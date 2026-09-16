@@ -154,59 +154,100 @@
 </section>
 
 <!-- ==========================================
-     CATÁLOGO / COLECCIONES POR CATEGORÍA
+     SOLUCIONES & EQUIPAMIENTO INTEGRAL
 ========================================== -->
-<section id="catalogo" class="catalogo-seccion" style="padding: 3.5rem 1rem;">
+<section id="soluciones" class="soluciones-seccion" style="padding: 4rem 1rem 4.5rem; background: #ffffff;">
+  <div style="max-width: 1150px; margin: 0 auto; width: 100%;">
+    
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <span style="display: inline-block; background: rgba(0, 32, 147, 0.08); color: #002093; font-weight: 800; font-size: 0.85rem; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
+        <i class="fa-solid fa-cube"></i> Especialidades Rapidassure
+      </span>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+        Soluciones Integrales para tu Comercio
+      </h2>
+      <p style="color: #64748b; font-size: 1.02rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
+        Equipamiento tecnológico de alto rendimiento diseñado para optimizar el punto de venta y resguardar tu operación.
+      </p>
+    </div>
 
-  <div style="text-align: center; margin-bottom: 1.8rem;">
-    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; color: #000E1F; margin: 0 0 4px 0;">
-      Nuestras Colecciones
-    </h2>
-    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Explora nuestros productos por categoría</p>
-  </div>
-
-  <!-- Chips de Navegación Rápida -->
-  <div class="categoria-chips-bar">
-    <a href="#catalogo" class="chip-btn active">
-      <i class="fa-solid fa-border-all"></i> Todas
-    </a>
-    {% for c in categorias %}
-      <a href="{% url 'categoria' c.slug %}" class="chip-btn">
-        {% if 'pos' in c.nombre.lower or 'retail' in c.nombre.lower %}
-          <i class="fa-solid fa-cash-register"></i>
-        {% elif 'audio' in c.nombre.lower or 'bluetooth' in c.nombre.lower %}
-          <i class="fa-solid fa-headphones"></i>
-        {% elif 'proteccion' in c.nombre.lower or 'garantia' in c.nombre.lower %}
-          <i class="fa-solid fa-shield-halved"></i>
-        {% else %}
-          <i class="fa-solid fa-microchip"></i>
-        {% endif %}
-        {{ c.nombre }}
-      </a>
-    {% endfor %}
-  </div>
-
-  <!-- Grilla de Categorías -->
-  <div class="catalogo-grid">
-    {% for c in categorias %}
-      <div class="producto" id="cat-{{ c.slug }}">
-        {% if c.imagen %}
-          <img src="{{ c.get_imagen_url_600 }}" alt="{{ c.nombre }}" loading="lazy">
-        {% else %}
-          <img src="{% static 'img/default-category.png' %}" alt="Sin imagen">
-        {% endif %}
-
-        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800;">{{ c.nombre }}</h3>
-
-        <a href="{% url 'categoria' c.slug %}" class="btn-categoria">
-          <i class="fa-solid fa-layer-group"></i> Ir a Colección
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px;">
+      
+      <!-- Card 1: Smart POS -->
+      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
+        <div>
+          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
+            <i class="fa-solid fa-cash-register"></i>
+          </div>
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+            Smart POS & Retail Tech
+          </h3>
+          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
+            Terminales de cobro táctiles Dual HD, dispositivos Android móviles con impresora térmica e integración transaccional directa.
+          </p>
+        </div>
+        <a href="/categoria/smart-pos-retail-tech/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
+          Ver Equipos POS <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
         </a>
       </div>
-    {% empty %}
-      <p style="text-align: center; color: #64748b;">No hay categorías creadas aún.</p>
-    {% endfor %}
-  </div>
 
+      <!-- Card 2: Audio & Bluetooth -->
+      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
+        <div>
+          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
+            <i class="fa-solid fa-headphones"></i>
+          </div>
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+            Audio & Sonido Profesional
+          </h3>
+          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
+            Audífonos JBL con cancelación de ruido adaptativa, altavoces portátiles ultra resistentes y sistemas de audio corporativos.
+          </p>
+        </div>
+        <a href="/categoria/audio-bluetooth/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
+          Ver Soluciones Audio <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
+        </a>
+      </div>
+
+      <!-- Card 3: Gadgets & Periféricos -->
+      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
+        <div>
+          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
+            <i class="fa-solid fa-microchip"></i>
+          </div>
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+            Gadgets & Periféricos Tech
+          </h3>
+          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
+            Escáneres inalámbricos 1D/2D QR de precisión industrial, cargadores rápidos GaN 65W y soportes giratorios ergonómicos.
+          </p>
+        </div>
+        <a href="/categoria/gadgets-perifericos-tech/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
+          Ver Periféricos <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
+        </a>
+      </div>
+
+      <!-- Card 4: Protección & Garantías -->
+      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
+        <div>
+          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+            Protección & Cobertura Care+
+          </h3>
+          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
+            Sistemas UPS de respaldo de energía ininterrumpida de 1500VA y planes de garantía con reemplazo express en 24h.
+          </p>
+        </div>
+        <a href="/categoria/proteccion-garantias/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
+          Ver Coberturas <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
 </section>
 
 
@@ -282,26 +323,111 @@
 </section>
 
 <!-- ==========================================
-     CONTACTO & CANALES DIRECTOS
+     CONTACTO CON MAPA & FORMULARIO FLOTANTE (ESTILO RAPIDASSURE.CL)
 ========================================== -->
-<section id="contacto" class="contacto" style="min-height: auto; padding: 4.5rem 1rem; background-color: #f8fafc;">
-  <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
+<section id="contacto" class="contacto-seccion" style="position: relative; padding: 4.5rem 1rem 3.5rem; background-color: #f8fafc; overflow: hidden;">
+  <div style="max-width: 1150px; margin: 0 auto; width: 100%;">
     
     <!-- Encabezado -->
-    <div style="text-align: center; margin-bottom: 3rem;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
       <span style="display: inline-block; background: #e0e7ff; color: #002093; font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
-        Atención Corporativa
+        Atención Corporativa & Presencial
       </span>
       <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
         Contáctanos
       </h2>
-      <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.02rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">
-        Nuestros asesores comerciales y equipo de soporte técnico están listos para atender tus requerimientos.
+      <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.02rem; max-width: 620px; margin: 0 auto; line-height: 1.6;">
+        ¿Tienes alguna pregunta, comentario o necesitas cotizar equipamiento? Escríbenos y un asesor te responderá a la brevedad.
       </p>
     </div>
 
-    <!-- Bloque 1: FAQ Corporativo -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2.8rem;">
+    <!-- Contenedor Principal: Mapa interactivo con Formulario Flotante en superposición -->
+    <div style="position: relative; width: 100%; min-height: 520px; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; margin-bottom: 3rem; background: #e5e3df;">
+      
+      <!-- Mapa de Google Embed de Fondo (San Diego 174 Local 8, Santiago) -->
+      <iframe src="https://maps.google.com/maps?q=San+Diego+174+Local+8+Santiago+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; min-height: 520px; filter: contrast(1.02) saturate(1.05);" allowfullscreen="" loading="lazy" title="Ubicación Rapidassure Retail"></iframe>
+
+      <!-- Formulario Flotante Glassmorphic (Superpuesto en el mapa a la izquierda) -->
+      <div style="position: relative; z-index: 10; max-width: 440px; margin: 25px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 32px 28px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
+        
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #000E1F; margin: 0 0 8px 0;">
+          Contáctanos
+        </h3>
+        
+        <p style="font-family: 'Open Sans', sans-serif; font-size: 0.88rem; color: #64748b; line-height: 1.5; margin-bottom: 20px;">
+          Tu opinión y consultas son muy importantes para nosotros. Estaremos encantados de ayudarte. ¡Gracias por confiar en nosotros!
+        </p>
+
+        <form id="form-contacto-rapida" onsubmit="enviarMensajeContacto(event)">
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre</label>
+            <input type="text" required placeholder="Tu nombre completo" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;" onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto / Email</label>
+            <input type="text" required placeholder="Ej: Cotización Smart POS / correo@empresa.cl" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;" onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
+          </div>
+
+          <div style="margin-bottom: 18px;">
+            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Mensaje</label>
+            <textarea required rows="3" placeholder="Escribe tu mensaje o consulta aquí..." style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; resize: vertical; transition: border-color 0.2s;" onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
+          </div>
+
+          <button type="submit" id="btn-enviar-contacto" style="width: 100%; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 32, 147, 0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(0, 32, 147, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px rgba(0, 32, 147, 0.3)'">
+            <i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Enviar Mensaje
+          </button>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Tira de Información Directa de Contacto (Estilo rapidassure.cl) -->
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px 30px; box-shadow: 0 6px 25px rgba(0,0,0,0.03); margin-bottom: 3rem;">
+      <h4 style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F; margin: 0 0 18px 0; text-align: center;">
+        Información de Contacto
+      </h4>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; text-align: left;">
+        
+        <!-- Dirección -->
+        <div style="display: flex; align-items: flex-start; gap: 14px;">
+          <div style="width: 44px; height: 44px; background: #e0e7ff; color: #002093; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div>
+            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Dirección</span>
+            <span style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #64748b; line-height: 1.4;">San Diego 174 Local 8, Santiago</span>
+          </div>
+        </div>
+
+        <!-- Teléfono / WhatsApp -->
+        <div style="display: flex; align-items: flex-start; gap: 14px;">
+          <div style="width: 44px; height: 44px; background: #e8f5e9; color: #25D366; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+            <i class="fa-solid fa-phone"></i>
+          </div>
+          <div>
+            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Teléfono & WhatsApp</span>
+            <a href="https://wa.me/56929789628" target="_blank" style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #002093; font-weight: 700; text-decoration: none;">+56 9 2978 9628</a>
+          </div>
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div style="display: flex; align-items: flex-start; gap: 14px;">
+          <div style="width: 44px; height: 44px; background: #e0e7ff; color: #002093; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <div>
+            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Correo Electrónico</span>
+            <a href="mailto:contacto@rapidassure.cl" style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #002093; font-weight: 700; text-decoration: none;">contacto@rapidassure.cl</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bloque FAQ Corporativo -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2.5rem;">
       
       <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
@@ -335,55 +461,37 @@
 
     </div>
 
-    <!-- Bloque 2: Tarjetas de Canales de Contacto Directo -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
-      
-      <!-- WhatsApp -->
-      <div style="background: white; padding: 28px 24px; border-radius: 18px; border: 1px solid #e2e8f0; box-shadow: 0 8px 25px rgba(0,0,0,0.04); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-        <div>
-          <div style="width: 54px; height: 54px; background: #e8f5e9; color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem;">
-            <i class="fab fa-whatsapp"></i>
-          </div>
-          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #000E1F; margin: 0 0 8px 0;">Atención WhatsApp</h3>
-          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.9rem; line-height: 1.5; margin: 0 0 20px 0;">
-            Asesoría comercial directa sobre requerimientos de equipamiento y cotizaciones.
-          </p>
-        </div>
-        <a href="https://wa.me/56930027170" target="_blank" rel="noopener noreferrer" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: white; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 0.92rem; text-decoration: none; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-          <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Contactar por WhatsApp
-        </a>
-      </div>
-
-      <!-- Email Corporativo -->
-      <div style="background: white; padding: 28px 24px; border-radius: 18px; border: 1px solid #e2e8f0; box-shadow: 0 8px 25px rgba(0,0,0,0.04); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-        <div>
-          <div style="width: 54px; height: 54px; background: #e0e7ff; color: #002093; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem;">
-            <i class="fa-solid fa-envelope"></i>
-          </div>
-          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #000E1F; margin: 0 0 8px 0;">Correo Corporativo</h3>
-          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.9rem; line-height: 1.5; margin: 0 0 20px 0;">
-            Escríbenos a info@rapidassure.cl para atención institucional o postventa.
-          </p>
-        </div>
-        <a href="mailto:info@rapidassure.cl" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 0.92rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-          <i class="fa-solid fa-envelope" style="font-size: 1.1rem;"></i> Enviar Correo
-        </a>
-      </div>
-
-    </div>
-
-    <!-- Bloque 3: Horarios & Compromiso -->
+    <!-- Bloque Horarios & Compromiso -->
     <div style="text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 24px; max-width: 750px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
       <p style="margin: 0 0 6px 0; font-size: 0.9rem; color: #000E1F; font-weight: 600; font-family: 'Montserrat', sans-serif;">
         <i class="fa-solid fa-clock" style="color: #FCBE00; margin-right: 6px;"></i> Horario de Atención Corporativa: Lunes a Viernes de 08:30 a 18:30 hrs.
       </p>
       <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.86rem; color: #64748b;">
-        <i class="fa-solid fa-building"></i> <strong>Rapidassure Retail</strong> — Respaldo, Tecnología y Cobertura a nivel nacional.
+        <i class="fa-solid fa-building"></i> <strong>Rapidassure SPA</strong> — Respaldo, Tecnología y Cobertura a nivel nacional.
       </p>
     </div>
 
   </div>
 </section>
+
+<script>
+function enviarMensajeContacto(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-enviar-contacto');
+  if (btn) {
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+    btn.disabled = true;
+  }
+  setTimeout(() => {
+    alert('¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito. Un ejecutivo de Rapidassure se pondrá en contacto contigo a la brevedad.');
+    document.getElementById('form-contacto-rapida').reset();
+    if (btn) {
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Mensaje';
+      btn.disabled = false;
+    }
+  }, 800);
+}
+</script>
 
 <script>
 function scrollDestacados(amount) {

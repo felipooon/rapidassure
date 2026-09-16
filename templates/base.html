@@ -76,7 +76,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- NAVEGACIÓN ESCRITORIO -->
         <ul class="nav-links">
             <li><a href="/#inicio">Inicio</a></li>
-            <li><a href="/#catalogo">Productos & Soluciones</a></li>
+            <li class="nav-dropdown" style="position: relative;">
+                <a href="/#soluciones" class="dropdown-trigger" style="display: inline-flex; align-items: center; gap: 6px;">
+                    Categorías <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    {% for cat in categorias_globales %}
+                        <li>
+                            <a href="{% url 'categoria' cat.slug %}">
+                                {% if 'pos' in cat.nombre.lower or 'retail' in cat.nombre.lower %}
+                                    <i class="fa-solid fa-cash-register" style="color: #FCBE00; width: 18px;"></i>
+                                {% elif 'audio' in cat.nombre.lower or 'bluetooth' in cat.nombre.lower %}
+                                    <i class="fa-solid fa-headphones" style="color: #FCBE00; width: 18px;"></i>
+                                {% elif 'proteccion' in cat.nombre.lower or 'garantia' in cat.nombre.lower %}
+                                    <i class="fa-solid fa-shield-halved" style="color: #FCBE00; width: 18px;"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-microchip" style="color: #FCBE00; width: 18px;"></i>
+                                {% endif %}
+                                {{ cat.nombre }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
             <li><a href="/#acerca">Nosotros</a></li>
             <li><a href="/#contacto">Contacto</a></li>
         </ul>
@@ -95,7 +117,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <ul class="mobile-drawer-nav">
             <li><a href="/#inicio"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Inicio</a></li>
-            <li><a href="/#catalogo"><span class="nav-icon"><i class="fa-solid fa-store"></i></span> Productos & Soluciones</a></li>
+            <li>
+                <a href="/#soluciones"><span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span> Categorías</a>
+                <ul style="list-style: none; padding-left: 54px; margin: -4px 0 8px 0; display: flex; flex-direction: column; gap: 4px;">
+                    {% for cat in categorias_globales %}
+                        <li>
+                            <a href="{% url 'categoria' cat.slug %}" style="padding: 6px 10px; margin: 0; font-size: 0.86rem; background: transparent; border: none; box-shadow: none; color: rgba(255,255,255,0.9);">
+                                • {{ cat.nombre }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
             <li><a href="/#acerca"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Nosotros</a></li>
             <li><a href="/#contacto"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span> Contacto</a></li>
         </ul>

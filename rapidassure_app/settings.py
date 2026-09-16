@@ -88,6 +88,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'tienda.context_processors.carrito_global',
                 'tienda.context_processors.configuracion_sitio',
+                'tienda.context_processors.categorias_global',
             ],
         },
     },
