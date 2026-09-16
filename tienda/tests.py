@@ -253,3 +253,60 @@ class CategoriaIndexTests(TestCase):
         self.assertNotIn(cat_sin_stock, categorias_en_contexto)
         self.assertNotIn(cat_vacia, categorias_en_contexto)
 
+
+class CarritoTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.categoria = Categoria.objects.create(nombre="Tecnología")
+        self.p1 = Producto.objects.create(categoria=self.categoria, nombre="Producto A", precio=10000, stock=10, disponible=True)
+        self.p2 = Producto.objects.create(categoria=self.categoria, nombre="Producto B", precio=5000, stock=10, disponible=True)
+
+    def test_carrito_length_y_total_items(self):
+        """Verifica que len(carrito) y get_total_items devuelvan la suma correcta de cantidades."""
+        request = self.factory.get('/')
+        middleware = SessionMiddleware(lambda r: None)
+        middleware.process_request(request)
+        request.session.save()
+
+        carrito = Carrito(request)
+        self.assertEqual(len(carrito), 0)
+        self.assertEqual(carrito.get_total_items(), 0)
+
+        carrito.agregar(self.p1, cantidad=2)
+        carrito.agregar(self.p2, cantidad=3)
+
+        self.assertEqual(len(carrito), 5)
+        self.assertEqual(carrito.get_total_items(), 5)
+        self.assertEqual(carrito.get_total(), 35000)
+
+
+class DeseosTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.categoria = Categoria.objects.create(nombre="Tecnología")
+        self.p1 = Producto.objects.create(categoria=self.categoria, nombre="Producto A", precio=10000, stock=10, disponible=True)
+
+    def test_deseos_toggle_y_mover_a_carrito(self):
+        """Verifica que toggle agregue/elimine de deseos y se puedan mover al carrito."""
+        from .deseos import Deseos
+        request = self.factory.get('/')
+        middleware = SessionMiddleware(lambda r: None)
+        middleware.process_request(request)
+        request.session.save()
+
+        deseos = Deseos(request)
+        self.assertEqual(len(deseos), 0)
+
+        deseos.toggle(self.p1)
+        self.assertEqual(len(deseos), 1)
+
+        # Mover al carrito
+        carrito = Carrito(request)
+        carrito.agregar(self.p1, 1)
+        deseos.eliminar(self.p1)
+
+        self.assertEqual(len(deseos), 0)
+        self.assertEqual(len(carrito), 1)
+
+
+

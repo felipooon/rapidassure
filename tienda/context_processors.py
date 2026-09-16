@@ -1,4 +1,5 @@
 from .carrito import Carrito
+from .deseos import Deseos
 from .models import Categoria, ConfiguracionSitio
 
 def carrito_global(request):
@@ -6,6 +7,13 @@ def carrito_global(request):
     return {
         'carrito': Carrito(request)
     }
+
+def deseos_global(request):
+    """Procesador de contexto global para la Lista de Deseos"""
+    return {
+        'deseos': Deseos(request)
+    }
+
 
 def configuracion_sitio(request):
     """Procesador de contexto global para tener acceso a config_sitio en todas las plantillas HTML"""

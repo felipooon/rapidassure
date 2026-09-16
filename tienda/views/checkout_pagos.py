@@ -11,6 +11,46 @@ from django.db import transaction
 
 from ..models import Producto, Pedido, ItemPedido, Cupon, LogProducto, LogPedido
 from ..carrito import Carrito
+from ..deseos import Deseos
+
+
+def toggle_deseos(request, producto_id):
+    deseos = Deseos(request)
+    producto = get_object_or_404(Producto, id=producto_id)
+    agregado = deseos.toggle(producto)
+    
+    if agregado:
+        messages.success(request, f'¡{producto.nombre} agregado a tu Lista de Deseos!')
+    else:
+        messages.info(request, f'{producto.nombre} eliminado de tu Lista de Deseos.')
+
+    url_anterior = request.META.get('HTTP_REFERER', '/')
+    return redirect(url_anterior)
+
+
+def ver_deseos(request):
+    deseos = Deseos(request)
+    return render(request, 'deseos.html', {'deseos': deseos})
+
+
+def mover_deseos_a_carrito(request, producto_id):
+    deseos = Deseos(request)
+    carrito = Carrito(request)
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if producto.hay_stock():
+        carrito.agregar(producto, 1)
+        deseos.eliminar(producto)
+        messages.success(request, f'¡{producto.nombre} movido al carrito de compras!')
+    else:
+        messages.error(request, f'Lo sentimos, {producto.nombre} está agotado por ahora.')
+
+    url_anterior = request.META.get('HTTP_REFERER', '/deseos/')
+    if '?' in url_anterior:
+        return redirect(url_anterior + '&cart=open')
+    else:
+        return redirect(url_anterior + '?cart=open')
+
 
 
 def validar_rut_chileno(rut):

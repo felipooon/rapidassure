@@ -5,95 +5,64 @@
 
 {% block content %}
 <!-- ==========================================
-     HERO CORPORATE SECTION (2 COLUMNAS CON LOGO AL LADO)
+     HERO ULTRA-MODERNO (ESTÉTICA RAPIDASSURE.CL)
 ========================================== -->
-<section id="inicio" class="hero-corporate" style="position: relative; min-height: 80vh; display: flex; align-items: center; background: linear-gradient(135deg, rgba(0, 14, 31, 0.94) 0%, rgba(0, 32, 147, 0.88) 100%), url('{% static "img/Rascacielos.jpg" %}') center/cover no-repeat; color: white; padding: 4.5rem 1rem 3.5rem; overflow: hidden;">
-  
-  <!-- Subtle glowing background accent -->
-  <div style="position: absolute; top: -120px; right: -80px; width: 550px; height: 550px; background: radial-gradient(circle, rgba(50, 48, 194, 0.3) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: 1;"></div>
+<section id="inicio" class="hero-clean-white">
+  <div class="hero-ambient-orb-1"></div>
+  <div class="hero-ambient-orb-2"></div>
 
-  <div class="container" style="max-width: 1150px; margin: 0 auto; width: 100%; position: relative; z-index: 2;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; align-items: center;">
-      
-      <!-- Columna Izquierda: Mensaje Principal y CTAs -->
-      <div style="text-align: left;">
-        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(252, 190, 0, 0.15); border: 1px solid rgba(252, 190, 0, 0.4); color: #FCBE00; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; backdrop-filter: blur(8px);">
-          <i class="fa-solid fa-bolt"></i> Tecnología & Protección Retail
-        </div>
-
-        <h1 style="font-family: 'Montserrat', sans-serif; font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight: 900; line-height: 1.18; margin-bottom: 18px; text-shadow: 0 4px 20px rgba(0,0,0,0.4); letter-spacing: -0.5px;">
-          Smart POS, Audio & Cobertura para tu Negocio
-        </h1>
-
-        <p style="font-family: 'Open Sans', sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 28px; line-height: 1.6; max-width: 540px;">
-          Equipamiento de punto de venta de vanguardia, dispositivos inteligentes y planes de respaldo garantizados para maximizar tus ventas.
-        </p>
-
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <a href="#catalogo" class="btn-categoria" style="padding: 14px 30px; font-size: 1rem; border-radius: 12px; background: linear-gradient(135deg, #002093, #3230C2); color: #ffffff; font-weight: 800; box-shadow: 0 8px 22px rgba(0, 32, 147, 0.4); border: 1px solid rgba(255,255,255,0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-            <i class="fa-solid fa-store"></i> Ver Productos Tech
-          </a>
-          <a href="#contacto" class="btn-categoria" style="padding: 14px 30px; font-size: 1rem; border-radius: 12px; background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-            <i class="fa-solid fa-headset"></i> Atención Corporativa
-          </a>
-        </div>
-      </div>
-
-      <!-- Columna Derecha: Tarjeta con el Logo de la Empresa al Lado -->
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <div style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 38px 30px; border-radius: 26px; box-shadow: 0 20px 45px rgba(0,0,0,0.35); text-align: center; max-width: 400px; width: 100%; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
-          
-          <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo" style="width: 85%; max-width: 270px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.4));">
-          
-          <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 18px; margin-top: 5px;">
-            <p style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; color: #FCBE00; margin: 0 0 6px 0;">
-              Equipamiento & Respaldo Retail
-            </p>
-            <p style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.5;">
-              Soluciones integrales en hardware, punto de venta y cobertura operacional asegurada a nivel nacional.
-            </p>
-          </div>
-
-        </div>
-      </div>
-
+  <div class="hero-clean-container">
+    <div class="hero-pill-badge">
+      <span class="dot-pulse"></span>
+      <span>TECNOLOGÍA & PROTECCIÓN INTEGRAL RETAIL</span>
     </div>
+
+    <img src="{% static 'img/Logo_Horizontal.png' %}" alt="Rapidassure Retail Logo" class="hero-central-logo">
+
+    <h1 class="hero-tagline-blue">
+      Tecnología a tu alcance con rapidez y confianza
+    </h1>
+
+    <p class="hero-subdescription">
+      Equipamiento de punto de venta de vanguardia, Smart POS, audio profesional y respaldo operacional garantizado a nivel nacional.
+    </p>
+
+    <div class="hero-actions-group">
+      <a href="#catalogo" class="btn-hero-primary">
+        <i class="fa-solid fa-cart-shopping"></i> Ver Productos Tech <i class="fa-solid fa-arrow-right" style="font-size: 0.82rem; margin-left: 4px;"></i>
+      </a>
+      <a href="#contacto" class="btn-hero-secondary">
+        <i class="fa-solid fa-headset"></i> Atención Corporativa
+      </a>
+    </div>
+
+    <div class="hero-features-strip">
+      <div class="hero-feature-card">
+        <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <h4>Garantía Operacional</h4>
+          <p>Protección integral en todo equipamiento</p>
+        </div>
+      </div>
+      <div class="hero-feature-card">
+        <div class="icon-box"><i class="fa-solid fa-truck-fast"></i></div>
+        <div>
+          <h4>Despacho Corporativo</h4>
+          <p>Envíos gratuitos sobre $19.990 en RM</p>
+        </div>
+      </div>
+      <div class="hero-feature-card">
+        <div class="icon-box"><i class="fa-solid fa-bolt"></i></div>
+        <div>
+          <h4>Smart POS 2026 Ready</h4>
+          <p>Cajas rápidas, audio & conectividad</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- ==========================================
-     BENEFICIOS CORPORATIVOS
-========================================== -->
-<section class="beneficios-seccion" style="background: #ffffff; padding: 2.5rem 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
-  <div class="beneficio-item">
-    <i class="fa-solid fa-shield-halved" style="color: #002093;"></i>
-    <div>
-      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Garantía & Cobertura</h4>
-      <p style="color: #64748b;">Protección integral en todo equipamiento</p>
-    </div>
-  </div>
-  <div class="beneficio-item">
-    <i class="fa-solid fa-truck-fast" style="color: #002093;"></i>
-    <div>
-      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Despacho Corporativo</h4>
-      <p style="color: #64748b;">Envíos seguros a sucursales en todo Chile</p>
-    </div>
-  </div>
-  <div class="beneficio-item">
-    <i class="fa-solid fa-lock" style="color: #002093;"></i>
-    <div>
-      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Transacciones Seguras</h4>
-      <p style="color: #64748b;">Plataforma protegida con encriptación SSL</p>
-    </div>
-  </div>
-  <div class="beneficio-item">
-    <i class="fa-solid fa-headset" style="color: #002093;"></i>
-    <div>
-      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Soporte Técnico 24/7</h4>
-      <p style="color: #64748b;">Asistencia directa para la operación de cajas</p>
-    </div>
-  </div>
-</section>
 
 <!-- ==========================================
      NOVEDADES DESTACADAS
@@ -120,11 +89,14 @@
 
     <div class="catalogo-destacados-slider" id="destacados-container">
       {% for p in productos_destacados %}
-        <div class="producto-destacado-card">
-          <div class="img-box">
+        <div class="producto-destacado-card" style="position: relative;">
+          <div class="img-box" style="position: relative;">
             {% if p.imagen %}
               <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
             {% endif %}
+            <a href="{% url 'toggle_deseos' p.id %}" title="Guardar en Lista de Deseos" style="position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,0.92); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e11d48; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.12); z-index: 5; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+              <i class="fa-solid fa-heart"></i>
+            </a>
             {% if not p.disponible %}
               <span class="agotado">Agotado</span>
             {% endif %}

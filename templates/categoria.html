@@ -40,6 +40,10 @@
         <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
       {% endif %}
 
+      <a href="{% url 'toggle_deseos' p.id %}" title="Guardar en Lista de Deseos" style="position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; background: rgba(255,255,255,0.92); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e11d48; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.12); z-index: 5; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+        <i class="fa-solid fa-heart"></i>
+      </a>
+
       {% if not p.disponible %}
         <span class="agotado">Agotado</span>
       {% endif %}

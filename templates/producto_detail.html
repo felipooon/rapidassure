@@ -386,10 +386,13 @@
                         <span style="font-size: 0.85rem; color: #888;">(Máximo {{ producto.stock }} unid.)</span>
                     </div>
 
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button type="submit" style="width: 100%; padding: 16px 25px; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 32, 147, 0.35); transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button type="submit" style="flex: 2; min-width: 200px; padding: 16px 22px; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 18px rgba(0, 32, 147, 0.35); transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 10px;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                             <i class="fa-solid fa-cart-plus"></i> Agregar al Carrito
                         </button>
+                        <a href="{% url 'toggle_deseos' producto.id %}" style="flex: 1; min-width: 140px; padding: 16px 18px; background: #ffffff; color: #e11d48; border: 2px solid #fecdd3; border-radius: 12px; font-size: 0.95rem; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;" onmouseover="this.style.background='#fff1f2'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='#ffffff'; this.style.transform='translateY(0)'">
+                            <i class="fa-solid fa-heart"></i> Guardar
+                        </a>
                     </div>
                 </form>
                 {% else %}

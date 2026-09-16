@@ -106,6 +106,38 @@ class Carrito:
         """
         return sum(int(item['precio']) * item['cantidad'] for item in self.carrito.values())
 
+    def get_total_items(self):
+        """
+        Calcula el número total de unidades acumuladas en el carrito.
+        """
+        return sum(int(item['cantidad']) for item in self.carrito.values())
+
+    def get_falta_envio_gratis(self, meta=19990):
+        """
+        Devuelve el monto restante para alcanzar el envío gratuito ($19.990).
+        """
+        total = self.get_total()
+        if total >= meta:
+            return 0
+        return meta - total
+
+    def get_porcentaje_envio_gratis(self, meta=19990):
+        """
+        Devuelve el porcentaje de avance hacia el envío gratuito (0-100).
+        """
+        total = self.get_total()
+        if total >= meta or meta <= 0:
+            return 100
+        return min(100, int((total / meta) * 100))
+
+    def __len__(self):
+        """
+        Permite usar len(carrito) y el filtro {{ carrito|length }} en los templates de Django.
+        """
+        return self.get_total_items()
+
+
+
     def __iter__(self):
         """
         Permite iterar sobre los items del carrito en los templates HTML y 

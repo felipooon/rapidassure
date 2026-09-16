@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Lista de Deseos — Rapidassure Retail{% endblock %}
+
+{% block content %}
+<div style="background: #f8fafc; min-height: 75vh; padding: 3.5rem 1rem;">
+  <div style="max-width: 1150px; margin: 0 auto;">
+
+    <!-- Encabezado de la Sección -->
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(50, 48, 194, 0.08); border: 1px solid rgba(50, 48, 194, 0.2); color: #3230C2; padding: 6px 18px; border-radius: 30px; font-size: 0.85rem; font-weight: 800; font-family: 'Montserrat', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+        <i class="fa-solid fa-heart" style="color: #e11d48;"></i> Tus Favoritos
+      </div>
+      <h1 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 900; color: #0f172a; margin: 0 0 8px 0;">
+        Mi Lista de Deseos
+      </h1>
+      <p style="color: #64748b; font-size: 1rem; max-width: 540px; margin: 0 auto; font-family: 'Open Sans', sans-serif;">
+        Productos guardados en tu sesión actual. Puedes moverlos al carrito cuando quieras realizar tu compra.
+      </p>
+    </div>
+
+    {% if not deseos or deseos|length == 0 %}
+      <!-- Estado Vacío -->
+      <div style="background: #ffffff; border-radius: 24px; padding: 4rem 2rem; text-align: center; border: 1px solid #e2e8f0; max-width: 500px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+        <div style="width: 80px; height: 80px; background: rgba(225, 29, 72, 0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto; color: #e11d48; font-size: 2.2rem;">
+          <i class="fa-regular fa-heart"></i>
+        </div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">Tu Lista de Deseos está vacía</h3>
+        <p style="color: #64748b; font-size: 0.92rem; margin: 0 0 24px 0; line-height: 1.5;">Explora nuestro catálogo y presiona el ícono del corazón en los productos que quieras guardar.</p>
+        <a href="{% url 'index' %}#catalogo" style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #3230C2, #1D4ED8); color: white; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.92rem; box-shadow: 0 8px 20px rgba(50, 48, 194, 0.3);">
+          <i class="fa-solid fa-store"></i> Explorar Productos
+        </a>
+      </div>
+    {% else %}
+      <!-- Grid de Productos de Deseos -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
+        {% for item in deseos %}
+          <div style="background: #ffffff; border-radius: 20px; border: 1px solid #e2e8f0; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 6px 20px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease; position: relative;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 15px 30px rgba(0,14,31,0.08)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.04)'">
+            
+            <!-- Botón Quitar de Deseos -->
+            <a href="{% url 'toggle_deseos' item.producto_id %}" title="Quitar de la lista" style="position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; background: rgba(255, 255, 255, 0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e11d48; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.08); z-index: 10; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+              <i class="fa-solid fa-heart"></i>
+            </a>
+
+            <!-- Imagen -->
+            <div style="width: 100%; height: 200px; border-radius: 14px; overflow: hidden; background: #f8fafc; margin-bottom: 14px; display: flex; align-items: center; justify-content: center;">
+              {% if item.producto_real and item.producto_real.imagen %}
+                <img src="{{ item.producto_real.get_imagen_url_600 }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+              {% elif item.imagen %}
+                <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+              {% else %}
+                <i class="fa-solid fa-box-open" style="color: #cbd5e1; font-size: 2.5rem;"></i>
+              {% endif %}
+            </div>
+
+            <!-- Información -->
+            <div style="flex-grow: 1; display: flex; flex-direction: column;">
+              <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; line-height: 1.35;">
+                {{ item.nombre }}
+              </h3>
+              <p style="font-weight: 800; color: #3230C2; font-size: 1.15rem; margin: 0 0 16px 0;">
+                ${{ item.precio }}
+              </p>
+
+              <!-- Botones de Acción -->
+              <div style="display: flex; gap: 8px; margin-top: auto;">
+                <a href="{% url 'mover_deseos_a_carrito' item.producto_id %}" style="flex: 1; text-align: center; background: linear-gradient(135deg, #3230C2, #1D4ED8); color: white; padding: 10px; border-radius: 12px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; text-decoration: none; box-shadow: 0 4px 12px rgba(50, 48, 194, 0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                  <i class="fa-solid fa-cart-plus"></i> Al Carrito
+                </a>
+                <a href="{% url 'toggle_deseos' item.producto_id %}" style="background: #f1f5f9; color: #64748b; padding: 10px 14px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#e2e8f0'; this.style.color='#e11d48'" onmouseout="this.style.background='#f1f5f9'; this.style.color='#64748b'" title="Quitar">
+                  <i class="fa-solid fa-trash-can"></i>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

@@ -56,53 +56,118 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N7WNM6XN"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<header>
-<nav class="navbar">
-    <div class="navbar-container">
-        <div class="navbar-brand">
-            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
-            <h1><a href="/" class="logo">
-                <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo" class="logo-img">
-            </a></h1>
-        </div>
+<header class="header-site-rapidassure">
+    
+    <!-- 1. TOP BAR (Llámenos, Envíos, Usuario) -->
+    <div class="top-bar">
+        <div class="top-bar-container">
+            <div class="top-bar-left">
+                <span><i class="fa-solid fa-headset"></i> Llámenos al: <strong style="color: #002093;">+56 9 2978 9628</strong></span>
+                <span class="top-divider">|</span>
+                <span style="color: #64748b;">Envíos Gratuitos en RM sobre <strong style="color: #FCBE00;">$19.990</strong></span>
+            </div>
 
-        <div class="search-container">
-            <input type="text" id="live-search-input" placeholder="Buscar soluciones o productos..." autocomplete="off">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <div class="top-bar-right">
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN HEADER ROW (Logo, Buscador integrado, Carrito Widget) -->
+    <div class="main-header-row">
+        <div class="main-header-container">
             
-            <div id="live-search-results" class="live-search-dropdown"></div>
-        </div>
-
-        <!-- NAVEGACIÓN ESCRITORIO -->
-        <ul class="nav-links">
-            <li><a href="/#inicio">Inicio</a></li>
-            <li class="nav-dropdown" style="position: relative;">
-                <a href="/#soluciones" class="dropdown-trigger" style="display: inline-flex; align-items: center; gap: 6px;">
-                    Categorías <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i>
+            <div class="header-brand-box">
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+                <a href="/" class="header-logo-link">
+                    <img src="{% static 'img/Logo_Horizontal.png' %}" alt="Rapidassure Retail Logo" class="header-logo-img">
                 </a>
-                <ul class="dropdown-menu">
+            </div>
+
+            <!-- Buscador Integrado con Selector de Categorías -->
+            <div class="integrated-search-box">
+                <div class="search-cat-dropdown">
+                    <select onchange="if(this.value) window.location.href=this.value;">
+                        <option value="">Todas las categorías</option>
+                        {% for cat in categorias_globales %}
+                            <option value="{% url 'categoria' cat.slug %}">{{ cat.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="fa-solid fa-chevron-down select-arrow"></i>
+                </div>
+
+                <div class="search-input-box">
+                    <input type="text" id="live-search-input" placeholder="Buscar productos..." autocomplete="off">
+                    <div id="live-search-results" class="live-search-dropdown"></div>
+                </div>
+
+                <button type="button" class="search-submit-btn" aria-label="Buscar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+
+            <!-- Widget del Carrito -->
+            <div class="cart-header-widget" onclick="abrirCarrito()">
+                <div class="cart-icon-wrapper">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-bubble-count">{{ carrito|length|default:0 }}</span>
+                </div>
+                <div class="cart-text-info">
+                    <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
+                    <strong style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total|default:0 }}</strong>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 3. BARRA AZUL PRINCIPAL (Botonera amarilla de Categorías + Menú Navegación) -->
+    <nav class="primary-nav-bar">
+        <div class="primary-nav-container">
+            
+            <div class="categories-yellow-wrapper">
+                <button class="btn-categories-yellow" id="btn-categories-yellow">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                    <span>Todas las Categorías</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+                </button>
+
+                <ul class="yellow-categories-dropdown" id="yellow-categories-dropdown">
                     {% for cat in categorias_globales %}
                         <li>
                             <a href="{% url 'categoria' cat.slug %}">
                                 {% if 'pos' in cat.nombre.lower or 'retail' in cat.nombre.lower %}
-                                    <i class="fa-solid fa-cash-register" style="color: #FCBE00; width: 18px;"></i>
+                                    <i class="fa-solid fa-cash-register"></i>
                                 {% elif 'audio' in cat.nombre.lower or 'bluetooth' in cat.nombre.lower %}
-                                    <i class="fa-solid fa-headphones" style="color: #FCBE00; width: 18px;"></i>
+                                    <i class="fa-solid fa-headphones"></i>
                                 {% elif 'proteccion' in cat.nombre.lower or 'garantia' in cat.nombre.lower %}
-                                    <i class="fa-solid fa-shield-halved" style="color: #FCBE00; width: 18px;"></i>
+                                    <i class="fa-solid fa-shield-halved"></i>
                                 {% else %}
-                                    <i class="fa-solid fa-microchip" style="color: #FCBE00; width: 18px;"></i>
+                                    <i class="fa-solid fa-microchip"></i>
                                 {% endif %}
                                 {{ cat.nombre }}
                             </a>
                         </li>
                     {% endfor %}
                 </ul>
-            </li>
-            <li><a href="/#acerca">Nosotros</a></li>
-            <li><a href="/#contacto">Contacto</a></li>
-        </ul>
-    </div>
+            </div>
+
+            <ul class="primary-menu-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/#soluciones">Soluciones</a></li>
+                <li><a href="/#acerca">Nosotros</a></li>
+                <li><a href="/#contacto">Contacto</a></li>
+                <li>
+                    <a href="{% url 'ver_deseos' %}">
+                        <i class="fa-regular fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
+                        {% if deseos|length > 0 %}
+                            <span style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px;">{{ deseos|length }}</span>
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
 
     <!-- MENÚ LATERAL MÓVIL (SÓLO MOBILE) -->
     <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
@@ -136,12 +201,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="mobile-drawer-footer">
             <p style="color: #FCBE00; font-weight: 600;">Rapidassure Retail — Innovación y Protección</p>
             <div class="drawer-social-links">
-                <a href="https://wa.me/56930027170" target="_blank" class="social-btn whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="mailto:info@rapidassure.cl" class="social-btn instagram-btn" style="background: #002093;"><i class="fa-solid fa-envelope"></i> Email</a>
+                <a href="https://wa.me/56929789628" target="_blank" class="social-btn whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="mailto:contacto@rapidassure.cl" class="social-btn instagram-btn" style="background: #002093;"><i class="fa-solid fa-envelope"></i> Email</a>
             </div>
         </div>
     </div>
-</nav>
 </header>
 
 {% if messages %}
@@ -404,32 +468,14 @@ if (!links.contains(e.target) && !toggle.contains(e.target)) {
     }
     .sidebar-carrito.abierto { right: 0; /* Aparece */ }
 
-    /* Botón flotante para abrirlo cuando quieras */
-    .btn-flotante-carrito {
-        position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #002093, #3230C2); color: white;
-        border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
-        font-size: 1.5rem; box-shadow: 0 8px 20px rgba(0, 32, 147, 0.4); cursor: pointer; z-index: 1000;
-        border: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        animation: pulseCart 2s infinite;
-    }
-    .btn-flotante-carrito:hover {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 12px 25px rgba(0, 32, 147, 0.6);
-        animation: none; /* Pausa el pulse al hacer hover */
-    }
-    @keyframes pulseCart {
-        0% { box-shadow: 0 0 0 0 rgba(0, 32, 147, 0.6); }
-        70% { box-shadow: 0 0 0 15px rgba(0, 32, 147, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(0, 32, 147, 0); }
-    }
 </style>
 
 <div id="overlay-carrito" class="overlay-carrito" onclick="cerrarCarrito()"></div>
 
 <div id="sidebar-carrito" class="sidebar-carrito">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; flex-shrink: 0;">
-        <span style="margin: 0; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #000E1F;"><i class="fa-solid fa-cart-shopping" style="color: #002093;"></i> Tu Carrito</span>
-        <button onclick="cerrarCarrito()" style="border: none; background: none; font-size: 1.3rem; cursor: pointer; color: #64748b;"><i class="fa-solid fa-xmark"></i></button>
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0;">
+        <span style="margin: 0; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; color: #FCBE00;">Carro de compras</span>
+        <button onclick="cerrarCarrito()" style="border: none; background: none; font-size: 1.2rem; cursor: pointer; color: #FCBE00;"><i class="fa-solid fa-xmark"></i></button>
     </div>
     
     <div style="padding: 20px; overflow-y: auto; flex-grow: 1;">
@@ -437,59 +483,71 @@ if (!links.contains(e.target) && !toggle.contains(e.target)) {
             <p style="text-align: center; color: #888; margin-top: 50px;"><i class="fa-solid fa-cart-flatbed" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>Tu carrito está vacío.</p>
         {% else %}
             {% for item in carrito %}
-                <div style="display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;">
+                <div style="display: flex; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; align-items: center;">
                     
-                    {% if item.imagen %}
-                        <img src="{{ item.imagen }}" alt="Imagen de {{ item.nombre }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-                    {% endif %}
+                    <div style="width: 65px; height: 65px; border-radius: 10px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                        {% if item.producto_real and item.producto_real.imagen %}
+                            <img src="{{ item.producto_real.get_imagen_url_600 }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% elif item.imagen %}
+                            <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <i class="fa-solid fa-box-open" style="color: #cbd5e1; font-size: 1.5rem;"></i>
+                        {% endif %}
+                    </div>
                     
-                    <div style="flex-grow: 1;">
-                        <h4 style="margin: 0 0 8px 0; font-size: 1rem; color: #333;">{{ item.nombre }}</h4>
+                    <div style="flex-grow: 1; min-width: 0;">
+                        <h4 style="margin: 0 0 4px 0; font-size: 0.9rem; font-weight: 700; color: #3230C2; font-family: 'Montserrat', sans-serif; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.nombre }}</h4>
                         
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            
-                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.05); border-radius: 8px; padding: 4px 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                                <a href="{% url 'restar_del_carrito' item.producto_id %}" style="text-decoration: none; color: #555; font-weight: bold; padding: 2px 8px; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#555'">-</a>
-                                <span style="font-weight: bold; font-size: 0.95rem; min-width: 15px; text-align: center; color: #333;">{{ item.cantidad }}</span>
-                                <a href="{% url 'agregar_al_carrito' item.producto_id %}" style="text-decoration: none; color: #555; font-weight: bold; padding: 2px 8px; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#555'">+</a>
-                            </div>
+                        <div style="font-weight: 800; color: #FCBE00; font-size: 0.95rem; margin-bottom: 6px;">${{ item.precio_total }}</div>
 
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <div style="text-align: right;">
-                                    <span style="display: block; font-size: 0.8rem; color: #888;">${{ item.precio }} c/u</span>
-                                    <span style="font-weight: bold; color: #333;">${{ item.precio_total }}</span>
-                                </div>
-                                <a href="{% url 'quitar_del_carrito' item.producto_id %}" style="color: #dc3545; text-decoration: none; font-size: 1rem; padding-left: 5px; border-left: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="Quitar del carrito">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </a>
-                            </div>
-                            
+                        <!-- Controles de Cantidad (- 1 +) -->
+                        <div style="display: inline-flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px 6px;">
+                            <a href="{% url 'restar_del_carrito' item.producto_id %}" style="text-decoration: none; color: #475569; font-weight: 800; font-size: 0.9rem; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#3230C2'" onmouseout="this.style.color='#475569'">-</a>
+                            <span style="font-weight: 700; font-size: 0.85rem; min-width: 16px; text-align: center; color: #0f172a;">{{ item.cantidad }}</span>
+                            <a href="{% url 'agregar_al_carrito' item.producto_id %}" style="text-decoration: none; color: #475569; font-weight: 800; font-size: 0.9rem; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#3230C2'" onmouseout="this.style.color='#475569'">+</a>
                         </div>
                     </div>
+
+                    <a href="{% url 'quitar_del_carrito' item.producto_id %}" style="color: #FCBE00; text-decoration: none; font-size: 1rem; padding: 4px; transition: transform 0.2s, color 0.2s;" onmouseover="this.style.color='#dc3545'; this.style.transform='scale(1.15)'" onmouseout="this.style.color='#FCBE00'; this.style.transform='scale(1)'" title="Quitar del carrito">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
                     
                 </div>
             {% endfor %}
         {% endif %}
     </div>
 
-    <div style="padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(249,249,249,0.5); flex-shrink: 0;">
-        <h3 style="display: flex; justify-content: space-between; margin-top: 0; font-family: 'Montserrat', sans-serif;">
-            <span>Total:</span> <span style="color: #002093; font-weight: 800;">${{ carrito.get_total }}</span>
+    <div style="padding: 20px; border-top: 1px solid #f1f5f9; background: #ffffff; flex-shrink: 0;">
+        <h3 style="display: flex; justify-content: space-between; margin: 0 0 16px 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700;">
+            <span style="color: #FCBE00;">Subtotal:</span>
+            <span style="color: #3230C2; font-weight: 800; font-size: 1.15rem;">${{ carrito.get_total }}</span>
         </h3>
-        <button onclick="cerrarCarrito()" style="display: block; width: 100%; background: rgba(255,255,255,0.9); color: #000E1F; border: 1px solid rgba(0,14,31,0.15); padding: 12px 0; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.3s;" onmouseover="this.style.background='white'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.boxShadow='none'">
-            <i class="fa-solid fa-arrow-left"></i> Seguir explorando
-        </button>
-        <a href="{% url 'procesar_pedido' %}" style="display: block; width: 100%; text-align: center; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 14px 0; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; margin-top: 15px; box-shadow: 0 6px 15px rgba(0, 32, 147, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0, 32, 147, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 15px rgba(0, 32, 147, 0.3)'">
-            Ir a Pagar <i class="fa-solid fa-arrow-right"></i>
-        </a>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
+            <a href="{% url 'ver_carrito' %}" style="display: block; text-align: center; background: #FCBE00; color: #000E1F; border: none; padding: 12px 0; border-radius: 8px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#e6ac00'" onmouseout="this.style.background='#FCBE00'">
+                Ver carrito
+            </a>
+            <a href="{% url 'procesar_pedido' %}" style="display: block; text-align: center; background: #3230C2; color: #ffffff; border: none; padding: 12px 0; border-radius: 8px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#2524a1'" onmouseout="this.style.background='#3230C2'">
+                Finalizar compra
+            </a>
+        </div>
+
+        <!-- Barra de Progreso de Envío Gratuito -->
+        <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
+            <div style="height: 6px; width: 100%; background: #e2e8f0; border-radius: 6px; overflow: hidden; margin-bottom: 10px;">
+                <div style="height: 100%; width: {{ carrito.get_porcentaje_envio_gratis }}%; background: #3230C2; border-radius: 6px; transition: width 0.4s ease;"></div>
+            </div>
+            <div style="font-size: 0.82rem; font-family: 'Open Sans', sans-serif; display: flex; align-items: center; gap: 8px; color: #64748b;">
+                <i class="fa-solid fa-truck-fast" style="color: #64748b; font-size: 0.9rem;"></i>
+                {% if carrito.get_total >= 19990 %}
+                    <span>¡Felicitaciones! Tienes <strong style="color: #FCBE00;">Envío Gratuito en RM</strong>.</span>
+                {% else %}
+                    <span>Te faltan <strong style="color: #FCBE00;">${{ carrito.get_falta_envio_gratis }}</strong> para el envío gratuito en RM.</span>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>
-
-{% if carrito.get_total > 0 %}
-<button class="btn-flotante-carrito" onclick="abrirCarrito()" style="background: linear-gradient(135deg, #002093, #FCBE00); color: white;">
-    <i class="fa-solid fa-cart-shopping"></i> <span style="position: absolute; top: -5px; right: -5px; background: #3230C2; font-size: 0.8rem; padding: 2px 6px; border-radius: 50%;">!</span>
-</button>
-{% endif %}
 
 <script>
     function abrirCarrito() {
@@ -559,6 +617,52 @@ if (!links.contains(e.target) && !toggle.contains(e.target)) {
             }
         });
     }
+
+    // Categorías en la Barra Azul
+    const btnCatYellow = document.getElementById('btn-categories-yellow');
+    const dropdownCatYellow = document.getElementById('yellow-categories-dropdown');
+    if (btnCatYellow && dropdownCatYellow) {
+        btnCatYellow.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownCatYellow.classList.toggle('active');
+        });
+        document.addEventListener('click', () => {
+            dropdownCatYellow.classList.remove('active');
+        });
+    }
+
+    // Scroll Suave para Secciones de la Navbar
+    document.querySelectorAll('a[href*="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (!href) return;
+
+            const hashIndex = href.indexOf('#');
+            if (hashIndex === -1) return;
+            const hash = href.substring(hashIndex);
+
+            if (!hash || hash === '#') return;
+
+            const targetElement = document.querySelector(hash);
+            const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+
+            if (targetElement && (isHomePage || href.startsWith('#'))) {
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+
+                // Si viene del menú móvil, cerrar la gaveta
+                const mobileDrawer = document.getElementById('mobile-drawer');
+                const mobileOverlay = document.getElementById('mobile-menu-overlay');
+                if (mobileDrawer && mobileDrawer.classList.contains('active')) {
+                    mobileDrawer.classList.remove('active');
+                    if (mobileOverlay) mobileOverlay.classList.remove('active');
+                }
+            }
+        });
+    });
 </script>
 
 </body>

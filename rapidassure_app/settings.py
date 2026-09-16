@@ -87,6 +87,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'tienda.context_processors.carrito_global',
+                'tienda.context_processors.deseos_global',
                 'tienda.context_processors.configuracion_sitio',
                 'tienda.context_processors.categorias_global',
             ],
