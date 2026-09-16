@@ -111,11 +111,12 @@ DATABASES = {
 if os.environ.get('DATABASE_URL'):
     db_url = os.environ.get('DATABASE_URL')
     is_sqlite = db_url.startswith('sqlite')
+    ssl_req = os.environ.get('DB_SSL_REQUIRE', 'False') == 'True'
     db_config = dj_database_url.config(
         default=db_url,
         conn_max_age=0 if is_sqlite else 600,
         conn_health_checks=not is_sqlite,
-        ssl_require=not is_sqlite
+        ssl_require=ssl_req
     )
     if not is_sqlite:
         if 'OPTIONS' not in db_config:
