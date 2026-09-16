@@ -323,6 +323,8 @@ def eliminar_producto(request, id):
 def panel_pedidos(request):
     q = request.GET.get('q', '').strip()
     estado = request.GET.get('estado', '')
+    tipo_entrega = request.GET.get('tipo_entrega', '')
+    tipo_doc = request.GET.get('tipo_doc', '')
 
     pedidos = Pedido.objects.all()
 
@@ -331,11 +333,22 @@ def panel_pedidos(request):
             models.Q(nombre_completo__icontains=q) |
             models.Q(rut__icontains=q) |
             models.Q(email__icontains=q) |
-            models.Q(id__icontains=q.replace('#', ''))
+            models.Q(id__icontains=q.replace('#', '')) |
+            models.Q(razon_social__icontains=q) |
+            models.Q(rut_empresa__icontains=q) |
+            models.Q(giro_comercial__icontains=q)
         )
 
     if estado:
         pedidos = pedidos.filter(estado=estado)
+
+    if tipo_entrega:
+        pedidos = pedidos.filter(tipo_entrega=tipo_entrega)
+
+    if tipo_doc == 'FACTURA':
+        pedidos = pedidos.filter(requiere_factura=True)
+    elif tipo_doc == 'BOLETA':
+        pedidos = pedidos.filter(requiere_factura=False)
 
     pedidos = pedidos.order_by('-id')
 
@@ -343,7 +356,10 @@ def panel_pedidos(request):
         'pedidos': pedidos,
         'q': q,
         'estado_filtro': estado,
-        'estados_choices': Pedido.ESTADO_CHOICES
+        'tipo_entrega_filtro': tipo_entrega,
+        'tipo_doc_filtro': tipo_doc,
+        'estados_choices': Pedido.ESTADO_CHOICES,
+        'tipo_entrega_choices': Pedido.TIPO_ENTREGA_CHOICES
     })
 
 
@@ -585,7 +601,12 @@ def exportar_pedidos_excel(request):
                          top=Side(style='thin', color='DDDDDD'),
                          bottom=Side(style='thin', color='DDDDDD'))
 
-    headers = ['ID Orden', 'Cliente', 'RUT', 'Email', 'Teléfono', 'Ciudad', 'Dirección', 'Estado', 'Pagado', 'Total', 'Transporte', 'Nº Seguimiento', 'Fecha']
+    headers = [
+        'ID Orden', 'Cliente', 'RUT', 'Email', 'Teléfono', 
+        'Tipo Entrega', 'Ciudad', 'Dirección', 
+        'Documento', 'Razón Social', 'RUT Empresa', 'Giro Comercial',
+        'Estado', 'Pagado', 'Total', 'Transporte', 'Nº Seguimiento', 'Fecha'
+    ]
     ws.append(headers)
     
     for col_num in range(1, len(headers) + 1):
@@ -595,19 +616,14 @@ def exportar_pedidos_excel(request):
         cell.alignment = align_center
         cell.border = thin_border
 
-    ws.column_dimensions['A'].width = 12
-    ws.column_dimensions['B'].width = 25
-    ws.column_dimensions['C'].width = 15
-    ws.column_dimensions['D'].width = 25
-    ws.column_dimensions['E'].width = 15
-    ws.column_dimensions['F'].width = 15
-    ws.column_dimensions['G'].width = 30
-    ws.column_dimensions['H'].width = 18
-    ws.column_dimensions['I'].width = 10
-    ws.column_dimensions['J'].width = 15
-    ws.column_dimensions['K'].width = 18
-    ws.column_dimensions['L'].width = 20
-    ws.column_dimensions['M'].width = 18
+    column_widths = {
+        'A': 12, 'B': 25, 'C': 15, 'D': 25, 'E': 15, 
+        'F': 18, 'G': 18, 'H': 30, 
+        'I': 18, 'J': 25, 'K': 16, 'L': 25,
+        'M': 18, 'N': 10, 'O': 15, 'P': 18, 'Q': 20, 'R': 18
+    }
+    for col_letter, width in column_widths.items():
+        ws.column_dimensions[col_letter].width = width
 
     pedidos = Pedido.objects.all().order_by('-id')
     
@@ -618,8 +634,13 @@ def exportar_pedidos_excel(request):
             p.rut,
             p.email,
             f"+56{p.telefono}",
+            p.get_tipo_entrega_display() if hasattr(p, 'get_tipo_entrega_display') else p.tipo_entrega,
             p.ciudad,
             p.direccion,
+            "Factura Electrónica" if p.requiere_factura else "Boleta",
+            p.razon_social if p.requiere_factura else "",
+            p.rut_empresa if p.requiere_factura else "",
+            p.giro_comercial if p.requiere_factura else "",
             p.get_estado_display(),
             "Sí" if p.pagado else "No",
             f"${p.get_total_cost() - p.descuento_aplicado}",
@@ -631,7 +652,7 @@ def exportar_pedidos_excel(request):
         for col_num in range(1, len(headers) + 1):
             cell = ws.cell(row=row_num, column=col_num)
             cell.border = thin_border
-            if col_num in [1, 3, 5, 8, 9, 10, 13]:
+            if col_num in [1, 3, 5, 6, 9, 11, 13, 14, 15, 18]:
                 cell.alignment = align_center
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

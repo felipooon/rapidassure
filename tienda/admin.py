@@ -44,10 +44,10 @@ class ItemPedidoInline(admin.TabularInline):
 # --- Configuración de Pedidos ---
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nombre_completo', 'rut', 'ciudad', 'estado', 'empresa_transporte', 'numero_seguimiento', 'creado', 'pagado')
-    list_filter = ('estado', 'pagado', 'creado', 'ciudad')
+    list_display = ('id', 'nombre_completo', 'rut', 'tipo_entrega', 'requiere_factura', 'ciudad', 'estado', 'empresa_transporte', 'numero_seguimiento', 'creado', 'pagado')
+    list_filter = ('tipo_entrega', 'requiere_factura', 'estado', 'pagado', 'creado', 'ciudad')
     list_editable = ('estado',)
-    search_fields = ('nombre_completo', 'email', 'rut', 'numero_seguimiento')
+    search_fields = ('nombre_completo', 'email', 'rut', 'razon_social', 'rut_empresa', 'giro_comercial', 'numero_seguimiento')
     
     inlines = [ItemPedidoInline]
 

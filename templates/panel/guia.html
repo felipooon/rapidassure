@@ -3,35 +3,37 @@
 {% block title %}Guía y Ayuda del Panel — Rapidassure Retail{% endblock %}
 
 {% block content %}
-<div style="max-width: 1000px; margin: 0 auto; padding-bottom: 60px;">
+<div style="max-width: 1050px; margin: 0 auto; padding-bottom: 60px;">
 
     <!-- Encabezado Principal -->
     <div style="margin-bottom: 30px;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
             <span style="background: rgba(0, 32, 147, 0.15); color: #002093; font-weight: 800; font-size: 0.85rem; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px;">
-                <i class="fa-solid fa-circle-question"></i> Centro de Ayuda
+                <i class="fa-solid fa-book-bookmark"></i> Centro de Ayuda & Documentación
             </span>
         </div>
         <h1 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin: 0;">
             Manual y Guía del Panel de Administración
         </h1>
         <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.05rem; margin-top: 6px;">
-            Consulta rápidamente el funcionamiento de cada módulo, botones y herramientas de Rapidassure Retail.
+            Consulta rápidamente el funcionamiento de cada módulo, botones, herramientas de despacho y facturación de Rapidassure Retail.
         </p>
     </div>
 
     <!-- Índice de Navegación Rápida -->
     <div style="background: white; border: 1px solid #e2e8f0; border-radius: 18px; padding: 22px 26px; margin-bottom: 35px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
-        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800; color: #334155; margin: 0 0 14px 0; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-list-ul" style="color: #002093;"></i> Índice de Navegación Rápida
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: #334155; margin: 0 0 14px 0; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-list-ul" style="color: #002093;"></i> Índice de Módulos del Sistema
         </h3>
         
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <a href="#seccion-productos" class="guia-chip"><i class="fa-solid fa-box"></i> Productos & Links <i class="fa-solid fa-star" style="color: #002093;"></i></a>
-            <a href="#seccion-pedidos" class="guia-chip"><i class="fa-solid fa-truck"></i> Pedidos y Envíos</a>
-            <a href="#seccion-resenas" class="guia-chip"><i class="fa-solid fa-star"></i> Reseñas Verificadas</a>
-            <a href="#seccion-cupones" class="guia-chip"><i class="fa-solid fa-ticket"></i> Cupones de Descuento</a>
-            <a href="#seccion-configuracion" class="guia-chip"><i class="fa-solid fa-gear"></i> Ajustes del Sitio</a>
+            <a href="#seccion-productos" class="guia-chip"><i class="fa-solid fa-box"></i> 1. Productos & Inventario</a>
+            <a href="#seccion-categorias" class="guia-chip"><i class="fa-solid fa-layer-group"></i> 2. Categorías de Tienda</a>
+            <a href="#seccion-banners" class="guia-chip"><i class="fa-solid fa-images"></i> 3. Banners Promocionales</a>
+            <a href="#seccion-pedidos" class="guia-chip"><i class="fa-solid fa-truck-fast"></i> 4. Pedidos, Facturación & Retiros</a>
+            <a href="#seccion-resenas" class="guia-chip"><i class="fa-solid fa-star"></i> 5. Reseñas Verificadas</a>
+            <a href="#seccion-cupones" class="guia-chip"><i class="fa-solid fa-ticket"></i> 6. Cupones de Descuento</a>
+            <a href="#seccion-deseos" class="guia-chip"><i class="fa-solid fa-heart"></i> 7. Lista de Deseos & Carrito</a>
         </div>
     </div>
 
@@ -40,80 +42,136 @@
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
             <div style="font-size: 1.8rem; color: #002093;"><i class="fa-solid fa-box"></i></div>
             <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">1. Gestión de Productos & Generador de Enlaces</h2>
-                <span style="color: #64748b; font-size: 0.88rem;">Catálogo, inventario y solicitudes de opiniones individuales.</span>
+                <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">1. Gestión de Productos e Inventario</h2>
+                <span style="color: #64748b; font-size: 0.88rem;">Catálogo, imágenes múltiples, stock y opiniones individuales.</span>
             </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-plus-circle" style="color: #65C18C;"></i> Crear y Editar Productos</h4>
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-plus-circle" style="color: #22c55e;"></i> Crear y Editar Productos</h4>
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    Define el nombre, categoría, precio y stock disponible. Puedes subir una foto de portada de alta calidad.
+                    Define el nombre, categoría, precio y stock disponible. Puedes subir una foto de portada principal e imágenes adicionales para la galería del producto.
                 </p>
             </div>
 
             <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-box-archive" style="color: #002093;"></i> Manejo de Stock Agotado</h4>
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-box-archive" style="color: #002093;"></i> Manejo Automático de Stock Agotado</h4>
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    Si un producto queda en stock 0 o es marcado como inactivo, se oculta automáticamente del catálogo público pero <strong>no se elimina</strong> de la base de datos.
+                    Si un producto queda en stock 0 o se desmarca como disponible, la tienda lo cataloga como <strong>Agotado</strong> impidiendo compras sin stock pero manteniendo su ficha técnica activa para SEO.
                 </p>
             </div>
 
             <div style="background: #fffbeb; padding: 18px; border-radius: 12px; border: 1px solid #fef3c7; grid-column: 1 / -1;">
-                <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 1rem;"><i class="fa-solid fa-star" style="color: #f59e0b;"></i> Botón <i class="fa-solid fa-star" style="color: #f59e0b;"></i> "Generar Link de Valoración"</h4>
+                <h4 style="margin: 0 0 8px 0; color: #92400e; font-size: 1rem;"><i class="fa-solid fa-star" style="color: #f59e0b;"></i> Enlace para Solicitar Opinión de Producto</h4>
                 <p style="color: #78350f; font-size: 0.9rem; line-height: 1.5; margin: 0 0 10px 0;">
-                    En la lista de productos y dentro del formulario de edición encontrarás el botón ⭐. Al presionarlo se abre un modal sutil con un link directo para solicitar opiniones sobre ese producto específico a compradores anteriores.
+                    En el catálogo del panel encontrarás el botón ⭐. Al presionarlo genera un link único para solicitar opiniones sobre ese producto específico a compradores anteriores con botón de envío rápido por WhatsApp.
                 </p>
-                <div style="font-size: 0.85rem; color: #92400e; font-weight: 700; background: white; padding: 8px 12px; border-radius: 8px; display: inline-block; border: 1px solid #fde68a;">
-                    <i class="fa-solid fa-lightbulb"></i> Incluye botón directo para copiar el link y enviar por WhatsApp.
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- SECCIÓN 2: PEDIDOS -->
-    <div id="seccion-pedidos" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+    <!-- SECCIÓN 2: CATEGORÍAS -->
+    <div id="seccion-categorias" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
-            <div style="font-size: 1.8rem; color: #002093;"><i class="fa-solid fa-truck"></i></div>
+            <div style="font-size: 1.8rem; color: #002093;"><i class="fa-solid fa-layer-group"></i></div>
             <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">2. Gestión de Pedidos & Envíos</h2>
-                <span style="color: #64748b; font-size: 0.88rem;">Control de ventas, despachos y reseñas de compra.</span>
+                <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">2. Administración de Categorías</h2>
+                <span style="color: #64748b; font-size: 0.88rem;">Estructura del catálogo, menú de navegación (navbar) y portada.</span>
             </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
             <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-list-check" style="color: #3b82f6;"></i> Estados del Pedido</h4>
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-pen-to-square" style="color: #3b82f6;"></i> Edición Dinámica y Slugs</h4>
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    Actualiza el estado de las compras: <em>Pendiente, Pagado, Enviado, Entregado o Cancelado</em>.
+                    Crea y edita categorías desde <code>/panel/categorias/</code>. Al cambiar el nombre de una categoría, la plataforma recalculará su URL amigable (slug) de forma transparente.
                 </p>
             </div>
 
             <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
-                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-truck" style="color: #65C18C;"></i> Datos de Despacho</h4>
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-compass" style="color: #002093;"></i> Sincronización en Navbar y Portada</h4>
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    Registra la empresa de transporte (Starken, Chilexpress, Blue Express) y asigna el código de seguimiento.
-                </p>
-            </div>
-
-            <div style="background: #fffaf7; padding: 18px; border-radius: 12px; border: 1px solid #fbd5c0; grid-column: 1 / -1;">
-                <h4 style="margin: 0 0 8px 0; color: #c26332; font-size: 1rem;"><i class="fa-solid fa-copy" style="color: #002093;"></i> Link de Evaluación de Compra Completa</h4>
-                <p style="color: #9c4221; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    En el detalle de cada pedido contarás con botones para copiar el enlace único de evaluación del cliente o enviárselo por <strong>WhatsApp</strong> o <strong>Correo</strong> con un mensaje pre-redactado.
+                    Las categorías creadas aparecen automáticamente en el botón desplegable de la barra de navegación pública y en las tarjetas estilizadas de la portada.
                 </p>
             </div>
         </div>
     </div>
 
+    <!-- SECCIÓN 3: BANNERS PROMOCIONALES -->
+    <div id="seccion-banners" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
+            <div style="font-size: 1.8rem; color: #002093;"><i class="fa-solid fa-images"></i></div>
+            <div>
+                <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">3. Control de Banners Promocionales</h2>
+                <span style="color: #64748b; font-size: 0.88rem;">Administración de la franja publicitaria de alto impacto en la portada.</span>
+            </div>
+        </div>
 
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-palette" style="color: #6366f1;"></i> Estilos Visuales & Insignias</h4>
+                <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                    Selecciona gradientes metálicos (Dark Navy, Royal Blue, Deep Purple), badges personalizados (ej: <em>TENDENCIA 2026</em>) e íconos FontAwesome con vista previa en vivo.
+                </p>
+            </div>
 
-    <!-- SECCIÓN 4: RESEÑAS -->
+            <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-link" style="color: #002093;"></i> Selector Inteligente de Enlaces</h4>
+                <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                    Elige el destino del banner utilizando el menú desplegable precargado con todas las categorías de la tienda o escribe una URL externa personalizada.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 4: PEDIDOS, FACTURACIÓN Y RETIROS -->
+    <div id="seccion-pedidos" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
+            <div style="font-size: 1.8rem; color: #002093;"><i class="fa-solid fa-truck-fast"></i></div>
+            <div>
+                <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">4. Pedidos, Facturación Electrónica & Retiros</h2>
+                <span style="color: #64748b; font-size: 0.88rem;">Control de compras, emisión de boletas/facturas y modalidades de entrega.</span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-file-invoice" style="color: #4338ca;"></i> Solicitud de Factura Electrónica</h4>
+                <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                    Los clientes pueden solicitar Factura mediante un checkbox en Checkout. El panel recopila y muestra de forma destacada la <strong>Razón Social</strong>, <strong>RUT Empresa</strong> (validado) y <strong>Giro Comercial</strong>.
+                </p>
+            </div>
+
+            <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-store" style="color: #d97706;"></i> Despacho vs. Retiro en Local</h4>
+                <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                    El sistema clasifica las compras entre 🚚 <strong>Despacho a Domicilio</strong> y 🏪 <strong>Retiro en Local</strong> (San Diego 174 local 8). Los pedidos de retiro se marcan con distintivo amarillo para coordinar entrega presencial.
+                </p>
+            </div>
+
+            <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-filter" style="color: #002093;"></i> Filtros Avanzados en el Panel</h4>
+                <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                    Filtra el listado de pedidos por <strong>Estado</strong> (Pagado, Enviado, etc.), <strong>Entrega</strong> (Despacho / Retiro) o <strong>Documento</strong> (Boleta / Factura). Permite buscar por cliente, RUT empresa o razón social.
+                </p>
+            </div>
+
+            <div style="background: #ecfdf5; padding: 18px; border-radius: 12px; border: 1px solid #a7f3d0; grid-column: 1 / -1;">
+                <h4 style="margin: 0 0 8px 0; color: #047857; font-size: 1rem;"><i class="fa-solid fa-file-excel"></i> Exportación Completa a Excel</h4>
+                <p style="color: #065f46; font-size: 0.9rem; line-height: 1.5; margin: 0;">
+                    El botón <strong>Exportar Pedidos a Excel</strong> genera un reporte detallado de 18 columnas con todos los datos de cliente, RUT personal, Razón Social, RUT Empresa, Giro, Tipo de Entrega, Dirección, Código de Seguimiento y Totales.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 5: RESEÑAS -->
     <div id="seccion-resenas" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
             <div style="font-size: 1.8rem; color: #f59e0b;"><i class="fa-solid fa-star"></i></div>
             <div>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">4. Moderación de Reseñas & Compradores Verificados</h2>
+                <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #0f172a; margin: 0;">5. Moderación de Reseñas & Compradores Verificados</h2>
                 <span style="color: #64748b; font-size: 0.88rem;">Aprobación de opiniones y garantía de autenticidad.</span>
             </div>
         </div>
@@ -122,47 +180,39 @@
             <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
                 <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Insignia "✓ Verificado"</h4>
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    Las reseñas enviadas a través de los enlaces generados obtienen automáticamente el sello verde <strong>✓ Verificado</strong> para dar máxima confianza.
+                    Las reseñas enviadas a través de los enlaces generados obtienen automáticamente el sello verde <strong>✓ Verificado</strong> otorgando máxima credibilidad.
                 </p>
             </div>
 
             <div style="background: #f8fafc; padding: 18px; border-radius: 12px; border: 1px solid #e2e8f0;">
                 <h4 style="margin: 0 0 8px 0; color: #1e293b; font-size: 1rem;"><i class="fa-solid fa-eye-slash" style="color: #002093;"></i> Moderación & Visibilidad</h4>
                 <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                    Puedes ocultar o mostrar libremente cualquier comentario desde `/panel/resenas/`. Las reseñas públicas se muestran en el index debajo de categorías.
+                    Puedes ocultar o publicar comentarios desde <code>/panel/resenas/</code>. Las valoraciones aprobadas se exhiben públicamente en el catálogo.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- SECCIÓN 5 Y 6: CUPONES Y CONFIGURACIÓN -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
+    <!-- SECCIÓN 6 Y 7: CUPONES, DESEOS Y AJUSTES -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
         
         <div id="seccion-cupones" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
                 <div style="font-size: 1.5rem; color: #002093;"><i class="fa-solid fa-ticket"></i></div>
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">5. Cupones de Descuento</h3>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">6. Cupones de Descuento</h3>
             </div>
             <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                Crea cupones promocionales indicando el porcentaje (%) o monto fijo ($), límite de uso por cliente y fecha límite de expiración.
+                Crea cupones promocionales indicando porcentaje (%) o monto fijo ($), límite de usos globales y fecha de expiración.
             </p>
         </div>
 
-        <div id="seccion-configuracion" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+        <div id="seccion-deseos" style="background: white; border: 1px solid #e2e8f0; border-radius: 20px; padding: 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                <div style="font-size: 1.5rem; color: #002093;"><i class="fa-solid fa-gear"></i></div>
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">6. Ajustes del Sitio</h3>
+                <div style="font-size: 1.5rem; color: #e11d48;"><i class="fa-solid fa-heart"></i></div>
+                <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">7. Lista de Deseos & Carrito</h3>
             </div>
             <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                Con un solo clic puedes encender o apagar la visibilidad de las <strong>Reseñas</strong> en la tienda pública.
-            </p>
-        </div>
-
-    </div>
-                <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 800; color: #0f172a; margin: 0;">6. Ajustes del Sitio</h3>
-            </div>
-            <p style="color: #475569; font-size: 0.9rem; line-height: 1.5; margin: 0;">
-                Con un solo clic puedes encender o apagar la visibilidad de las <strong>Reseñas</strong> en la tienda pública.
+                Los usuarios pueden marcar productos favoritos con el botón de corazón y gestionarlos en <code>/deseos/</code> para pasarlos al carrito en 1 clic. El carrito calcula automáticamente el monto faltante para Envío Gratis ($19.990).
             </p>
         </div>
 
