@@ -12,8 +12,8 @@ from django.http import HttpResponse
 from django.db import models, transaction
 from django.utils import timezone
 
-from ..models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, BlogPost, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido, MetricaDiaria, MetricaProducto
-from ..forms import CategoriaForm, ProductoForm, CuponForm, BlogPostForm, ConfiguracionSitioForm
+from ..models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, BlogPost, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido, MetricaDiaria, MetricaProducto, BannerPromocional
+from ..forms import CategoriaForm, ProductoForm, CuponForm, BlogPostForm, ConfiguracionSitioForm, BannerPromocionalForm
 
 
 class CustomLoginView(LoginView):
@@ -147,22 +147,62 @@ def crear_producto(request):
 
 
 @staff_member_required(login_url='login')
+def panel_categorias(request):
+    categorias = Categoria.objects.annotate(total_productos=models.Count('producto')).all()
+    return render(request, "panel/categorias.html", {"categorias": categorias})
+
+
+@staff_member_required(login_url='login')
 def crear_categoria(request):
-    next_url = request.GET.get('next') or request.POST.get('next') or 'panel_productos'
+    next_url = request.GET.get('next') or request.POST.get('next') or 'panel_categorias'
     
     if request.method == 'POST':
         form = CategoriaForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Categoria creada exitosamente.")
+            cat = form.save()
+            messages.success(request, f"Categoría '{cat.nombre}' creada exitosamente.")
             return redirect(next_url)
     else:
         form = CategoriaForm()
 
     return render(request, "panel/categoria_form.html", {
         "form": form,
-        "next": next_url
+        "next": next_url,
+        "editando": False
     })
+
+
+@staff_member_required(login_url='login')
+def editar_categoria(request, id):
+    categoria = get_object_or_404(Categoria, id=id)
+    next_url = request.GET.get('next') or request.POST.get('next') or 'panel_categorias'
+    
+    if request.method == 'POST':
+        form = CategoriaForm(request.POST, request.FILES, instance=categoria)
+        if form.is_valid():
+            cat = form.save()
+            messages.success(request, f"Categoría '{cat.nombre}' actualizada correctamente.")
+            return redirect(next_url)
+    else:
+        form = CategoriaForm(instance=categoria)
+
+    return render(request, "panel/categoria_form.html", {
+        "form": form,
+        "next": next_url,
+        "editando": True,
+        "categoria": categoria
+    })
+
+
+@staff_member_required(login_url='login')
+def eliminar_categoria(request, id):
+    categoria = get_object_or_404(Categoria, id=id)
+    if request.method == 'POST':
+        nombre = categoria.nombre
+        categoria.delete()
+        messages.success(request, f"Categoría '{nombre}' eliminada correctamente.")
+    return redirect('panel_categorias')
+
 
 
 @staff_member_required(login_url='login')
@@ -738,3 +778,56 @@ def eliminar_resena(request, id):
 @staff_member_required(login_url='login')
 def panel_guia(request):
     return render(request, "panel/guia.html")
+
+
+@staff_member_required(login_url='login')
+def panel_banners(request):
+    banners = BannerPromocional.objects.all()
+    return render(request, "panel/banners.html", {"banners": banners})
+
+
+@staff_member_required(login_url='login')
+def crear_banner(request):
+    if request.method == 'POST':
+        form = BannerPromocionalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Banner promocional creado exitosamente.")
+            return redirect('panel_banners')
+    else:
+        form = BannerPromocionalForm()
+    return render(request, "panel/banner_form.html", {"form": form, "titulo_pagina": "Nuevo Banner Promocional"})
+
+
+@staff_member_required(login_url='login')
+def editar_banner(request, id):
+    banner = get_object_or_404(BannerPromocional, id=id)
+    if request.method == 'POST':
+        form = BannerPromocionalForm(request.POST, instance=banner)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Banner promocional actualizado correctamente.")
+            return redirect('panel_banners')
+    else:
+        form = BannerPromocionalForm(instance=banner)
+    return render(request, "panel/banner_form.html", {"form": form, "banner": banner, "titulo_pagina": "Editar Banner Promocional"})
+
+
+@staff_member_required(login_url='login')
+def toggle_banner(request, id):
+    banner = get_object_or_404(BannerPromocional, id=id)
+    banner.activo = not banner.activo
+    banner.save()
+    estado = "activado" if banner.activo else "desactivado"
+    messages.info(request, f"Banner {estado}.")
+    return redirect('panel_banners')
+
+
+@staff_member_required(login_url='login')
+def eliminar_banner(request, id):
+    banner = get_object_or_404(BannerPromocional, id=id)
+    if request.method == 'POST':
+        banner.delete()
+        messages.success(request, "Banner promocional eliminado.")
+    return redirect('panel_banners')
+

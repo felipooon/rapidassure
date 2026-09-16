@@ -90,6 +90,7 @@ TEMPLATES = [
                 'tienda.context_processors.deseos_global',
                 'tienda.context_processors.configuracion_sitio',
                 'tienda.context_processors.categorias_global',
+                'tienda.context_processors.banners_global',
             ],
         },
     },

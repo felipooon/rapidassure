@@ -12,7 +12,10 @@ urlpatterns = [
     path("panel/", views.panel_home, name="panel_home"),
     path("panel/productos/", views.panel_productos, name="panel_productos"),
     path("panel/productos/crear/", views.crear_producto, name="crear_producto"),
+    path("panel/categorias/", views.panel_categorias, name="panel_categorias"),
     path("panel/categorias/crear/", views.crear_categoria, name="crear_categoria"),
+    path("panel/categorias/editar/<int:id>/", views.editar_categoria, name="editar_categoria"),
+    path("panel/categorias/eliminar/<int:id>/", views.eliminar_categoria, name="eliminar_categoria"),
     path("panel/productos/<int:id>/toggle/", views.toggle_producto, name="toggle_producto"),
     path("login/", CustomLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page="/"), name="logout"),
@@ -69,7 +72,7 @@ urlpatterns = [
     path('evaluar-producto/<int:id>/', views.evaluar_producto_directo, name='evaluar_producto_directo'),
     path('producto/<int:producto_id>/resena/', views.agregar_resena, name='agregar_resena'),
 
-    # Panel Admin - Configuración, Blog, Reseñas y Solicitud por Email
+    # Panel Admin - Configuración, Blog, Reseñas, Banners y Guía
     path('panel/configuracion/', views.panel_configuracion, name='panel_configuracion'),
     path('panel/blog/', views.panel_blog, name='panel_blog'),
     path('panel/blog/crear/', views.crear_blog_post, name='crear_blog_post'),
@@ -80,6 +83,13 @@ urlpatterns = [
     path('panel/resenas/<int:id>/eliminar/', views.eliminar_resena, name='eliminar_resena'),
     path('panel/pedidos/<int:id>/enviar-resena/', views.enviar_resena_email, name='enviar_resena_email'),
     path('panel/guia/', views.panel_guia, name='panel_guia'),
+    
+    # Banners Promocionales
+    path('panel/banners/', views.panel_banners, name='panel_banners'),
+    path('panel/banners/crear/', views.crear_banner, name='crear_banner'),
+    path('panel/banners/editar/<int:id>/', views.editar_banner, name='editar_banner'),
+    path('panel/banners/<int:id>/toggle/', views.toggle_banner, name='toggle_banner'),
+    path('panel/banners/<int:id>/eliminar/', views.eliminar_banner, name='eliminar_banner'),
 
     # APIs y Proxies
     path('api/destacados-random/', views.api_destacados_random, name='api_destacados_random'),

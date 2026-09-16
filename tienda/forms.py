@@ -71,7 +71,7 @@ class CuponForm(forms.ModelForm):
         return codigo
 
 
-from .models import BlogPost, ResenaProducto, ConfiguracionSitio
+from .models import BlogPost, ResenaProducto, ConfiguracionSitio, BannerPromocional
 
 class BlogPostForm(forms.ModelForm):
     class Meta:
@@ -102,4 +102,63 @@ class ConfiguracionSitioForm(forms.ModelForm):
         labels = {
             'mostrar_blog': 'Activar Sección de Blog en la tienda (Navbar y menú)',
             'mostrar_resenas': 'Activar Reseñas y Calificaciones con Estrellas en productos',
+        }
+
+class BannerPromocionalForm(forms.ModelForm):
+    url_destino_select = forms.ChoiceField(
+        required=False,
+        label="Seleccionar Enlace Rápido",
+        widget=forms.Select(attrs={'class': 'form-control', 'id': 'url_destino_select'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [
+            ('', '-- Seleccionar destino de la tienda --'),
+            ('Secciones de Inicio', (
+                ('/', 'Página Principal (/)'),
+                ('/#categorias', 'Sección Categorías (/#categorias)'),
+                ('/#promociones', 'Sección Promociones (/#promociones)'),
+                ('/#destacados', 'Sección Productos Destacados (/#destacados)'),
+                ('/#contacto', 'Sección Contacto (/#contacto)'),
+                ('/blog/', 'Sección Blog (/blog/)'),
+                ('/deseos/', 'Lista de Deseos (/deseos/)'),
+            )),
+        ]
+        
+        try:
+            cat_choices = []
+            for cat in Categoria.objects.all():
+                url = cat.get_absolute_url()
+                cat_choices.append((url, f"Categoría: {cat.nombre} ({url})"))
+                
+            if cat_choices:
+                choices.append(('Categorías de Productos', tuple(cat_choices)))
+        except Exception:
+            pass
+
+        choices.append(('Opción Manual', (('custom', '✏️ Ingresar enlace personalizado manualmente...'),)))
+
+        self.fields['url_destino_select'].choices = choices
+        
+        if self.instance and self.instance.pk and self.instance.url_destino:
+            current_url = self.instance.url_destino
+            all_urls = [c[0] for group in choices for c in (group[1] if isinstance(group[1], (tuple, list)) else [(group[0], group[1])])]
+            if current_url in all_urls:
+                self.fields['url_destino_select'].initial = current_url
+            else:
+                self.fields['url_destino_select'].initial = 'custom'
+
+    class Meta:
+        model = BannerPromocional
+        fields = ['titulo', 'subtitulo', 'badge', 'badge_gold', 'url_destino_select', 'url_destino', 'texto_boton', 'estilo_fondo', 'icono_fontawesome', 'orden', 'activo']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Smart POS Dual Screen'}),
+            'subtitulo': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Ej: Terminales Android de alta velocidad con cobro contactless...'}),
+            'badge': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: EQUIPAMIENTO DE CAJA'}),
+            'url_destino': forms.TextInput(attrs={'class': 'form-control', 'id': 'url_destino_input', 'placeholder': 'Ej: /categoria/smart-pos-retail-tech/'}),
+            'texto_boton': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Equipar mi Caja'}),
+            'estilo_fondo': forms.Select(attrs={'class': 'form-control'}),
+            'icono_fontawesome': forms.Select(attrs={'class': 'form-control', 'id': 'icono_select'}),
+            'orden': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }

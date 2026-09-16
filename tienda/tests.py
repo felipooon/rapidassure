@@ -309,4 +309,76 @@ class DeseosTests(TestCase):
         self.assertEqual(len(carrito), 1)
 
 
+class BannerPromocionalTests(TestCase):
+    def test_banner_promocional_creation_and_context(self):
+        """Verifica la creación de un BannerPromocional y su presencia en la portada."""
+        from .models import BannerPromocional
+        banner = BannerPromocional.objects.create(
+            titulo="Banner Test POS",
+            subtitulo="Descripción de prueba",
+            badge="TEST BADGE",
+            badge_gold=True,
+            url_destino="/categoria/test/",
+            texto_boton="Ver Más",
+            estilo_fondo="dark-navy",
+            icono_fontawesome="fa-cash-register",
+            orden=1,
+            activo=True
+        )
+        self.assertEqual(str(banner), "Banner Test POS (Dark Navy Metallic)")
+        
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        banners_en_contexto = list(response.context['banners_promocionales'])
+        self.assertIn(banner, banners_en_contexto)
+
+
+class TipoEntregaCheckoutTests(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.categoria = Categoria.objects.create(nombre="Equipos POS")
+        self.producto = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Impresora Térmica 80mm",
+            precio=45000,
+            stock=10,
+            disponible=True
+        )
+
+    def test_procesar_pedido_con_retiro_en_local(self):
+        """Verifica que al seleccionar Retiro en Local se asigne tipo_entrega RETIRO y la dirección por defecto."""
+        session = self.client.session
+        session['carrito'] = {
+            str(self.producto.id): {
+                'producto_id': self.producto.id,
+                'nombre': self.producto.nombre,
+                'precio': '45000',
+                'cantidad': 1,
+                'imagen': ''
+            }
+        }
+        session.save()
+
+        response = self.client.post('/checkout/', {
+            'nombre_completo': 'Juan Pérez',
+            'rut': '12.345.678-5',
+            'email': 'juan@ejemplo.com',
+            'telefono': '912345678',
+            'tipo_entrega': 'RETIRO',
+            'direccion': '',
+            'ciudad': '',
+            'terminos_aceptados': 'on'
+        })
+        
+        self.assertEqual(response.status_code, 302)
+        pedido = Pedido.objects.last()
+        self.assertIsNotNone(pedido)
+        self.assertEqual(pedido.tipo_entrega, 'RETIRO')
+        self.assertEqual(pedido.direccion, 'Retiro en Local - San Diego 174 local 8')
+        self.assertEqual(pedido.ciudad, 'Santiago')
+
+
+
+
+
 

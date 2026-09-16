@@ -247,15 +247,53 @@ def procesar_pedido(request):
             }
             return render(request, 'checkout.html', context)
 
+        tipo_entrega = request.POST.get('tipo_entrega', 'ENVIO')
+        direccion = request.POST.get('direccion', '').strip()
+        ciudad = request.POST.get('ciudad', '').strip()
+
+        if tipo_entrega == 'RETIRO':
+            if not direccion:
+                direccion = "Retiro en Local - San Diego 174 local 8"
+            if not ciudad:
+                ciudad = "Santiago"
+        elif not direccion or not ciudad:
+            # Si es envio a domicilio y faltan datos
+            if not direccion:
+                direccion = "Dirección no especificada"
+            if not ciudad:
+                ciudad = "Santiago"
+
+        requiere_factura = bool(request.POST.get('requiere_factura'))
+        razon_social = request.POST.get('razon_social', '').strip()
+        rut_empresa = request.POST.get('rut_empresa', '').strip()
+        giro_comercial = request.POST.get('giro_comercial', '').strip()
+
+        if requiere_factura and rut_empresa:
+            if not validar_rut_chileno(rut_empresa):
+                context = {
+                    'carrito': carrito,
+                    'cupon': cupon_obj,
+                    'descuento': descuento_aplicado,
+                    'total_final': total_final,
+                    'error_rut': "El RUT de la Empresa ingresado para la factura no es válido.",
+                    'datos_previos': request.POST
+                }
+                return render(request, 'checkout.html', context)
+
         pedido = Pedido.objects.create(
             nombre_completo=request.POST.get('nombre_completo'),
             rut=rut_ingresado,
             email=request.POST.get('email'),
             telefono=request.POST.get('telefono'),
-            direccion=request.POST.get('direccion'),
-            ciudad=request.POST.get('ciudad', 'Puerto Montt'),
+            tipo_entrega=tipo_entrega,
+            direccion=direccion,
+            ciudad=ciudad,
             cupon=cupon_obj,
-            descuento_aplicado=descuento_aplicado
+            descuento_aplicado=descuento_aplicado,
+            requiere_factura=requiere_factura,
+            razon_social=razon_social,
+            rut_empresa=rut_empresa,
+            giro_comercial=giro_comercial
         )
         
         if cupon_obj:

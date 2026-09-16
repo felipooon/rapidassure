@@ -121,52 +121,36 @@
   <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
     
     <div class="promo-banners-grid">
-      
-      <!-- Banner 1: POS & Smart Checkout -->
-      <div class="promo-banner-card dark-navy">
-        <div class="promo-badge">EQUIPAMIENTO DE CAJA</div>
-        <div class="promo-content">
-          <h3>Smart POS Dual Screen</h3>
-          <p>Terminales Android de alta velocidad con cobro contactless e impresora térmica integrada.</p>
-          <a href="/categoria/smart-pos-retail-tech/" class="btn-banner-link">
-            Equipar mi Caja <i class="fa-solid fa-arrow-right"></i>
-          </a>
+      {% for b in banners_promocionales %}
+        <div class="promo-banner-card {{ b.estilo_fondo }}">
+          <div class="promo-badge {% if b.badge_gold %}gold{% endif %}">{{ b.badge }}</div>
+          <div class="promo-content">
+            <h3>{{ b.titulo }}</h3>
+            <p>{{ b.subtitulo }}</p>
+            <a href="{{ b.url_destino }}" class="btn-banner-link">
+              {{ b.texto_boton }} <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+          <div class="promo-banner-icon">
+            <i class="fa-solid {{ b.icono_fontawesome }}"></i>
+          </div>
         </div>
-        <div class="promo-banner-icon">
-          <i class="fa-solid fa-cash-register"></i>
+      {% empty %}
+        <!-- Fallback Banners si no hay en DB -->
+        <div class="promo-banner-card dark-navy">
+          <div class="promo-badge">EQUIPAMIENTO DE CAJA</div>
+          <div class="promo-content">
+            <h3>Smart POS Dual Screen</h3>
+            <p>Terminales Android de alta velocidad con cobro contactless e impresora térmica integrada.</p>
+            <a href="/categoria/smart-pos-retail-tech/" class="btn-banner-link">
+              Equipar mi Caja <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+          <div class="promo-banner-icon">
+            <i class="fa-solid fa-cash-register"></i>
+          </div>
         </div>
-      </div>
-
-      <!-- Banner 2: Audio JBL & Bluetooth -->
-      <div class="promo-banner-card vibrant-blue">
-        <div class="promo-badge gold">TENDENCIA 2026</div>
-        <div class="promo-content">
-          <h3>Audio Profesional JBL</h3>
-          <p>Audífonos & Parlantes Bluetooth de sonido nítido para ambiente comercial y uso diario.</p>
-          <a href="/categoria/audio-bluetooth/" class="btn-banner-link">
-            Ver Modelos Audio <i class="fa-solid fa-arrow-right"></i>
-          </a>
-        </div>
-        <div class="promo-banner-icon">
-          <i class="fa-solid fa-headphones"></i>
-        </div>
-      </div>
-
-      <!-- Banner 3: Papel Térmico & Periféricos -->
-      <div class="promo-banner-card gradient-purple">
-        <div class="promo-badge">INSUMOS & PERIFÉRICOS</div>
-        <div class="promo-content">
-          <h3>Lectores 2D & Papel POS</h3>
-          <p>Escáneres QR industriales y insumos de papel térmico de alta calidad para impresoras.</p>
-          <a href="/categoria/gadgets-perifericos-tech/" class="btn-banner-link">
-            Ver Insumos <i class="fa-solid fa-arrow-right"></i>
-          </a>
-        </div>
-        <div class="promo-banner-icon">
-          <i class="fa-solid fa-print"></i>
-        </div>
-      </div>
-
+      {% endfor %}
     </div>
 
   </div>

@@ -1,0 +1,77 @@
+{% extends "panel/base_panel.html" %}
+
+{% block content %}
+<div style="padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+        <div>
+            <h1 style="margin: 0; color: #000E1F; font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800;">
+                <i class="fa-solid fa-layer-group" style="color: #002093;"></i> Gestión de Categorías
+            </h1>
+            <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.9rem;">Crea, edita y organiza las categorías de productos de la tienda</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="{% url 'crear_categoria' %}" style="background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 10px 20px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,32,147,0.25);">
+                <i class="fa-solid fa-folder-plus"></i> Nueva Categoría
+            </a>
+            <a href="{% url 'panel_productos' %}" style="background: #f1f5f9; color: #475569; padding: 10px 18px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-box-open"></i> Ir a Productos
+            </a>
+        </div>
+    </div>
+
+    <div style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #e2e8f0;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-family: 'Open Sans', sans-serif;">
+            <thead>
+                <tr style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                    <th style="padding: 16px; color: #000E1F; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Ícono / Imagen</th>
+                    <th style="padding: 16px; color: #000E1F; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Nombre de la Categoría</th>
+                    <th style="padding: 16px; color: #000E1F; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Slug (URL)</th>
+                    <th style="padding: 16px; color: #000E1F; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; text-transform: uppercase;">Productos Asociados</th>
+                    <th style="padding: 16px; color: #000E1F; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; text-align: center;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cat in categorias %}
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 16px;">
+                        {% if cat.imagen %}
+                            <img src="{{ cat.get_imagen_url_300 }}" alt="{{ cat.nombre }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 10px; border: 1px solid #e2e8f0;">
+                        {% else %}
+                            <div style="width: 48px; height: 48px; background: #e0e7ff; color: #002093; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                                <i class="fa-solid fa-folder"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 16px;">
+                        <a href="{{ cat.get_absolute_url }}" target="_blank" style="font-weight: 800; color: #000E1F; font-size: 1.02rem; text-decoration: none; font-family: 'Montserrat', sans-serif;">
+                            {{ cat.nombre }} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem; color: #64748b; margin-left: 4px;"></i>
+                        </a>
+                    </td>
+                    <td style="padding: 16px; color: #64748b; font-size: 0.9rem; font-family: monospace;">
+                        /categoria/{{ cat.slug }}/
+                    </td>
+                    <td style="padding: 16px;">
+                        <span style="background: #f1f5f9; color: #002093; font-weight: 800; padding: 4px 12px; border-radius: 12px; font-size: 0.85rem;">
+                            <i class="fa-solid fa-box" style="margin-right: 4px;"></i> {{ cat.total_productos }} producto{% if cat.total_productos != 1 %}s{% endif %}
+                        </span>
+                    </td>
+                    <td style="padding: 16px; text-align: center;">
+                        <a href="{% url 'editar_categoria' cat.id %}" style="color: #002093; text-decoration: none; margin-right: 14px; font-size: 1.1rem;" title="Editar Categoría"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <form action="{% url 'eliminar_categoria' cat.id %}" method="POST" style="display: inline;" onsubmit="return confirm('¿Seguro que deseas eliminar la categoría {{ cat.nombre }}? Todos los productos asociados perderán su categoría.');">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem; padding: 0;" title="Eliminar Categoría"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: 40px; text-align: center; color: #64748b;">No hay categorías registradas aún.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

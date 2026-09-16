@@ -1,6 +1,6 @@
 from .carrito import Carrito
 from .deseos import Deseos
-from .models import Categoria, ConfiguracionSitio
+from .models import Categoria, ConfiguracionSitio, BannerPromocional
 
 def carrito_global(request):
     """Procesador de contexto global para el Carrito de Compras"""
@@ -34,4 +34,15 @@ def categorias_global(request):
     except Exception:
         return {
             'categorias_globales': []
+        }
+
+def banners_global(request):
+    """Procesador de contexto global para tener acceso a banners_promocionales en la portada"""
+    try:
+        return {
+            'banners_promocionales': BannerPromocional.objects.filter(activo=True)
+        }
+    except Exception:
+        return {
+            'banners_promocionales': []
         }

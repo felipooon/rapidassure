@@ -10,7 +10,7 @@ class Categoria(models.Model):
     imagen = models.ImageField(upload_to='categorias/', blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if not self.slug or slugify(self.nombre) != self.slug:
             self.slug = slugify(self.nombre)
         super().save(*args, **kwargs)
 
@@ -230,11 +230,17 @@ class Pedido(models.Model):
         ('CANCELADO', 'Cancelado'),
     )
 
+    TIPO_ENTREGA_CHOICES = (
+        ('ENVIO', 'Despacho a Domicilio'),
+        ('RETIRO', 'Retiro en Local'),
+    )
+
     # 1. Datos del cliente (Compra como invitado)
     nombre_completo = models.CharField(max_length=200)
     rut = models.CharField(max_length=12, help_text="Formato: 12.345.678-9")
     email = models.EmailField()
     telefono = models.CharField(max_length=20)
+    tipo_entrega = models.CharField(max_length=20, choices=TIPO_ENTREGA_CHOICES, default='ENVIO', help_text="Forma de entrega seleccionada por el cliente")
     direccion = models.CharField(max_length=250)
     ciudad = models.CharField(max_length=100, default="Puerto Montt")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -247,6 +253,12 @@ class Pedido(models.Model):
     # 3. Cupón de descuento aplicado
     cupon = models.ForeignKey(Cupon, null=True, blank=True, on_delete=models.SET_NULL, related_name='pedidos')
     descuento_aplicado = models.IntegerField(default=0)
+
+    # 4. Datos opcionales de Factura Electrónica
+    requiere_factura = models.BooleanField(default=False, help_text="Marcar si el cliente solicitó Factura Electrónica")
+    razon_social = models.CharField(max_length=200, blank=True, default='', help_text="Razón social para la factura")
+    rut_empresa = models.CharField(max_length=15, blank=True, default='', help_text="RUT de la empresa para la factura")
+    giro_comercial = models.CharField(max_length=200, blank=True, default='', help_text="Giro comercial de la empresa")
 
     @property
     def codigo_orden(self):
@@ -336,6 +348,50 @@ class ConfiguracionSitio(models.Model):
     def get_solo(cls):
         obj, created = cls.objects.get_or_create(id=1)
         return obj
+
+
+class BannerPromocional(models.Model):
+    ESTILO_CHOICES = [
+        ('dark-navy', 'Dark Navy Metallic'),
+        ('vibrant-blue', 'Azul Vibrante'),
+        ('gradient-purple', 'Púrpura Deep'),
+        ('emerald-green', 'Verde Esmeralda'),
+    ]
+
+    ICONO_CHOICES = [
+        ('fa-cash-register', 'Caja Registradora / Smart POS'),
+        ('fa-headphones', 'Audífonos / Audio Profesional'),
+        ('fa-print', 'Impresora Térmica / Insumos'),
+        ('fa-microchip', 'Microchip / Gadgets Tech'),
+        ('fa-truck-fast', 'Despacho Corporativo'),
+        ('fa-shield-halved', 'Garantía / Cobertura Care+'),
+        ('fa-bolt', 'Smart / Oferta Relámpago'),
+        ('fa-tag', 'Etiqueta de Descuento / Oferta'),
+        ('fa-store', 'Tienda / Comercio Retail'),
+        ('fa-qrcode', 'Lector QR / Código de Barras'),
+        ('fa-mobile-screen', 'POS Móvil Android'),
+        ('fa-boxes-stacked', 'Inventario / Accesorios'),
+    ]
+
+    titulo = models.CharField(max_length=150, help_text="Título principal del banner")
+    subtitulo = models.TextField(help_text="Descripción o detalles promocionales del banner")
+    badge = models.CharField(max_length=60, default="OFERTA TECH", help_text="Etiqueta superior (ej: EQUIPAMIENTO DE CAJA, TENDENCIA 2026)")
+    badge_gold = models.BooleanField(default=False, help_text="Marcar para mostrar la etiqueta en tono dorado/amarillo")
+    url_destino = models.CharField(max_length=250, default="/", help_text="Enlace al hacer clic en el botón (ej: /categoria/smart-pos-retail-tech/)")
+    texto_boton = models.CharField(max_length=60, default="Ver Colección", help_text="Texto del botón de acción")
+    estilo_fondo = models.CharField(max_length=30, choices=ESTILO_CHOICES, default='dark-navy', help_text="Estilo de gradiente de fondo")
+    icono_fontawesome = models.CharField(max_length=50, choices=ICONO_CHOICES, default="fa-cash-register", help_text="Icono FontAwesome decorativo de fondo")
+    orden = models.PositiveIntegerField(default=1, help_text="Orden de aparición en la portada")
+    activo = models.BooleanField(default=True, help_text="Marcar para mostrar en la portada")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['orden', '-fecha_creacion']
+        verbose_name = 'Banner Promocional'
+        verbose_name_plural = 'Banners Promocionales'
+
+    def __str__(self):
+        return f"{self.titulo} ({self.get_estilo_fondo_display()})"
 
 
 class BlogPost(models.Model):

@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, BlogPost, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido
+from .models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, BlogPost, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido, BannerPromocional
+
+@admin.register(BannerPromocional)
+class BannerPromocionalAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'badge', 'estilo_fondo', 'orden', 'activo', 'fecha_creacion')
+    list_editable = ('orden', 'activo')
+    list_filter = ('activo', 'estilo_fondo', 'badge_gold')
+    search_fields = ('titulo', 'subtitulo', 'badge')
+
 
 class ImagenProductoInline(admin.TabularInline):
     model = ImagenProducto
