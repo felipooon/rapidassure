@@ -65,158 +65,204 @@
 
 
 <!-- ==========================================
-     NOVEDADES DESTACADAS
+     EXPLORA POR CATEGORÍA (QUICK FILTERS GRID)
 ========================================== -->
-<section id="destacados" class="catalogo-seccion" style="background-color: #f8fafc; padding: 3rem 1rem 3.5rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
-  
-  <div class="destacados-header-box">
-    <div>
-      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; color: #000E1F; margin: 0 0 4px 0;">
-        Novedades Destacadas
-      </h2>
-      <p style="color: #64748b; font-size: 0.92rem; margin: 0;">Equipamiento tecnológico y soluciones de vanguardia para tu negocio</p>
-    </div>
+<section id="categorias" class="categorias-seccion" style="background: #ffffff; padding: 3.5rem 1rem 3rem;">
+  <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
     
-    <button type="button" class="btn-shuffle" onclick="shuffleDestacados()" id="btn-shuffle-destacados">
-      <i class="fa-solid fa-dice" id="shuffle-icon"></i> Explorar Más
-    </button>
-  </div>
-
-  <div class="destacados-slider-wrapper">
-    <button type="button" class="slider-nav-btn prev" onclick="scrollDestacados(-280)" title="Anterior">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-
-    <div class="catalogo-destacados-slider" id="destacados-container">
-      {% for p in productos_destacados %}
-        <div class="producto-destacado-card" style="position: relative;">
-          <div class="img-box" style="position: relative;">
-            {% if p.imagen %}
-              <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
-            {% endif %}
-            <a href="{% url 'toggle_deseos' p.id %}" title="Guardar en Lista de Deseos" style="position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; background: rgba(255,255,255,0.92); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e11d48; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.12); z-index: 5; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
-              <i class="fa-solid fa-heart"></i>
-            </a>
-            {% if not p.disponible %}
-              <span class="agotado">Agotado</span>
-            {% endif %}
-          </div>
-          
-          <h3 style="font-size: 0.98rem; font-weight: 700; color: #000E1F; margin: 0 0 4px 0; font-family: 'Montserrat', sans-serif; line-height: 1.3;">{{ p.nombre }}</h3>
-          <p style="font-weight: 800; color: #002093; font-size: 1.12rem; margin: 0 0 12px 0;">${{ p.precio }}</p>
-          
-          <div style="display: flex; gap: 6px; margin-top: auto;">
-            <a href="{{ p.get_absolute_url }}" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0;">
-              <i class="fa-solid fa-eye"></i> Ver
-            </a>
-            <a href="{% url 'agregar_al_carrito' p.id %}" title="Agregar al carrito" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0; background: linear-gradient(135deg, #002093, #3230C2); color: white;">
-              <i class="fa-solid fa-cart-plus"></i> Añadir
-            </a>
-          </div>
-        </div>
-      {% empty %}
-        <p style="text-align: center; color: #64748b; width: 100%;">No hay productos destacados aún.</p>
-      {% endfor %}
-    </div>
-
-    <button type="button" class="slider-nav-btn next" onclick="scrollDestacados(280)" title="Siguiente">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-  </div>
-</section>
-
-<!-- ==========================================
-     SOLUCIONES & EQUIPAMIENTO INTEGRAL
-========================================== -->
-<section id="soluciones" class="soluciones-seccion" style="padding: 4rem 1rem 4.5rem; background: #ffffff;">
-  <div style="max-width: 1150px; margin: 0 auto; width: 100%;">
-    
-    <div style="text-align: center; margin-bottom: 3rem;">
-      <span style="display: inline-block; background: rgba(0, 32, 147, 0.08); color: #002093; font-weight: 800; font-size: 0.85rem; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
-        <i class="fa-solid fa-cube"></i> Especialidades Rapidassure
+    <div style="text-align: center; margin-bottom: 2.2rem;">
+      <span class="section-tag-pill">
+        <i class="fa-solid fa-layer-group"></i> NAVEGACIÓN RÁPIDA
       </span>
-      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
-        Soluciones Integrales para tu Comercio
+      <h2 class="section-title-dark">
+        Explora por Categoría
       </h2>
-      <p style="color: #64748b; font-size: 1.02rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
-        Equipamiento tecnológico de alto rendimiento diseñado para optimizar el punto de venta y resguardar tu operación.
+      <p class="section-subtitle">
+        Encuentra el equipamiento tecnológico exacto para optimizar tu comercio
       </p>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px;">
+    <div class="category-pill-grid">
+      {% for c in categorias_globales %}
+        <a href="{{ c.get_absolute_url }}" class="category-pill-card">
+          <div class="category-icon-circle">
+            {% if c.imagen %}
+              <img src="{{ c.get_imagen_url_300 }}" alt="{{ c.nombre }}" loading="lazy">
+            {% else %}
+              {% if "pos" in c.slug or "smart" in c.slug %}
+                <i class="fa-solid fa-cash-register"></i>
+              {% elif "audio" in c.slug or "sonido" in c.slug %}
+                <i class="fa-solid fa-headphones"></i>
+              {% elif "gadgets" in c.slug or "perifericos" in c.slug %}
+                <i class="fa-solid fa-microchip"></i>
+              {% elif "proteccion" in c.slug or "garantias" in c.slug %}
+                <i class="fa-solid fa-shield-halved"></i>
+              {% else %}
+                <i class="fa-solid fa-boxes-stacked"></i>
+              {% endif %}
+            {% endif %}
+          </div>
+          <span class="category-name">{{ c.nombre }}</span>
+          <span class="category-action">Explorar <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+      {% empty %}
+        <p style="text-align: center; color: #64748b; grid-column: 1 / -1;">No hay categorías registradas.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ==========================================
+     STRIP DE BANNERS PROMOCIONALES IMPACTO TECH
+========================================== -->
+<section id="promociones" class="promo-banners-seccion" style="background: #f8fafc; padding: 2.5rem 1rem 3.5rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+  <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
+    
+    <div class="promo-banners-grid">
       
-      <!-- Card 1: Smart POS -->
-      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
-        <div>
-          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
-            <i class="fa-solid fa-cash-register"></i>
-          </div>
-          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
-            Smart POS & Retail Tech
-          </h3>
-          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
-            Terminales de cobro táctiles Dual HD, dispositivos Android móviles con impresora térmica e integración transaccional directa.
-          </p>
+      <!-- Banner 1: POS & Smart Checkout -->
+      <div class="promo-banner-card dark-navy">
+        <div class="promo-badge">EQUIPAMIENTO DE CAJA</div>
+        <div class="promo-content">
+          <h3>Smart POS Dual Screen</h3>
+          <p>Terminales Android de alta velocidad con cobro contactless e impresora térmica integrada.</p>
+          <a href="/categoria/smart-pos-retail-tech/" class="btn-banner-link">
+            Equipar mi Caja <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
-        <a href="/categoria/smart-pos-retail-tech/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
-          Ver Equipos POS <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
-        </a>
+        <div class="promo-banner-icon">
+          <i class="fa-solid fa-cash-register"></i>
+        </div>
       </div>
 
-      <!-- Card 2: Audio & Bluetooth -->
-      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
-        <div>
-          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
-            <i class="fa-solid fa-headphones"></i>
-          </div>
-          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
-            Audio & Sonido Profesional
-          </h3>
-          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
-            Audífonos JBL con cancelación de ruido adaptativa, altavoces portátiles ultra resistentes y sistemas de audio corporativos.
-          </p>
+      <!-- Banner 2: Audio JBL & Bluetooth -->
+      <div class="promo-banner-card vibrant-blue">
+        <div class="promo-badge gold">TENDENCIA 2026</div>
+        <div class="promo-content">
+          <h3>Audio Profesional JBL</h3>
+          <p>Audífonos & Parlantes Bluetooth de sonido nítido para ambiente comercial y uso diario.</p>
+          <a href="/categoria/audio-bluetooth/" class="btn-banner-link">
+            Ver Modelos Audio <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
-        <a href="/categoria/audio-bluetooth/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
-          Ver Soluciones Audio <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
-        </a>
+        <div class="promo-banner-icon">
+          <i class="fa-solid fa-headphones"></i>
+        </div>
       </div>
 
-      <!-- Card 3: Gadgets & Periféricos -->
-      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
-        <div>
-          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
-            <i class="fa-solid fa-microchip"></i>
-          </div>
-          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
-            Gadgets & Periféricos Tech
-          </h3>
-          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
-            Escáneres inalámbricos 1D/2D QR de precisión industrial, cargadores rápidos GaN 65W y soportes giratorios ergonómicos.
-          </p>
+      <!-- Banner 3: Papel Térmico & Periféricos -->
+      <div class="promo-banner-card gradient-purple">
+        <div class="promo-badge">INSUMOS & PERIFÉRICOS</div>
+        <div class="promo-content">
+          <h3>Lectores 2D & Papel POS</h3>
+          <p>Escáneres QR industriales y insumos de papel térmico de alta calidad para impresoras.</p>
+          <a href="/categoria/gadgets-perifericos-tech/" class="btn-banner-link">
+            Ver Insumos <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
-        <a href="/categoria/gadgets-perifericos-tech/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
-          Ver Periféricos <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
-        </a>
+        <div class="promo-banner-icon">
+          <i class="fa-solid fa-print"></i>
+        </div>
       </div>
 
-      <!-- Card 4: Protección & Garantías -->
-      <div style="background: #f8fafc; border-radius: 20px; padding: 32px 24px; border: 1px solid #e2e8f0; box-shadow: 0 6px 20px rgba(0,0,0,0.03); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 14px 30px rgba(0, 32, 147, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.03)';">
-        <div>
-          <div style="width: 56px; height: 56px; background: #e0e7ff; color: #002093; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; margin-bottom: 18px;">
-            <i class="fa-solid fa-shield-halved"></i>
-          </div>
-          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
-            Protección & Cobertura Care+
-          </h3>
-          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.92rem; line-height: 1.6; margin: 0 0 22px 0;">
-            Sistemas UPS de respaldo de energía ininterrumpida de 1500VA y planes de garantía con reemplazo express en 24h.
-          </p>
-        </div>
-        <a href="/categoria/proteccion-garantias/" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);">
-          Ver Coberturas <i class="fa-solid fa-arrow-right" style="font-size: 0.8rem;"></i>
-        </a>
-      </div>
+    </div>
 
+  </div>
+</section>
+
+
+<!-- ==========================================
+     NOVEDADES & PRODUCTOS DESTACADOS TECH
+========================================== -->
+<section id="destacados" class="destacados-seccion" style="background-color: #ffffff; padding: 4rem 1rem 4.5rem;">
+  <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
+
+    <div class="destacados-header-box" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px;">
+      <div>
+        <span class="section-tag-pill">
+          <i class="fa-solid fa-fire"></i> CATÁLOGO DESTACADO
+        </span>
+        <h2 class="section-title-dark">
+          Equipamiento Recomendado
+        </h2>
+        <p class="section-subtitle">
+          Los productos de hardware y audio más solicitados por nuestros clientes
+        </p>
+      </div>
+      
+      <button type="button" class="btn-shuffle" onclick="shuffleDestacados()" id="btn-shuffle-destacados">
+        <i class="fa-solid fa-dice" id="shuffle-icon"></i> Explorar Más
+      </button>
+    </div>
+
+    <div class="modern-products-grid" id="destacados-container">
+      {% for p in productos_destacados %}
+        <div class="modern-product-card">
+          
+          <!-- Badges & Heart Wishlist -->
+          <div class="card-badges-top">
+            {% if p.precio >= 19990 %}
+              <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
+            {% else %}
+              <span class="badge-tag-std">Garantizado</span>
+            {% endif %}
+            
+            {% if not p.disponible %}
+              <span class="badge-out-stock">Agotado</span>
+            {% endif %}
+          </div>
+
+          <a href="{% url 'toggle_deseos' p.id %}" class="card-heart-wishlist" title="Guardar en Lista de Deseos">
+            <i class="fa-solid fa-heart"></i>
+          </a>
+
+          <!-- Image Container -->
+          <a href="{{ p.get_absolute_url }}" class="card-image-box">
+            {% if p.imagen %}
+              <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
+            {% else %}
+              <div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>
+            {% endif %}
+          </a>
+
+          <!-- Details -->
+          <div class="card-body">
+            <span class="card-category-tag">{{ p.categoria.nombre|default:"Equipamiento Tech" }}</span>
+            
+            <div class="card-stars-row">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <span>5.0 (24 reseñas)</span>
+            </div>
+
+            <h3 class="card-title">
+              <a href="{{ p.get_absolute_url }}">{{ p.nombre }}</a>
+            </h3>
+
+            <div class="card-price-container">
+              <span class="card-price-value">${{ p.precio }}</span>
+              <span class="card-vat-note">IVA Incluido</span>
+            </div>
+
+            <div class="card-actions-row">
+              <a href="{{ p.get_absolute_url }}" class="btn-card-view">
+                <i class="fa-solid fa-eye"></i> Ver
+              </a>
+              <a href="{% url 'agregar_al_carrito' p.id %}" title="Agregar al carrito" class="btn-card-cart">
+                <i class="fa-solid fa-cart-plus"></i> Añadir
+              </a>
+            </div>
+          </div>
+
+        </div>
+      {% empty %}
+        <p style="text-align: center; color: #64748b; width: 100%; grid-column: 1 / -1;">No hay productos disponibles por ahora.</p>
+      {% endfor %}
     </div>
 
   </div>
@@ -509,19 +555,41 @@ async function shuffleDestacados() {
       container.innerHTML = '';
       data.productos.forEach(p => {
         const cardHtml = `
-          <div class="producto-destacado-card">
-            <div class="img-box">
-              ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}">` : ''}
+          <div class="modern-product-card">
+            <div class="card-badges-top">
+              <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
             </div>
-            <h3 style="font-size: 0.98rem; font-weight: 700; color: #000E1F; margin: 0 0 4px 0; font-family: 'Montserrat', sans-serif; line-height: 1.3;">${p.nombre}</h3>
-            <p style="font-weight: 800; color: #002093; font-size: 1.12rem; margin: 0 0 12px 0;">$${p.precio}</p>
-            <div style="display: flex; gap: 6px; margin-top: auto;">
-              <a href="${p.url}" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0;">
-                <i class="fa-solid fa-eye"></i> Ver
-              </a>
-              <a href="/carrito/agregar/${p.id}/" title="Agregar al carrito" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0; background: linear-gradient(135deg, #002093, #3230C2); color: white;">
-                <i class="fa-solid fa-cart-plus"></i> Añadir
-              </a>
+            <a href="/deseos/toggle/${p.id}/" class="card-heart-wishlist" title="Guardar en Lista de Deseos">
+              <i class="fa-solid fa-heart"></i>
+            </a>
+            <a href="${p.url}" class="card-image-box">
+              ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy">` : '<div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>'}
+            </a>
+            <div class="card-body">
+              <span class="card-category-tag">${p.badge || 'DESTACADO TECH'}</span>
+              <div class="card-stars-row">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <span>5.0 (24 reseñas)</span>
+              </div>
+              <h3 class="card-title">
+                <a href="${p.url}">${p.nombre}</a>
+              </h3>
+              <div class="card-price-container">
+                <span class="card-price-value">$${p.precio}</span>
+                <span class="card-vat-note">IVA Incluido</span>
+              </div>
+              <div class="card-actions-row">
+                <a href="${p.url}" class="btn-card-view">
+                  <i class="fa-solid fa-eye"></i> Ver
+                </a>
+                <a href="/carrito/agregar/${p.id}/" title="Agregar al carrito" class="btn-card-cart">
+                  <i class="fa-solid fa-cart-plus"></i> Añadir
+                </a>
+              </div>
             </div>
           </div>
         `;

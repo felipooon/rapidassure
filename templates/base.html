@@ -152,13 +152,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
 
             <ul class="primary-menu-links">
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/#soluciones">Soluciones</a></li>
+                <li><a href="/#inicio">Inicio</a></li>
+                <li><a href="/#categorias">Categorías</a></li>
+                <li><a href="/#promociones">Promociones</a></li>
+                <li><a href="/#destacados">Destacados</a></li>
                 <li><a href="/#acerca">Nosotros</a></li>
                 <li><a href="/#contacto">Contacto</a></li>
                 <li>
                     <a href="{% url 'ver_deseos' %}">
-                        <i class="fa-regular fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
+                        <i class="fa-solid fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
                         {% if deseos|length > 0 %}
                             <span style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px;">{{ deseos|length }}</span>
                         {% endif %}
@@ -183,7 +185,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <ul class="mobile-drawer-nav">
             <li><a href="/#inicio"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Inicio</a></li>
             <li>
-                <a href="/#soluciones"><span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span> Categorías</a>
+                <a href="/#categorias"><span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span> Categorías</a>
                 <ul style="list-style: none; padding-left: 54px; margin: -4px 0 8px 0; display: flex; flex-direction: column; gap: 4px;">
                     {% for cat in categorias_globales %}
                         <li>
@@ -194,8 +196,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     {% endfor %}
                 </ul>
             </li>
+            <li><a href="/#promociones"><span class="nav-icon"><i class="fa-solid fa-bolt"></i></span> Promociones</a></li>
+            <li><a href="/#destacados"><span class="nav-icon"><i class="fa-solid fa-fire"></i></span> Destacados</a></li>
             <li><a href="/#acerca"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Nosotros</a></li>
             <li><a href="/#contacto"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span> Contacto</a></li>
+            <li>
+                <a href="{% url 'ver_deseos' %}">
+                    <span class="nav-icon"><i class="fa-solid fa-heart" style="color: #FCBE00;"></i></span> Lista de Deseos
+                    {% if deseos|length > 0 %}
+                        <span style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px;">{{ deseos|length }}</span>
+                    {% endif %}
+                </a>
+            </li>
         </ul>
 
         <div class="mobile-drawer-footer">
