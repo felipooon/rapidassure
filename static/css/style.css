@@ -58,7 +58,7 @@ h2 {
 
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)),
-    url("/static/img/Fondo_corporativo.jpg");
+    url("../img/Fondo_corporativo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -212,7 +212,7 @@ section:nth-of-type(4) {
 
   background-image:
     linear-gradient(rgba(0, 14, 31, 0.85), rgba(0, 14, 31, 0.90)),
-    url("/static/img/Fondo_corporativo.jpg");
+    url("../img/Fondo_corporativo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -535,7 +535,7 @@ section:nth-of-type(4) {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url("../img/heroig.png");
+  background-image: url("../img/Fondo_corporativo.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -742,7 +742,7 @@ section:nth-of-type(4) {
 
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)),
-    url("/static/img/Fondo_corporativo.jpg");
+    url("../img/Fondo_corporativo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -855,7 +855,7 @@ section:nth-of-type(4) {
 
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)),
-    url("/static/img/Fondo_corporativo.jpg");
+    url("../img/Fondo_corporativo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -1111,7 +1111,7 @@ section:nth-of-type(4) {
   padding: 40px; /* 👈 aquí está la separación real */
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)),
-    url("/static/img/Fondo_corporativo.jpg");
+    url("../img/Fondo_corporativo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -1463,7 +1463,7 @@ section:nth-of-type(4) {
     padding: 135px 6px 30px 6px;
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)),
-      url("/static/img/Fondo_corporativo.jpg");
+      url("../img/Fondo_corporativo.jpg");
     background-repeat: no-repeat;
     background-size: cover;
   }
