@@ -11,13 +11,16 @@ def get_cloudinary_url(image_field_or_url, width=None, quality="auto", format_ty
     if not image_field_or_url:
         return ""
 
-    if hasattr(image_field_or_url, 'url'):
+    try:
+        url = getattr(image_field_or_url, 'url', None)
+        if not url:
+            url = str(image_field_or_url)
+    except Exception:
         try:
-            url = image_field_or_url.url
+            name = getattr(image_field_or_url, 'name', None) or str(image_field_or_url)
+            url = f"/media/{name}" if name else ""
         except Exception:
             return ""
-    else:
-        url = str(image_field_or_url)
 
     if not url:
         return ""
