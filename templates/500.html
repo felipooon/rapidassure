@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Error temporal del servidor (500) — Rapidassure Retail{% endblock %}
+
+{% block content %}
+<div style="background-color: #f8fafc; min-height: 80vh; padding-top: 140px; padding-bottom: 90px; display: flex; align-items: center; justify-content: center;">
+    
+    <div class="container" style="max-width: 650px; text-align: center;">
+        <div style="background: white; border-radius: 24px; padding: 50px 35px; box-shadow: 0 15px 45px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;">
+            
+            <div style="font-size: 3.5rem; margin-bottom: 10px; color: #dc2626;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            
+            <span style="background: rgba(220, 38, 38, 0.12); color: #dc2626; font-weight: 800; font-size: 0.85rem; padding: 6px 18px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 16px;">
+                Error 500
+            </span>
+
+            <h1 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin-top: 0; margin-bottom: 12px;">
+                Inconveniente Temporal del Servidor
+            </h1>
+
+            <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.05rem; line-height: 1.6; margin-bottom: 30px;">
+                Se ha presentado un inconveniente inesperado en el sistema. Por favor reintenta recargar la página en unos momentos.
+            </p>
+
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="javascript:location.reload()" class="btn" style="background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; padding: 13px 28px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 0.95rem; font-family: 'Montserrat', sans-serif;">
+                    <i class="fa-solid fa-rotate-right"></i> Recargar Página
+                </a>
+                <a href="/" class="btn" style="background: #ffffff; color: #000E1F; border: 1px solid #cbd5e1; padding: 13px 28px; border-radius: 12px; font-weight: 700; text-decoration: none; font-size: 0.95rem; font-family: 'Montserrat', sans-serif;">
+                    <i class="fa-solid fa-house"></i> Ir al Inicio
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

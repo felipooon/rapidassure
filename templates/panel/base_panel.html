@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapidassure Panel</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'img/Icono.png' %}">
+</head>
+
+<body class="panel-body">
+
+<div class="panel-layout">
+
+  <nav class="panel-nav" style="background: #000E1F;">
+    <div style="padding: 10px 0 20px; border-bottom: 1px solid rgba(252, 190, 0, 0.2); margin-bottom: 15px;">
+        <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Panel" style="max-width: 160px; height: auto;">
+    </div>
+
+    <a href="/panel/"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    <a href="/panel/productos/"><i class="fa-solid fa-box-open"></i> Gestión de Productos</a>
+    <a href="/panel/pedidos/"><i class="fa-solid fa-truck-fast"></i> Gestión de Pedidos</a>
+    <a href="/panel/cupones/"><i class="fa-solid fa-ticket"></i> Gestión de Cupones</a>
+    <a href="{% url 'panel_resenas' %}"><i class="fa-solid fa-star"></i> Reseñas</a>
+    <a href="{% url 'panel_configuracion' %}"><i class="fa-solid fa-sliders"></i> Configuración Sitio</a>
+    <a href="/"><i class="fa-solid fa-store"></i> Ver tienda pública</a>
+    
+    <div style="margin-top: auto; padding-top: 15px; display: flex; flex-direction: column; gap: 6px;">
+        <a href="{% url 'panel_guia' %}" style="display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); padding: 8px 12px; border-radius: 8px; text-decoration: none; border: 1px solid rgba(255,255,255,0.18); white-space: nowrap; box-sizing: border-box; width: 100%; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'; this.style.color='#ffffff';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.85)';">
+            <i class="fa-solid fa-circle-question" style="font-size: 0.85rem; color: #FCBE00; margin: 0;"></i> Guía del Panel
+        </a>
+        
+        {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn-logout-clean" type="submit">
+              <i class="fa-solid fa-power-off"></i> Cerrar sesión
+            </button>
+        </form>
+        {% endif %}
+    </div>
+  </nav>
+
+{% if messages %}
+<div id="panel-toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; max-width: 400px; width: calc(100% - 40px); pointer-events: none;">
+  {% for message in messages %}
+    <div class="toast-item" style="pointer-events: auto; padding: 12px 18px; border-radius: 12px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 0.95rem; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.4s ease; animation: toastSlideIn 0.3s ease forwards; {% if message.tags == 'success' %}background-color: #e8f8f5; color: #116b47; border: 1px solid #a3e4d7;{% elif message.tags == 'warning' %}background-color: #fff9e6; color: #975a16; border: 1px solid #ffe082;{% elif message.tags == 'info' %}background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8;{% else %}background-color: #fdf2f2; color: #9b2c2c; border: 1px solid #f8b4b4;{% endif %}">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        {% if message.tags == 'success' %}
+          <i class="fa-solid fa-circle-check" style="font-size: 1.1rem;"></i>
+        {% elif message.tags == 'error' %}
+          <i class="fa-solid fa-circle-xmark" style="font-size: 1.1rem;"></i>
+        {% elif message.tags == 'warning' %}
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem;"></i>
+        {% else %}
+          <i class="fa-solid fa-circle-info" style="font-size: 1.1rem;"></i>
+        {% endif %}
+        <span>{{ message }}</span>
+      </div>
+      <button type="button" onclick="dismissToast(this.parentElement);" style="background: none; border: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: inherit; opacity: 0.6; padding: 0 2px;">&times;</button>
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(-15px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast-fadeOut {
+  opacity: 0 !important;
+  transform: translateX(30px) !important;
+}
+</style>
+
+<script>
+function dismissToast(el) {
+  if (!el) return;
+  el.classList.add('toast-fadeOut');
+  setTimeout(function() {
+    if (el.parentNode) el.remove();
+  }, 400);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const toasts = document.querySelectorAll('#panel-toast-container .toast-item');
+  toasts.forEach(function(toast, index) {
+    setTimeout(function() {
+      dismissToast(toast);
+    }, 3500 + (index * 500));
+  });
+});
+</script>
+{% endif %}
+
+  <main class="panel-main">
+    {% block content %}{% endblock %}
+  </main>
+
+</div>
+
+</body>
+</html>

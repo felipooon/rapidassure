@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /panel/
+Disallow: /carrito/
+Disallow: /checkout/
+Disallow: /evaluar-compra/
+Disallow: /evaluar-producto/
+Disallow: /api/
+
+Sitemap: https://rapidassure.cl/sitemap.xml

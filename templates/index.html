@@ -1,0 +1,462 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio — Rapidassure Retail | Soluciones & Protección para el Comercio{% endblock %}
+
+{% block content %}
+<!-- ==========================================
+     HERO CORPORATE SECTION (2 COLUMNAS CON LOGO AL LADO)
+========================================== -->
+<section id="inicio" class="hero-corporate" style="position: relative; min-height: 80vh; display: flex; align-items: center; background: linear-gradient(135deg, rgba(0, 14, 31, 0.94) 0%, rgba(0, 32, 147, 0.88) 100%), url('{% static "img/Rascacielos.jpg" %}') center/cover no-repeat; color: white; padding: 4.5rem 1rem 3.5rem; overflow: hidden;">
+  
+  <!-- Subtle glowing background accent -->
+  <div style="position: absolute; top: -120px; right: -80px; width: 550px; height: 550px; background: radial-gradient(circle, rgba(50, 48, 194, 0.3) 0%, rgba(0,0,0,0) 70%); pointer-events: none; z-index: 1;"></div>
+
+  <div class="container" style="max-width: 1150px; margin: 0 auto; width: 100%; position: relative; z-index: 2;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; align-items: center;">
+      
+      <!-- Columna Izquierda: Mensaje Principal y CTAs -->
+      <div style="text-align: left;">
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(252, 190, 0, 0.15); border: 1px solid rgba(252, 190, 0, 0.4); color: #FCBE00; padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 20px; backdrop-filter: blur(8px);">
+          <i class="fa-solid fa-bolt"></i> Tecnología & Protección Retail
+        </div>
+
+        <h1 style="font-family: 'Montserrat', sans-serif; font-size: clamp(2.1rem, 4vw, 3.2rem); font-weight: 900; line-height: 1.18; margin-bottom: 18px; text-shadow: 0 4px 20px rgba(0,0,0,0.4); letter-spacing: -0.5px;">
+          Smart POS, Audio & Cobertura para tu Negocio
+        </h1>
+
+        <p style="font-family: 'Open Sans', sans-serif; font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 28px; line-height: 1.6; max-width: 540px;">
+          Equipamiento de punto de venta de vanguardia, dispositivos inteligentes y planes de respaldo garantizados para maximizar tus ventas.
+        </p>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="#catalogo" class="btn-categoria" style="padding: 14px 30px; font-size: 1rem; border-radius: 12px; background: linear-gradient(135deg, #002093, #3230C2); color: #ffffff; font-weight: 800; box-shadow: 0 8px 22px rgba(0, 32, 147, 0.4); border: 1px solid rgba(255,255,255,0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="fa-solid fa-store"></i> Ver Productos Tech
+          </a>
+          <a href="#contacto" class="btn-categoria" style="padding: 14px 30px; font-size: 1rem; border-radius: 12px; background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            <i class="fa-solid fa-headset"></i> Atención Corporativa
+          </a>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Tarjeta con el Logo de la Empresa al Lado -->
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <div style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 38px 30px; border-radius: 26px; box-shadow: 0 20px 45px rgba(0,0,0,0.35); text-align: center; max-width: 400px; width: 100%; transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+          
+          <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo" style="width: 85%; max-width: 270px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.4));">
+          
+          <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 18px; margin-top: 5px;">
+            <p style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 700; color: #FCBE00; margin: 0 0 6px 0;">
+              Equipamiento & Respaldo Retail
+            </p>
+            <p style="font-family: 'Open Sans', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.5;">
+              Soluciones integrales en hardware, punto de venta y cobertura operacional asegurada a nivel nacional.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     BENEFICIOS CORPORATIVOS
+========================================== -->
+<section class="beneficios-seccion" style="background: #ffffff; padding: 2.5rem 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+  <div class="beneficio-item">
+    <i class="fa-solid fa-shield-halved" style="color: #002093;"></i>
+    <div>
+      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Garantía & Cobertura</h4>
+      <p style="color: #64748b;">Protección integral en todo equipamiento</p>
+    </div>
+  </div>
+  <div class="beneficio-item">
+    <i class="fa-solid fa-truck-fast" style="color: #002093;"></i>
+    <div>
+      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Despacho Corporativo</h4>
+      <p style="color: #64748b;">Envíos seguros a sucursales en todo Chile</p>
+    </div>
+  </div>
+  <div class="beneficio-item">
+    <i class="fa-solid fa-lock" style="color: #002093;"></i>
+    <div>
+      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Transacciones Seguras</h4>
+      <p style="color: #64748b;">Plataforma protegida con encriptación SSL</p>
+    </div>
+  </div>
+  <div class="beneficio-item">
+    <i class="fa-solid fa-headset" style="color: #002093;"></i>
+    <div>
+      <h4 style="font-family: 'Montserrat', sans-serif; font-weight: 700;">Soporte Técnico 24/7</h4>
+      <p style="color: #64748b;">Asistencia directa para la operación de cajas</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     NOVEDADES DESTACADAS
+========================================== -->
+<section id="destacados" class="catalogo-seccion" style="background-color: #f8fafc; padding: 3rem 1rem 3.5rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+  
+  <div class="destacados-header-box">
+    <div>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; color: #000E1F; margin: 0 0 4px 0;">
+        Novedades Destacadas
+      </h2>
+      <p style="color: #64748b; font-size: 0.92rem; margin: 0;">Equipamiento tecnológico y soluciones de vanguardia para tu negocio</p>
+    </div>
+    
+    <button type="button" class="btn-shuffle" onclick="shuffleDestacados()" id="btn-shuffle-destacados">
+      <i class="fa-solid fa-dice" id="shuffle-icon"></i> Explorar Más
+    </button>
+  </div>
+
+  <div class="destacados-slider-wrapper">
+    <button type="button" class="slider-nav-btn prev" onclick="scrollDestacados(-280)" title="Anterior">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+
+    <div class="catalogo-destacados-slider" id="destacados-container">
+      {% for p in productos_destacados %}
+        <div class="producto-destacado-card">
+          <div class="img-box">
+            {% if p.imagen %}
+              <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
+            {% endif %}
+            {% if not p.disponible %}
+              <span class="agotado">Agotado</span>
+            {% endif %}
+          </div>
+          
+          <h3 style="font-size: 0.98rem; font-weight: 700; color: #000E1F; margin: 0 0 4px 0; font-family: 'Montserrat', sans-serif; line-height: 1.3;">{{ p.nombre }}</h3>
+          <p style="font-weight: 800; color: #002093; font-size: 1.12rem; margin: 0 0 12px 0;">${{ p.precio }}</p>
+          
+          <div style="display: flex; gap: 6px; margin-top: auto;">
+            <a href="{{ p.get_absolute_url }}" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0;">
+              <i class="fa-solid fa-eye"></i> Ver
+            </a>
+            <a href="{% url 'agregar_al_carrito' p.id %}" title="Agregar al carrito" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0; background: linear-gradient(135deg, #002093, #3230C2); color: white;">
+              <i class="fa-solid fa-cart-plus"></i> Añadir
+            </a>
+          </div>
+        </div>
+      {% empty %}
+        <p style="text-align: center; color: #64748b; width: 100%;">No hay productos destacados aún.</p>
+      {% endfor %}
+    </div>
+
+    <button type="button" class="slider-nav-btn next" onclick="scrollDestacados(280)" title="Siguiente">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </div>
+</section>
+
+<!-- ==========================================
+     CATÁLOGO / COLECCIONES POR CATEGORÍA
+========================================== -->
+<section id="catalogo" class="catalogo-seccion" style="padding: 3.5rem 1rem;">
+
+  <div style="text-align: center; margin-bottom: 1.8rem;">
+    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.8rem; font-weight: 800; color: #000E1F; margin: 0 0 4px 0;">
+      Nuestras Colecciones
+    </h2>
+    <p style="color: #64748b; font-size: 0.95rem; margin: 0;">Explora nuestros productos por categoría</p>
+  </div>
+
+  <!-- Chips de Navegación Rápida -->
+  <div class="categoria-chips-bar">
+    <a href="#catalogo" class="chip-btn active">
+      <i class="fa-solid fa-border-all"></i> Todas
+    </a>
+    {% for c in categorias %}
+      <a href="{% url 'categoria' c.slug %}" class="chip-btn">
+        {% if 'pos' in c.nombre.lower or 'retail' in c.nombre.lower %}
+          <i class="fa-solid fa-cash-register"></i>
+        {% elif 'audio' in c.nombre.lower or 'bluetooth' in c.nombre.lower %}
+          <i class="fa-solid fa-headphones"></i>
+        {% elif 'proteccion' in c.nombre.lower or 'garantia' in c.nombre.lower %}
+          <i class="fa-solid fa-shield-halved"></i>
+        {% else %}
+          <i class="fa-solid fa-microchip"></i>
+        {% endif %}
+        {{ c.nombre }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Grilla de Categorías -->
+  <div class="catalogo-grid">
+    {% for c in categorias %}
+      <div class="producto" id="cat-{{ c.slug }}">
+        {% if c.imagen %}
+          <img src="{{ c.get_imagen_url_600 }}" alt="{{ c.nombre }}" loading="lazy">
+        {% else %}
+          <img src="{% static 'img/default-category.png' %}" alt="Sin imagen">
+        {% endif %}
+
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800;">{{ c.nombre }}</h3>
+
+        <a href="{% url 'categoria' c.slug %}" class="btn-categoria">
+          <i class="fa-solid fa-layer-group"></i> Ir a Colección
+        </a>
+      </div>
+    {% empty %}
+      <p style="text-align: center; color: #64748b;">No hay categorías creadas aún.</p>
+    {% endfor %}
+  </div>
+
+</section>
+
+
+
+
+
+<!-- ==========================================
+     SECCIÓN NOSOTROS (3 PILARES Y SELLO)
+========================================== -->
+<section id="acerca" class="nosotros" style="position: relative; padding: 4.5rem 1rem; width: 100%; min-height: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #000E1F;">
+  <img src="{% static 'img/Oficina.jpg' %}" alt="Oficinas Rapidassure Retail" class="hero-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.25; z-index: 0;">
+
+  <!-- Dark overlay gradient -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0, 14, 31, 0.82) 0%, rgba(0, 14, 31, 0.96) 100%); z-index: 1;"></div>
+
+  <div style="position: relative; z-index: 2; max-width: 1050px; margin: 0 auto; text-align: center; width: 100%;">
+    
+    <div style="margin-bottom: 2.5rem;">
+      <span style="display: inline-block; background: rgba(252, 190, 0, 0.15); color: #FCBE00; border: 1px solid rgba(252, 190, 0, 0.3); font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; backdrop-filter: blur(5px);">
+        Nuestra Trayectoria
+      </span>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.4);">
+        ¿Quiénes Somos?
+      </h2>
+      <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.9); font-size: 1.08rem; max-width: 760px; margin: 0 auto; line-height: 1.6;">
+        En **Rapidassure Retail** transformamos la experiencia del comercio entregando equipamiento tecnológico de vanguardia, terminales POS y coberturas de garantía que aseguran la continuidad operativa de tu empresa.
+      </p>
+    </div>
+
+    <!-- 3 Pilares Corporativos -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
+      
+      <!-- Pilar 1 -->
+      <div style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-microchip"></i></div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Tecnología Especializada</h3>
+        <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          Soluciones de hardware y sistemas diseñados a la medida para optimizar el punto de venta y la administración de stock.
+        </p>
+      </div>
+
+      <!-- Pilar 2 -->
+      <div style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-shield-virus"></i></div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Respaldo & Cobertura</h3>
+        <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          Planes de protección y reemplazo inmediato ante imprevistos para garantizar que tus ventas nunca se detengan.
+        </p>
+      </div>
+
+      <!-- Pilar 3 -->
+      <div style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-handshake"></i></div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Compromiso Corporativo</h3>
+        <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          Acompañamos a PyMEs y grandes cadenas en su crecimiento operacional con soluciones integrales y asesoría profesional.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Sello corporativo -->
+    <div style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px); border: 1px solid rgba(252, 190, 0, 0.3); border-radius: 16px; padding: 20px 25px; display: inline-block; max-width: 650px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+      <p style="font-family: 'Open Sans', sans-serif; font-size: 1.02rem; font-weight: 600; color: rgba(255, 255, 255, 0.95); margin: 0 0 6px 0; font-style: italic;">
+        "Innovación, velocidad y seguridad para asegurar el éxito operativo de tu negocio retail."
+      </p>
+      <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #FCBE00;">
+        — Rapidassure Retail
+      </span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================
+     CONTACTO & CANALES DIRECTOS
+========================================== -->
+<section id="contacto" class="contacto" style="min-height: auto; padding: 4.5rem 1rem; background-color: #f8fafc;">
+  <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
+    
+    <!-- Encabezado -->
+    <div style="text-align: center; margin-bottom: 3rem;">
+      <span style="display: inline-block; background: #e0e7ff; color: #002093; font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+        Atención Corporativa
+      </span>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+        Contáctanos
+      </h2>
+      <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.02rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        Nuestros asesores comerciales y equipo de soporte técnico están listos para atender tus requerimientos.
+      </p>
+    </div>
+
+    <!-- Bloque 1: FAQ Corporativo -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2.8rem;">
+      
+      <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <i class="fa-solid fa-truck-fast" style="color: #002093; font-size: 1.15rem;"></i>
+          <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">¿Despachos a Sucursales?</h4>
+        </div>
+        <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
+          Realizamos envíos asegurados a sucursales y puntos de venta en todo el país.
+        </p>
+      </div>
+
+      <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <i class="fa-solid fa-clock" style="color: #002093; font-size: 1.15rem;"></i>
+          <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">¿Tiempos de Respuesta?</h4>
+        </div>
+        <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
+          Atención prioritaria y despacho rápido en menos de 24 horas hábiles.
+        </p>
+      </div>
+
+      <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <i class="fa-solid fa-credit-card" style="color: #002093; font-size: 1.15rem;"></i>
+          <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">¿Facturación & Pagos?</h4>
+        </div>
+        <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
+          Factura electrónica instantánea, pago en línea protegido y convenios corporativos.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Bloque 2: Tarjetas de Canales de Contacto Directo -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
+      
+      <!-- WhatsApp -->
+      <div style="background: white; padding: 28px 24px; border-radius: 18px; border: 1px solid #e2e8f0; box-shadow: 0 8px 25px rgba(0,0,0,0.04); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+        <div>
+          <div style="width: 54px; height: 54px; background: #e8f5e9; color: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem;">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #000E1F; margin: 0 0 8px 0;">Atención WhatsApp</h3>
+          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.9rem; line-height: 1.5; margin: 0 0 20px 0;">
+            Asesoría comercial directa sobre requerimientos de equipamiento y cotizaciones.
+          </p>
+        </div>
+        <a href="https://wa.me/56930027170" target="_blank" rel="noopener noreferrer" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #25D366; color: white; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 0.92rem; text-decoration: none; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i> Contactar por WhatsApp
+        </a>
+      </div>
+
+      <!-- Email Corporativo -->
+      <div style="background: white; padding: 28px 24px; border-radius: 18px; border: 1px solid #e2e8f0; box-shadow: 0 8px 25px rgba(0,0,0,0.04); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+        <div>
+          <div style="width: 54px; height: 54px; background: #e0e7ff; color: #002093; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 1.8rem;">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #000E1F; margin: 0 0 8px 0;">Correo Corporativo</h3>
+          <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 0.9rem; line-height: 1.5; margin: 0 0 20px 0;">
+            Escríbenos a info@rapidassure.cl para atención institucional o postventa.
+          </p>
+        </div>
+        <a href="mailto:info@rapidassure.cl" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 0.92rem; text-decoration: none; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+          <i class="fa-solid fa-envelope" style="font-size: 1.1rem;"></i> Enviar Correo
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Bloque 3: Horarios & Compromiso -->
+    <div style="text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 24px; max-width: 750px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+      <p style="margin: 0 0 6px 0; font-size: 0.9rem; color: #000E1F; font-weight: 600; font-family: 'Montserrat', sans-serif;">
+        <i class="fa-solid fa-clock" style="color: #FCBE00; margin-right: 6px;"></i> Horario de Atención Corporativa: Lunes a Viernes de 08:30 a 18:30 hrs.
+      </p>
+      <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.86rem; color: #64748b;">
+        <i class="fa-solid fa-building"></i> <strong>Rapidassure Retail</strong> — Respaldo, Tecnología y Cobertura a nivel nacional.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+function scrollDestacados(amount) {
+  const container = document.getElementById('destacados-container');
+  if (!container) return;
+
+  const maxScrollLeft = container.scrollWidth - container.clientWidth;
+
+  if (amount > 0) {
+    if (container.scrollLeft >= maxScrollLeft - 15) {
+      const firstCard = container.firstElementChild;
+      if (firstCard) {
+        container.appendChild(firstCard);
+      }
+    }
+    container.scrollBy({ left: amount, behavior: 'smooth' });
+  } else {
+    if (container.scrollLeft <= 15) {
+      const lastCard = container.lastElementChild;
+      if (lastCard) {
+        container.insertBefore(lastCard, container.firstElementChild);
+      }
+    }
+    container.scrollBy({ left: amount, behavior: 'smooth' });
+  }
+}
+
+async function shuffleDestacados() {
+  const container = document.getElementById('destacados-container');
+  const icon = document.getElementById('shuffle-icon');
+  if (!container) return;
+
+  if (icon) icon.classList.add('fa-spin');
+  
+  container.style.opacity = '0.4';
+  container.style.transition = 'opacity 0.25s ease';
+
+  try {
+    const response = await fetch('/api/destacados-random/');
+    const data = await response.json();
+    
+    if (data.productos && data.productos.length > 0) {
+      container.innerHTML = '';
+      data.productos.forEach(p => {
+        const cardHtml = `
+          <div class="producto-destacado-card">
+            <div class="img-box">
+              ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}">` : ''}
+            </div>
+            <h3 style="font-size: 0.98rem; font-weight: 700; color: #000E1F; margin: 0 0 4px 0; font-family: 'Montserrat', sans-serif; line-height: 1.3;">${p.nombre}</h3>
+            <p style="font-weight: 800; color: #002093; font-size: 1.12rem; margin: 0 0 12px 0;">$${p.precio}</p>
+            <div style="display: flex; gap: 6px; margin-top: auto;">
+              <a href="${p.url}" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0;">
+                <i class="fa-solid fa-eye"></i> Ver
+              </a>
+              <a href="/carrito/agregar/${p.id}/" title="Agregar al carrito" class="btn-categoria" style="flex: 1; text-align: center; padding: 7px 10px; font-size: 12px; margin: 0; background: linear-gradient(135deg, #002093, #3230C2); color: white;">
+                <i class="fa-solid fa-cart-plus"></i> Añadir
+              </a>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
+      });
+    }
+  } catch (err) {
+    console.error('Error al actualizar destacados:', err);
+  } finally {
+    setTimeout(() => {
+      container.style.opacity = '1';
+      if (icon) icon.classList.remove('fa-spin');
+    }, 200);
+  }
+}
+</script>
+
+{% endblock %}

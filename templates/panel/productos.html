@@ -1,0 +1,301 @@
+{% extends "panel/base_panel.html" %}
+
+{% block content %}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Gestión de Productos</h1>
+    
+    <div style="display: flex; gap: 10px;">
+        <a href="/panel/categorias/crear/?next={{ request.get_full_path|urlencode }}" class="btn-categoria" style="background-color: #6c757d; color: white;">
+            <i class="fa-solid fa-folder-plus"></i> Nueva categoría
+        </a>
+        <a href="/panel/productos/crear/?next={{ request.get_full_path|urlencode }}" class="btn-categoria">
+            <i class="fa-solid fa-plus"></i> Nuevo producto
+        </a>
+        <a href="{% url 'exportar_stock_excel' %}" style="background-color: #1D6F42; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-file-excel"></i> Descargar Excel
+        </a>
+    </div>
+</div>
+
+<hr style="margin-bottom: 20px; border: 0; border-top: 1px solid #eee;">
+
+<div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+    
+    <form method="GET" id="filtroForm" style="display:flex; gap:10px; align-items: center; margin: 0;">
+      
+      <input type="hidden" name="per_page" value="{{ per_page }}">
+
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label style="font-size: 0.8em; color: #666; font-weight: bold;">Categoría</label>
+          <select name="categoria" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; min-width: 150px;">
+            <option value="">Todas las categorías</option>
+            {% for c in categorias %}
+              <option value="{{ c.id }}" {% if categoria_actual == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
+            {% endfor %}
+          </select>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label style="font-size: 0.8em; color: #666; font-weight: bold;">Estado</label>
+          <select name="estado" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+            <option value="">Todos</option>
+            <option value="disponible" {% if estado_actual == 'disponible' %}selected{% endif %}>Disponibles</option>
+            <option value="agotado" {% if estado_actual == 'agotado' %}selected{% endif %}>Agotados</option>
+          </select>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+          <label style="font-size: 0.8em; visibility: hidden;">Fantasma</label>
+          <button type="submit" class="btn-categoria" style="height: 35px; margin: 0; padding: 0 15px; display: flex; align-items: center;">Aplicar Filtros</button>
+      </div>
+    </form>
+
+    <form method="GET" style="display: flex; align-items: center; gap: 10px; margin: 0;">
+        <input type="hidden" name="categoria" value="{{ categoria_actual }}">
+        <input type="hidden" name="estado" value="{{ estado_actual }}">
+        
+        <label for="per_page" style="font-size: 0.9em; color: #555; font-weight: bold;">Mostrar:</label>
+        <select name="per_page" id="per_page" onchange="this.form.submit()" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+            <option value="10" {% if per_page == '10' %}selected{% endif %}>10 por página</option>
+            <option value="20" {% if per_page == '20' %}selected{% endif %}>20 por página</option>
+            <option value="50" {% if per_page == '50' %}selected{% endif %}>50 por página</option>
+            <option value="100" {% if per_page == '100' %}selected{% endif %}>100 por página</option>
+        </select>
+    </form>
+</div>
+
+<div style="overflow-x: auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+    <thead style="border-bottom: 2px solid #ddd; background-color: #f8f9fa;">
+      <tr>
+        <th style="padding: 12px; color: #333;">Vista</th>
+        <th style="padding: 12px; color: #333;">Nombre</th>
+        <th style="padding: 12px; color: #333;">Stock</th>
+        <th style="padding: 12px; color: #333;">Precio</th>
+        <th style="padding: 12px; color: #333;">Estado</th>
+        <th style="padding: 12px; color: #333; text-align: right;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in page_obj %}
+      <tr style="border-bottom: 1px solid #eee; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#fdfdfd'" onmouseout="this.style.backgroundColor='transparent'">
+        
+        <td style="padding: 12px;">
+          {% if p.imagen %}
+            <button type="button" onclick="mostrarImagen('{{ p.imagen.url }}', '{{ p.nombre }}')" style="cursor: pointer; background: none; border: 1px solid #ddd; padding: 5px 10px; border-radius: 4px; transition: all 0.2s;" title="Ver foto" onmouseover="this.style.borderColor='#999'" onmouseout="this.style.borderColor='#ddd'">
+              <i class="fa-solid fa-image"></i>
+            </button>
+          {% else %}
+            <span style="color: #aaa; font-size: 0.8em; background: #f5f5f5; padding: 4px 8px; border-radius: 4px;">Sin foto</span>
+          {% endif %}
+        </td>
+
+        <td style="padding: 12px; font-weight: 500; color: #2c3e50;">{{ p.nombre }}</td>
+        
+        <td style="padding: 12px;">
+            {% if p.stock == 0 %}
+                <span style="color: #dc3545; font-weight: 500;">
+                    {{ p.stock }} uds.
+                </span>
+            {% elif p.stock > 0 and p.stock < 5 %}
+                <span style="color: #f39c12; font-weight: 500;">
+                    {{ p.stock }} uds.
+                </span>
+            {% else %}
+                <span style="color: #666; font-weight: 500;">
+                    {{ p.stock }} uds.
+                </span>
+            {% endif %}
+        </td>
+        
+        <td style="padding: 12px; color: #444;">${{ p.precio }}</td>
+
+        <td style="padding: 12px; vertical-align: middle;">
+          <a href="{% url 'toggle_producto' p.id %}?next={{ request.get_full_path|urlencode }}" 
+            style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer;"> 
+             {% if p.disponible %}
+                 <div style="width: 40px; height: 22px; border-radius: 20px; position: relative; background-color: #28a745;">
+                    <div style="width: 18px; height: 18px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+                    </div>
+                 </div>
+                 <span style="font-size: 0.85em; font-weight: bold; color: #28a745;">
+                    Disponible
+                 </span>
+                 
+             {% else %}
+                 <div style="width: 40px; height: 22px; border-radius: 20px; position: relative; background-color: #ccc;">
+                    <div style="width: 18px; height: 18px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+                    </div>
+                 </div>
+                 <span style="font-size: 0.85em; font-weight: bold; color: #888;">
+                    Agotado
+                 </span>
+             {% endif %}
+
+          </a>
+        </td> 
+
+        <td style="padding: 12px; text-align: right; white-space: nowrap; vertical-align: middle;">
+    <div style="display: inline-flex; gap: 8px; justify-content: flex-end;">
+        
+        <button type="button" 
+           onclick="abrirModalResena('https://rapidassure.cl/evaluar-producto/{{ p.id }}/', '{{ p.nombre|escapejs }}')"
+           title="Generar link de valoración para este producto"
+           style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 8px; cursor: pointer; transition: all 0.2s;"
+           onmouseover="this.style.backgroundColor='#002093'; this.style.color='white';" 
+           onmouseout="this.style.backgroundColor='#eff6ff'; this.style.color='#1d4ed8';">
+            <i class="fa-solid fa-star"></i>
+        </button>
+
+        <a href="{% url 'editar_producto' p.id %}?next={{ request.get_full_path|urlencode }}" 
+           title="Editar producto"
+           style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background-color: #f0f7ff; color: #007bff; border-radius: 8px; text-decoration: none; transition: all 0.2s;"
+           onmouseover="this.style.backgroundColor='#007bff'; this.style.color='white';" 
+           onmouseout="this.style.backgroundColor='#f0f7ff'; this.style.color='#007bff';">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 5.343 14.793 4.05 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+            </svg>
+        </a>
+
+        <a href="{% url 'eliminar_producto' p.id %}" 
+           title="Eliminar producto"
+           onclick="return confirm('¿Estás seguro de que quieres eliminar: {{ p.nombre }}?');"
+           style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background-color: #fff5f5; color: #dc3545; border-radius: 8px; text-decoration: none; transition: all 0.2s;"
+           onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='white';" 
+           onmouseout="this.style.backgroundColor='#fff5f5'; this.style.color='#dc3545';">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+            </svg>
+        </a>
+
+    </div>
+</td>
+
+      </tr>
+      {% empty %}
+      <tr>
+          <td colspan="6" style="padding: 30px; text-align: center; color: #888;">
+              No se encontraron productos con estos filtros.
+          </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px; align-items: center; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); width: max-content; margin-left: auto; margin-right: auto;">
+    
+    {% if page_obj.has_previous %}
+        <a href="?page=1&categoria={{ categoria_actual }}&estado={{ estado_actual }}&per_page={{ per_page }}" style="text-decoration: none; color: #666; font-size: 0.9em;">&laquo; Primera</a>
+        <a href="?page={{ page_obj.previous_page_number }}&categoria={{ categoria_actual }}&estado={{ estado_actual }}&per_page={{ per_page }}" class="btn-categoria" style="padding: 6px 12px; font-size: 0.9em;">Anterior</a>
+    {% else %}
+        <span style="color: #ccc; font-size: 0.9em;">&laquo; Primera</span>
+        <span class="btn-categoria" style="padding: 6px 12px; font-size: 0.9em; background-color: #eee; color: #aaa; cursor: not-allowed;">Anterior</span>
+    {% endif %}
+
+    <span style="font-weight: bold; color: #444; padding: 0 10px;">
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&categoria={{ categoria_actual }}&estado={{ estado_actual }}&per_page={{ per_page }}" class="btn-categoria" style="padding: 6px 12px; font-size: 0.9em;">Siguiente</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}&categoria={{ categoria_actual }}&estado={{ estado_actual }}&per_page={{ per_page }}" style="text-decoration: none; color: #666; font-size: 0.9em;">Última &raquo;</a>
+    {% else %}
+        <span class="btn-categoria" style="padding: 6px 12px; font-size: 0.9em; background-color: #eee; color: #aaa; cursor: not-allowed;">Siguiente</span>
+        <span style="color: #ccc; font-size: 0.9em;">Última &raquo;</span>
+    {% endif %}
+
+</div>
+{% endif %}
+
+<div id="modalImagen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px);">
+    <div style="background: white; padding: 20px; border-radius: 12px; max-width: 450px; width: 90%; text-align: center; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <button onclick="cerrarModal()" style="position: absolute; top: 10px; right: 15px; background: #f1f1f1; border: none; font-size: 16px; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: background 0.2s;" onmouseover="this.style.background='#e0e0e0'" onmouseout="this.style.background='#f1f1f1'"><i class="fa-solid fa-xmark"></i></button>
+        <h3 id="nombreProductoModal" style="margin-top: 15px; margin-bottom: 20px; font-size: 1.3rem; color: #333; font-weight: 600;"></h3>
+        <div style="background: #f9f9f9; padding: 10px; border-radius: 8px; border: 1px solid #eee;">
+            <img id="imagenPreview" src="" style="max-width: 100%; max-height: 60vh; border-radius: 4px; object-fit: contain;">
+        </div>
+    </div>
+</div>
+
+<!-- Modal Estética Rapidassure para Enlace de Valoración -->
+<div id="modalResena" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; text-align: center; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.2); border: 1px solid #cbd5e1;">
+        <button onclick="cerrarModalResena()" style="position: absolute; top: 15px; right: 18px; background: #f1f5f9; border: none; font-size: 14px; cursor: pointer; width: 32px; height: 32px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #64748b;">✕</button>
+        
+        <div style="font-size: 2.5rem; margin-bottom: 8px; color: #002093;"><i class="fa-solid fa-star"></i></div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #000E1F; margin: 0 0 6px 0;">Link de Valoración</h3>
+        <p id="modalResenaSubtitulo" style="color: #64748b; font-size: 0.95rem; margin: 0 0 20px 0; font-weight: 600;"></p>
+        
+        <div style="margin-bottom: 20px;">
+            <input type="text" id="modalResenaInput" readonly style="width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 0.9rem; font-family: monospace; background: #f8fafc; color: #334155; text-align: center; box-sizing: border-box; outline: none;">
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button type="button" id="btnCopiarModal" onclick="ejecutarCopiaModal()" style="background: #002093; color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.2s;">
+                <i class="fa-solid fa-copy"></i> Copiar Link
+            </button>
+            <a id="btnWhatsappModal" href="#" target="_blank" style="background: #25D366; color: white; text-decoration: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fab fa-whatsapp"></i> Compartir WhatsApp
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+function mostrarImagen(url, nombre) {
+    document.getElementById('imagenPreview').src = url;
+    document.getElementById('nombreProductoModal').innerText = nombre;
+    document.getElementById('modalImagen').style.display = 'flex';
+}
+
+function cerrarModal() {
+    document.getElementById('modalImagen').style.display = 'none';
+    document.getElementById('imagenPreview').src = '';
+}
+
+document.getElementById('modalImagen').addEventListener('click', function(e) {
+    if (e.target === this) {
+        cerrarModal();
+    }
+});
+
+function abrirModalResena(url, nombre) {
+    document.getElementById('modalResenaSubtitulo').innerText = 'Producto: "' + nombre + '"';
+    document.getElementById('modalResenaInput').value = url;
+    document.getElementById('btnWhatsappModal').href = "https://wa.me/?text=" + encodeURIComponent("Hola! ¿Nos dejarías tu opinión sobre " + nombre + "? " + url);
+    document.getElementById('btnCopiarModal').innerHTML = '<i class="fa-solid fa-copy"></i> Copiar Link';
+    document.getElementById('btnCopiarModal').style.background = '#002093';
+    document.getElementById('modalResena').style.display = 'flex';
+}
+
+function cerrarModalResena() {
+    document.getElementById('modalResena').style.display = 'none';
+}
+
+document.getElementById('modalResena').addEventListener('click', function(e) {
+    if (e.target === this) {
+        cerrarModalResena();
+    }
+});
+
+function ejecutarCopiaModal() {
+    var input = document.getElementById('modalResenaInput');
+    navigator.clipboard.writeText(input.value).then(function() {
+        var btn = document.getElementById('btnCopiarModal');
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+        btn.style.background = '#22c55e';
+        setTimeout(function() {
+            btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copiar Link';
+            btn.style.background = '#002093';
+        }, 2500);
+    }, function() {
+        input.select();
+    });
+}
+</script>
+
+{% endblock %}

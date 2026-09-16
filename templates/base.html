@@ -1,0 +1,532 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-N7WNM6XN');</script>
+<!-- End Google Tag Manager -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{% block meta_desc %}Rapidassure Retail: Líderes en equipamiento, soluciones tecnológicas y protección integral para el sector retail.{% endblock %}">
+<meta property="og:site_name" content="Rapidassure Retail">
+<meta property="og:title" content="{% block og_title %}Rapidassure Retail{% endblock %}">
+<meta property="og:description" content="{% block og_desc %}Soluciones y protección integral para el retail.{% endblock %}">
+<meta property="og:image" content="{% block og_image %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
+<meta property="og:image:secure_url" content="{% block og_image_secure %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
+<meta property="og:image:type" content="{% block og_image_type %}image/png{% endblock %}">
+<meta property="og:image:width" content="{% block og_image_width %}600{% endblock %}">
+<meta property="og:image:height" content="{% block og_image_height %}300{% endblock %}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+<meta property="og:type" content="{% block og_type %}website{% endblock %}">
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}Rapidassure Retail{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_desc %}Soluciones y protección integral para el retail.{% endblock %}">
+<meta name="twitter:image" content="{% block twitter_image %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<title>{% block title %}Rapidassure Retail{% endblock %}</title>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="icon" href="{% static 'img/Icono.png' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Rapidassure Retail",
+  "url": "https://www.rapidassure.cl/",
+  "sameAs": [
+    "https://www.instagram.com/rapidassure"
+  ]
+}
+</script>
+
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N7WNM6XN"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<header>
+<nav class="navbar">
+    <div class="navbar-container">
+        <div class="navbar-brand">
+            <button class="menu-toggle" id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+            <h1><a href="/" class="logo">
+                <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo" class="logo-img">
+            </a></h1>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="live-search-input" placeholder="Buscar soluciones o productos..." autocomplete="off">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            
+            <div id="live-search-results" class="live-search-dropdown"></div>
+        </div>
+
+        <!-- NAVEGACIÓN ESCRITORIO -->
+        <ul class="nav-links">
+            <li><a href="/#inicio">Inicio</a></li>
+            <li><a href="/#catalogo">Productos & Soluciones</a></li>
+            <li><a href="/#acerca">Nosotros</a></li>
+            <li><a href="/#contacto">Contacto</a></li>
+        </ul>
+    </div>
+
+    <!-- MENÚ LATERAL MÓVIL (SÓLO MOBILE) -->
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+
+    <div class="mobile-drawer" id="mobile-drawer">
+        <div class="mobile-drawer-header">
+            <div class="mobile-drawer-brand">
+                <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo" class="drawer-logo-img" style="height: 36px;">
+            </div>
+            <button id="close-menu" class="close-button" aria-label="Cerrar menú">&times;</button>
+        </div>
+
+        <ul class="mobile-drawer-nav">
+            <li><a href="/#inicio"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Inicio</a></li>
+            <li><a href="/#catalogo"><span class="nav-icon"><i class="fa-solid fa-store"></i></span> Productos & Soluciones</a></li>
+            <li><a href="/#acerca"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Nosotros</a></li>
+            <li><a href="/#contacto"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span> Contacto</a></li>
+        </ul>
+
+        <div class="mobile-drawer-footer">
+            <p style="color: #FCBE00; font-weight: 600;">Rapidassure Retail — Innovación y Protección</p>
+            <div class="drawer-social-links">
+                <a href="https://wa.me/56930027170" target="_blank" class="social-btn whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a href="mailto:info@rapidassure.cl" class="social-btn instagram-btn" style="background: #002093;"><i class="fa-solid fa-envelope"></i> Email</a>
+            </div>
+        </div>
+    </div>
+</nav>
+</header>
+
+{% if messages %}
+<div id="toast-container" style="position: fixed; top: 90px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; max-width: 400px; width: calc(100% - 40px); pointer-events: none;">
+  {% for message in messages %}
+    <div class="toast-item" style="pointer-events: auto; padding: 12px 18px; border-radius: 12px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 0.95rem; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.4s ease; animation: toastSlideIn 0.3s ease forwards; {% if message.tags == 'success' %}background-color: #e8f8f5; color: #116b47; border: 1px solid #a3e4d7;{% elif message.tags == 'warning' %}background-color: #fff9e6; color: #975a16; border: 1px solid #ffe082;{% elif message.tags == 'info' %}background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8;{% else %}background-color: #fdf2f2; color: #9b2c2c; border: 1px solid #f8b4b4;{% endif %}">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        {% if message.tags == 'success' %}
+          <i class="fa-solid fa-circle-check" style="font-size: 1.1rem;"></i>
+        {% elif message.tags == 'error' %}
+          <i class="fa-solid fa-circle-xmark" style="font-size: 1.1rem;"></i>
+        {% elif message.tags == 'warning' %}
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem;"></i>
+        {% else %}
+          <i class="fa-solid fa-circle-info" style="font-size: 1.1rem;"></i>
+        {% endif %}
+        <span>{{ message }}</span>
+      </div>
+      <button type="button" onclick="dismissToast(this.parentElement);" style="background: none; border: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: inherit; opacity: 0.6; padding: 0 2px;">&times;</button>
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(-15px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast-fadeOut {
+  opacity: 0 !important;
+  transform: translateX(30px) !important;
+}
+@media (max-width: 600px) {
+  #toast-container {
+    top: 75px;
+    right: 15px;
+    left: 15px;
+    width: auto;
+  }
+}
+</style>
+
+<script>
+function dismissToast(el) {
+  if (!el) return;
+  el.classList.add('toast-fadeOut');
+  setTimeout(function() {
+    if (el.parentNode) el.remove();
+  }, 400);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const toasts = document.querySelectorAll('#toast-container .toast-item');
+  toasts.forEach(function(toast, index) {
+    setTimeout(function() {
+      dismissToast(toast);
+    }, 3500 + (index * 500));
+  });
+});
+</script>
+{% endif %}
+<main>
+{% block content %}
+{% endblock %}
+</main>
+
+<footer class="footer-section" style="background-color: #fdfaf6; color: #4a4a4a; border-top: 3px solid #002093; padding: 3.5rem 1rem 1.5rem 1rem; font-family: 'Nunito', sans-serif;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    
+    <!-- Fila Superior: Marca, Enlaces Rápidos y Redes -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; margin-bottom: 2.5rem; text-align: left;">
+      
+      <!-- Columna 1: Marca & Descripción -->
+      <div>
+        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; color: #000E1F; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
+          Rapidassure Retail
+        </h3>
+        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6; margin: 0 0 15px 0;">
+          Soluciones integrales de tecnología inteligente para retail, cajas Smart POS y protección antirrobo.
+        </p>
+        <div style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.85rem; font-weight: 600;">
+          <i class="fa-solid fa-location-dot" style="color: #FCBE00;"></i> Santiago y Regiones, Chile
+        </div>
+      </div>
+
+      <!-- Columna 2: Enlaces Rápidos (Navegación) -->
+      <div>
+        <h4 style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+          Navegación
+        </h4>
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
+          <li><a href="{% url 'index' %}" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Inicio</a></li>
+          <li><a href="{% url 'index' %}#catalogo" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Catálogo de Productos</a></li>
+          <li><a href="{% url 'terminos' %}" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Términos y Condiciones</a></li>
+          <li><a href="{% url 'index' %}#contacto" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Atención al Cliente</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: Redes & Canales -->
+      <div>
+        <h4 style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+          Contacto Corporativo
+        </h4>
+        <p style="color: #64748b; font-size: 0.88rem; line-height: 1.5; margin: 0 0 12px 0;">
+          Contáctanos directamente para asesoría en equipamiento y proyectos corporativos:
+        </p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="https://wa.me/56930027170" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #25D366; color: white; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.2);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+          <a href="mailto:contacto@rapidassure.cl" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #002093; color: white; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.2);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <i class="fa-solid fa-envelope"></i> Email
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Separador sutil -->
+    <div style="border-top: 1px solid #e2e8f0; margin-bottom: 1.5rem;"></div>
+
+    <!-- Fila Inferior (Sub-footer): Copyright & Firma de Desarrollo -->
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: #64748b;">
+      <div>
+        &copy; {% now "Y" %} Rapidassure Retail. Todos los derechos reservados.
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: #94a3b8; font-weight: 400;">
+        <i class="fa-solid fa-shield-halved" style="color: #FCBE00; opacity: 0.9; font-size: 0.75rem;"></i> Tecnología & Seguridad Retail
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+const toggle = document.getElementById("menu-toggle");
+const drawer = document.getElementById("mobile-drawer");
+const close = document.getElementById("close-menu");
+const overlay = document.getElementById("mobile-menu-overlay");
+
+function abrirMenuMovil() {
+    if (drawer) drawer.classList.add("show");
+    if (overlay) overlay.classList.add("show");
+}
+
+function cerrarMenuMovil() {
+    if (drawer) drawer.classList.remove("show");
+    if (overlay) overlay.classList.remove("show");
+}
+
+if (toggle) toggle.addEventListener("click", abrirMenuMovil);
+if (close) close.addEventListener("click", cerrarMenuMovil);
+if (overlay) overlay.addEventListener("click", cerrarMenuMovil);
+
+document.querySelectorAll("#mobile-drawer a").forEach(link => {
+    link.addEventListener("click", cerrarMenuMovil);
+});
+
+  // efecto scroll navbar
+window.addEventListener("scroll", () => {
+    document.querySelector(".navbar")
+    .classList.toggle("scrolled", window.scrollY > 10);
+});
+
+document.addEventListener("click", (e) => {
+if (!links.contains(e.target) && !toggle.contains(e.target)) {
+    links.classList.remove("show");
+}
+});
+
+});
+</script>
+
+<style>
+    /* Buscador en Vivo Responsivo */
+    .search-container {
+        position: relative;
+        width: 200px;
+        margin: 0 10px;
+        flex-shrink: 1;
+    }
+    .search-container input {
+        width: 100%;
+        padding: 7px 12px 7px 32px;
+        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: rgba(255,255,255,0.95);
+        font-size: 0.85rem;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+        box-sizing: border-radius;
+        box-sizing: border-box;
+    }
+    .search-container i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+        font-size: 0.8rem;
+    }
+    .live-search-dropdown {
+        display: none;
+        position: absolute;
+        top: 110%;
+        right: 0;
+        width: 280px;
+        max-width: 85vw;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        overflow: hidden;
+        z-index: 1100;
+        border: 1px solid #eee;
+    }
+
+    @media (max-width: 768px) {
+        .search-container {
+            width: 130px;
+            margin: 0 5px;
+        }
+        .search-container input {
+            padding: 5px 8px 5px 26px !important;
+            font-size: 0.78rem !important;
+        }
+        .search-container i {
+            left: 7px !important;
+            font-size: 0.72rem !important;
+        }
+        .live-search-dropdown {
+            width: 250px;
+            right: -10px;
+        }
+    }
+
+    /* El fondo oscuro que tapa la tienda */
+    .overlay-carrito {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+        background: rgba(0,0,0,0.5); z-index: 1040;
+        opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .overlay-carrito.abierto { opacity: 1; pointer-events: auto; }
+
+    /* La caja blanca del panel */
+    .sidebar-carrito {
+        position: fixed; top: 0; right: -400px; /* Escondido a la derecha */
+        width: 100%; max-width: 400px; 
+        height: 100vh; /* Fallback para navegadores muy antiguos */
+        height: 100dvh; /* SOLUCIÓN MOBILE: Se adapta dinámicamente a la pantalla real */
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 1050; 
+        display: flex; flex-direction: column;
+    }
+    .sidebar-carrito.abierto { right: 0; /* Aparece */ }
+
+    /* Botón flotante para abrirlo cuando quieras */
+    .btn-flotante-carrito {
+        position: fixed; bottom: 30px; right: 30px; background: linear-gradient(135deg, #002093, #3230C2); color: white;
+        border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; box-shadow: 0 8px 20px rgba(0, 32, 147, 0.4); cursor: pointer; z-index: 1000;
+        border: none; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        animation: pulseCart 2s infinite;
+    }
+    .btn-flotante-carrito:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 12px 25px rgba(0, 32, 147, 0.6);
+        animation: none; /* Pausa el pulse al hacer hover */
+    }
+    @keyframes pulseCart {
+        0% { box-shadow: 0 0 0 0 rgba(0, 32, 147, 0.6); }
+        70% { box-shadow: 0 0 0 15px rgba(0, 32, 147, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 32, 147, 0); }
+    }
+</style>
+
+<div id="overlay-carrito" class="overlay-carrito" onclick="cerrarCarrito()"></div>
+
+<div id="sidebar-carrito" class="sidebar-carrito">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; flex-shrink: 0;">
+        <span style="margin: 0; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #000E1F;"><i class="fa-solid fa-cart-shopping" style="color: #002093;"></i> Tu Carrito</span>
+        <button onclick="cerrarCarrito()" style="border: none; background: none; font-size: 1.3rem; cursor: pointer; color: #64748b;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <div style="padding: 20px; overflow-y: auto; flex-grow: 1;">
+        {% if not carrito or carrito.get_total == 0 %}
+            <p style="text-align: center; color: #888; margin-top: 50px;"><i class="fa-solid fa-cart-flatbed" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>Tu carrito está vacío.</p>
+        {% else %}
+            {% for item in carrito %}
+                <div style="display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0;">
+                    
+                    {% if item.imagen %}
+                        <img src="{{ item.imagen }}" alt="Imagen de {{ item.nombre }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                    {% endif %}
+                    
+                    <div style="flex-grow: 1;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 1rem; color: #333;">{{ item.nombre }}</h4>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            
+                            <div style="display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.05); border-radius: 8px; padding: 4px 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                                <a href="{% url 'restar_del_carrito' item.producto_id %}" style="text-decoration: none; color: #555; font-weight: bold; padding: 2px 8px; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#555'">-</a>
+                                <span style="font-weight: bold; font-size: 0.95rem; min-width: 15px; text-align: center; color: #333;">{{ item.cantidad }}</span>
+                                <a href="{% url 'agregar_al_carrito' item.producto_id %}" style="text-decoration: none; color: #555; font-weight: bold; padding: 2px 8px; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#555'">+</a>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="text-align: right;">
+                                    <span style="display: block; font-size: 0.8rem; color: #888;">${{ item.precio }} c/u</span>
+                                    <span style="font-weight: bold; color: #333;">${{ item.precio_total }}</span>
+                                </div>
+                                <a href="{% url 'quitar_del_carrito' item.producto_id %}" style="color: #dc3545; text-decoration: none; font-size: 1rem; padding-left: 5px; border-left: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'" title="Quitar del carrito">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div style="padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(249,249,249,0.5); flex-shrink: 0;">
+        <h3 style="display: flex; justify-content: space-between; margin-top: 0; font-family: 'Montserrat', sans-serif;">
+            <span>Total:</span> <span style="color: #002093; font-weight: 800;">${{ carrito.get_total }}</span>
+        </h3>
+        <button onclick="cerrarCarrito()" style="display: block; width: 100%; background: rgba(255,255,255,0.9); color: #000E1F; border: 1px solid rgba(0,14,31,0.15); padding: 12px 0; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.3s;" onmouseover="this.style.background='white'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.boxShadow='none'">
+            <i class="fa-solid fa-arrow-left"></i> Seguir explorando
+        </button>
+        <a href="{% url 'procesar_pedido' %}" style="display: block; width: 100%; text-align: center; background: linear-gradient(135deg, #002093, #3230C2); color: white; padding: 14px 0; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; margin-top: 15px; box-shadow: 0 6px 15px rgba(0, 32, 147, 0.3); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0, 32, 147, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 15px rgba(0, 32, 147, 0.3)'">
+            Ir a Pagar <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
+
+{% if carrito.get_total > 0 %}
+<button class="btn-flotante-carrito" onclick="abrirCarrito()" style="background: linear-gradient(135deg, #002093, #FCBE00); color: white;">
+    <i class="fa-solid fa-cart-shopping"></i> <span style="position: absolute; top: -5px; right: -5px; background: #3230C2; font-size: 0.8rem; padding: 2px 6px; border-radius: 50%;">!</span>
+</button>
+{% endif %}
+
+<script>
+    function abrirCarrito() {
+        document.getElementById('sidebar-carrito').classList.add('abierto');
+        document.getElementById('overlay-carrito').classList.add('abierto');
+    }
+    function cerrarCarrito() {
+        document.getElementById('sidebar-carrito').classList.remove('abierto');
+        document.getElementById('overlay-carrito').classList.remove('abierto');
+    }
+
+    // Truco: Si la URL dice que el carrito debe estar abierto, lo abrimos automáticamente
+    if (window.location.search.includes('cart=open')) {
+        abrirCarrito();
+        // Limpiamos la URL para que no se quede pegado si el usuario recarga
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Buscador con Autocompletado en Tiempo Real
+    const searchInput = document.getElementById('live-search-input');
+    const searchResults = document.getElementById('live-search-results');
+    let searchTimeout = null;
+
+    if (searchInput && searchResults) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            clearTimeout(searchTimeout);
+
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                searchResults.innerHTML = '';
+                return;
+            }
+
+            searchTimeout = setTimeout(() => {
+                fetch(`/api/buscar-productos/?q=${encodeURIComponent(query)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data.productos || data.productos.length === 0) {
+                            searchResults.innerHTML = '<div style="padding: 12px; text-align: center; color: #888; font-size: 0.85rem;">Sin resultados</div>';
+                        } else {
+                            let html = '';
+                            data.productos.forEach(p => {
+                                html += `
+                                    <a href="${p.url}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-decoration: none; border-bottom: 1px solid #f5f5f5; color: #333; transition: background 0.2s;" onmouseover="this.style.background='#fff9f0'" onmouseout="this.style.background='white'">
+                                        ${p.imagen ? `<img src="${p.imagen}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">` : ''}
+                                        <div style="flex-grow: 1;">
+                                            <div style="font-weight: 600; font-size: 0.85rem; color: #222;">${p.nombre}</div>
+                                            <div style="font-size: 0.8rem; color: #002093; font-weight: bold;">${p.precio}</div>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                            searchResults.innerHTML = html;
+                        }
+                        searchResults.style.display = 'block';
+                    })
+                    .catch(() => {
+                        searchResults.style.display = 'none';
+                    });
+            }, 250);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

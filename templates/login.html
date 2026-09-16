@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Acceso Corporativo — Rapidassure Retail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="{% static 'img/Icono.png' %}">
+</head>
+<body style="
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(0, 14, 31, 0.95), rgba(0, 32, 147, 0.9)),
+    url('{% static "img/Oficina.jpg" %}');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Open Sans', sans-serif;
+">
+
+    <div style="
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 16px;
+        width: 360px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        border: 1px solid rgba(252, 190, 0, 0.2);
+    ">
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{% static 'img/Logo_Horizontal.png' %}" alt="Rapidassure Retail" style="max-width: 210px; height: auto;">
+        </div>
+
+        <p style="
+            text-align: center;
+            margin-bottom: 25px;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        ">
+            Acceso al Panel Administrativo
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 18px;">
+                <label style="display:block; margin-bottom:6px; color:#000E1F; font-size:14px; font-weight:600; font-family: 'Montserrat', sans-serif;">
+                    Usuario
+                </label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    placeholder="Ingresa tu usuario"
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        outline: none;
+                        transition: 0.2s;
+                        box-sizing: border-box;
+                    "
+                    onfocus="this.style.border='1px solid #002093'; this.style.boxShadow='0 0 0 2px rgba(0, 32, 147, 0.2)'"
+                    onblur="this.style.border='1px solid #cbd5e1'; this.style.boxShadow='none'"
+                >
+            </div>
+
+            <div style="margin-bottom: 22px;">
+                <label style="display:block; margin-bottom:6px; color:#000E1F; font-size:14px; font-weight:600; font-family: 'Montserrat', sans-serif;">
+                    Contraseña
+                </label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Ingresa tu contraseña"
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #cbd5e1;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        outline: none;
+                        transition: 0.2s;
+                        box-sizing: border-box;
+                    "
+                    onfocus="this.style.border='1px solid #002093'; this.style.boxShadow='0 0 0 2px rgba(0, 32, 147, 0.2)'"
+                    onblur="this.style.border='1px solid #cbd5e1'; this.style.boxShadow='none'"
+                >
+            </div>
+
+            <button type="submit" style="
+                width: 100%;
+                padding: 13px;
+                background: linear-gradient(135deg, #002093, #3230C2);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 700;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 15px;
+                letter-spacing: 0.5px;
+                transition: 0.2s;
+                box-shadow: 0 4px 12px rgba(0, 32, 147, 0.25);
+            "
+            onmouseover="this.style.opacity='0.9'"
+            onmouseout="this.style.opacity='1'">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        {% if form.errors %}
+            <p style="
+                color: #dc2626;
+                margin-top: 15px;
+                text-align: center;
+                font-size: 14px;
+                font-weight: 600;
+            ">
+                Usuario o contraseña incorrectos
+            </p>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
