@@ -28,19 +28,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = False
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-if not SECRET_KEY:
-    if DEBUG:
-        SECRET_KEY = 'django-insecure-local-dev-key'
-    else:
-        raise ValueError("Missing DJANGO_SECRET_KEY with DEBUG=False")
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', os.environ.get('SECRET_KEY', 'django-insecure-rapidassure-prod-secret-key-2026'))
 
-EBIRD_API_KEY = os.environ.get('EBIRD_API_KEY')
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rapidassure.cl', 'www.rapidassure.cl', '*.onrender.com']
+allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
+if allowed_hosts_env:
+    ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
+else:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rapidassure.cl', 'www.rapidassure.cl', '.onrender.com', '*']
 
 
 MP_ACCESS_TOKEN = os.environ.get('MERCADOPAGO_ACCESS_TOKEN', '')

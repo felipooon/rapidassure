@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: rapidassure
+    env: python
+    buildCommand: ./build.sh
+    startCommand: gunicorn rapidassure_app.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
