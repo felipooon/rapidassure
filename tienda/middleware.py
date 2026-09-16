@@ -22,20 +22,21 @@ class AnaliticasMiddleware:
 
         user_agent = request.META.get('HTTP_USER_AGENT', '')
         
-        # 1. Detección avanzada de bots con base de datos amplia de User-Agents
-        es_bot = crawler_detector.isCrawler(user_agent)
-        
-        hoy = timezone.localdate()
-        metrica, created = MetricaDiaria.objects.get_or_create(fecha=hoy)
-        
-        if es_bot:
-            MetricaDiaria.objects.filter(id=metrica.id).update(visitas_bots=F('visitas_bots') + 1)
-        else:
-            # 2. Visitantes humanos únicos por día mediante cookie
-            cookie_key = f'v_h_{hoy.strftime("%Y%m%d")}'
-            if not request.COOKIES.get(cookie_key):
-                MetricaDiaria.objects.filter(id=metrica.id).update(visitas_humanos=F('visitas_humanos') + 1)
-                response.set_cookie(cookie_key, '1', max_age=86400, httponly=True, samesite='Lax')
+        try:
+            es_bot = crawler_detector.isCrawler(user_agent)
+            hoy = timezone.localdate()
+            metrica, created = MetricaDiaria.objects.get_or_create(fecha=hoy)
+            
+            if es_bot:
+                MetricaDiaria.objects.filter(id=metrica.id).update(visitas_bots=F('visitas_bots') + 1)
+            else:
+                # 2. Visitantes humanos únicos por día mediante cookie
+                cookie_key = f'v_h_{hoy.strftime("%Y%m%d")}'
+                if not request.COOKIES.get(cookie_key):
+                    MetricaDiaria.objects.filter(id=metrica.id).update(visitas_humanos=F('visitas_humanos') + 1)
+                    response.set_cookie(cookie_key, '1', max_age=86400, httponly=True, samesite='Lax')
+        except Exception:
+            pass
             
         return response
 

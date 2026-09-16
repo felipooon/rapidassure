@@ -176,6 +176,8 @@ USE_THOUSAND_SEPARATOR = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+os.makedirs(STATIC_ROOT, exist_ok=True)
+WHITENOISE_USE_FINDERS = True
 
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
