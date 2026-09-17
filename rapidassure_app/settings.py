@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+# import dj_database_url
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -51,7 +51,7 @@ MP_ACCESS_TOKEN = os.environ.get('MERCADOPAGO_ACCESS_TOKEN', '')
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
+    # 'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'tienda',
-    'cloudinary',
+    # 'cloudinary',
     'corsheaders',
 ]
 
@@ -105,6 +105,8 @@ WSGI_APPLICATION = 'rapidassure_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# CONFIGURACIÓN LOCAL CON SQLITE (Neon / DATABASE_URL comentado)
+"""
 if os.environ.get('DATABASE_URL'):
     db_url = os.environ.get('DATABASE_URL')
     is_sqlite = db_url.startswith('sqlite')
@@ -112,7 +114,7 @@ if os.environ.get('DATABASE_URL'):
     if ssl_req_env is not None:
         ssl_req = ssl_req_env == 'True'
     else:
-        ssl_req = not is_sqlite  # Activar SSL por defecto para PostgreSQL en cloud (Render)
+        ssl_req = not is_sqlite
 
     db_config = dj_database_url.config(
         default=db_url,
@@ -128,12 +130,13 @@ if os.environ.get('DATABASE_URL'):
         'default': db_config
     }
 else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 
 
 LOGIN_URL = '/login/'
@@ -188,50 +191,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #  STORAGES
 #---------------------
 
-if DEBUG:
-    # MODO LOCAL
-    STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        },
-    }
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
+# ALMACENAMIENTO LOCAL DE ARCHIVOS (Cloudinary comentado)
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-else:
-    # MODO PRODUCCIÓN (Render): Cloudinary solo si las 3 variables están presentes
-    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME")
-    api_key = os.environ.get("CLOUDINARY_API_KEY")
-    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
-
-    if cloud_name and api_key and api_secret:
-        CLOUDINARY_STORAGE = {
-            'CLOUD_NAME': cloud_name,
-            'API_KEY': api_key,
-            'API_SECRET': api_secret,
-        }
-        STORAGES = {
-            "default": {
-                "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-            },
-            "staticfiles": {
-                "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-            },
-        }
-    else:
-        STORAGES = {
-            "default": {
-                "BACKEND": "django.core.files.storage.FileSystemStorage",
-            },
-            "staticfiles": {
-                "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-            },
-        }
-        MEDIA_URL = '/media/'
-        MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # LOGGING PARA PRODUCCIÓN Y DEPURACIÓN DE ERRORES 500
