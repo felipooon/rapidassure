@@ -20,7 +20,7 @@ class AnaliticasMiddleware:
         if response.status_code not in (200, 301, 302):
             return response
 
-        user_agent = request.META.get('HTTP_USER_AGENT', '')
+        user_agent = request.META.get('HTTP_USER_AGENT') or ''
         
         try:
             es_bot = crawler_detector.isCrawler(user_agent)

@@ -37,8 +37,14 @@ allowed_hosts_env = os.environ.get('ALLOWED_HOSTS', '')
 if allowed_hosts_env:
     ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_env.split(',') if h.strip()]
 else:
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rapidassure.cl', 'www.rapidassure.cl', '.onrender.com', '*']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rapidassure.cl', 'www.rapidassure.cl', 'rapidassure.onrender.com', '.onrender.com', '*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://rapidassure.cl",
+    "https://www.rapidassure.cl",
+    "https://rapidassure.onrender.com",
+    "https://*.onrender.com",
+]
 
 MP_ACCESS_TOKEN = os.environ.get('MERCADOPAGO_ACCESS_TOKEN', '')
 
@@ -60,7 +66,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -99,19 +105,15 @@ WSGI_APPLICATION = 'rapidassure_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-"""
-DATABASES = {
-   'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
-"""
-
 if os.environ.get('DATABASE_URL'):
     db_url = os.environ.get('DATABASE_URL')
     is_sqlite = db_url.startswith('sqlite')
-    ssl_req = os.environ.get('DB_SSL_REQUIRE', 'False') == 'True'
+    ssl_req_env = os.environ.get('DB_SSL_REQUIRE')
+    if ssl_req_env is not None:
+        ssl_req = ssl_req_env == 'True'
+    else:
+        ssl_req = not is_sqlite  # Activar SSL por defecto para PostgreSQL en cloud (Render)
+
     db_config = dj_database_url.config(
         default=db_url,
         conn_max_age=0 if is_sqlite else 600,
@@ -132,7 +134,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 
 LOGIN_URL = '/login/'
@@ -156,8 +157,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-#MEDIA_URL = '/media/'
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -180,8 +179,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 os.makedirs(STATIC_ROOT, exist_ok=True)
 WHITENOISE_USE_FINDERS = True
 
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -192,9 +189,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #---------------------
 
 if DEBUG:
-    # ==========================================
-    # MODO LOCAL (Tu PC): Guarda en tu disco duro
-    # ==========================================
+    # MODO LOCAL
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -203,19 +198,20 @@ if DEBUG:
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
-    # Le decimos a Django dónde crear la carpeta local
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
 else:
-    # ==========================================
-    # MODO PRODUCCIÓN (Render): Guarda en Cloudinary si hay credenciales
-    # ==========================================
-    if os.environ.get("CLOUDINARY_CLOUD_NAME"):
+    # MODO PRODUCCIÓN (Render): Cloudinary solo si las 3 variables están presentes
+    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME")
+    api_key = os.environ.get("CLOUDINARY_API_KEY")
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET")
+
+    if cloud_name and api_key and api_secret:
         CLOUDINARY_STORAGE = {
-            'CLOUD_NAME': os.environ.get("CLOUDINARY_CLOUD_NAME"),
-            'API_KEY': os.environ.get("CLOUDINARY_API_KEY"),
-            'API_SECRET': os.environ.get("CLOUDINARY_API_SECRET"),
+            'CLOUD_NAME': cloud_name,
+            'API_KEY': api_key,
+            'API_SECRET': api_secret,
         }
         STORAGES = {
             "default": {
@@ -238,40 +234,53 @@ else:
         MEDIA_ROOT = BASE_DIR / 'media'
 
 
-"""
-
-STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
+# LOGGING PARA PRODUCCIÓN Y DEPURACIÓN DE ERRORES 500
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[%(asctime)s] %(levelname)s %(name)s %(message)s'
         },
-        "staticfiles": {
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
-    }
-    # Le decimos a Django dónde crear la carpeta local
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-"""
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
 #---------------
 #  EMAIL
 #---------------
 
 if DEBUG:
-    # Entorno Local (Tu PC): Imprime el correo en la terminal de texto
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
-    # Producción (Render): Envía el correo real usando Gmail
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     
-    # Aquí lee las contraseñas secretas desde el servidor de Render
     EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-    
-    # El nombre que verá el cliente cuando reciba el correo
     DEFAULT_FROM_EMAIL = f"Rapidassure Retail <{EMAIL_HOST_USER}>"
 
 CORS_ALLOWED_ORIGINS = [
