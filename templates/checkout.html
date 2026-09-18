@@ -40,8 +40,8 @@
         </div>
     {% endif %}
 
-    <!-- Grid Principal de Checkout (2 Columnas en escritorio) -->
-    <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 30px; align-items: start;">
+    <!-- Grid Principal de Checkout (2 Columnas en escritorio, 1 en móvil) -->
+    <div class="checkout-grid-container">
         
         <!-- COLUMNA IZQUIERDA: FORMULARIO DE ENVÍO Y DATOS -->
         <div>
@@ -213,9 +213,9 @@
         </div>
 
         <!-- COLUMNA DERECHA: RESUMEN DE PEDIDO Y CUPONES -->
-        <div style="position: sticky; top: 110px;">
+        <div class="checkout-summary-column">
             
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 26px; box-shadow: 0 6px 25px rgba(0,0,0,0.03);">
+            <div class="checkout-summary-box" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 26px; box-shadow: 0 6px 25px rgba(0,0,0,0.03);">
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 14px;">
                     <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F;">
@@ -302,6 +302,45 @@
 </div>
 
 <style>
+.checkout-grid-container {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.checkout-summary-column {
+    position: sticky;
+    top: 110px;
+}
+
+@media (max-width: 991px) {
+    .checkout-page-wrapper {
+        margin: 15px auto !important;
+        padding: 0 0.5rem 40px !important;
+    }
+
+    .checkout-grid-container {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .checkout-summary-column {
+        position: static !important;
+        margin-bottom: 10px;
+    }
+
+    #form-checkout-rapida {
+        padding: 18px 14px !important;
+        border-radius: 16px !important;
+    }
+
+    .checkout-summary-box {
+        padding: 18px 14px !important;
+        border-radius: 16px !important;
+    }
+}
+
 .input-checkout-modern {
     width: 100%; 
     padding: 12px 14px; 

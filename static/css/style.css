@@ -1256,59 +1256,120 @@ section:nth-of-type(4) {
 
 @media (max-width: 768px) {
   .main-header-row {
-    padding: 8px 8px 10px;
+    padding: 4px 8px 6px;
   }
 
   .main-header-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
     width: 100%;
     box-sizing: border-box;
   }
 
-  /* FILA 1 MÓVIL: Logo (Izquierda) + Carrito (Derecha) */
+  /* FILA 1 MÓVIL: Logo Centrado */
   .header-top-row {
     display: flex !important;
     width: 100%;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 2px;
+    justify-content: center !important;
+    text-align: center;
+    padding: 0;
   }
 
   .header-logo-link {
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin: 0 auto;
   }
 
   .header-logo-img {
-    height: 45px;
+    height: 36px;
     width: auto;
   }
 
+  /* Ocultar Carrito del Header en Móvil */
   .cart-header-widget {
-    flex-shrink: 0;
-    padding: 6px 12px;
-    gap: 8px;
-    border-radius: 20px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    display: none !important;
   }
 
-  .cart-icon-wrapper {
+/* Floating Mobile Cart Button (Solo Móvil) */
+.floating-mobile-cart-btn,
+.floating-mobile-cart-btn.oculto {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .floating-mobile-cart-btn {
+    display: flex !important;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #002093 0%, #3230C2 100%);
+    color: #ffffff;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 10px 25px rgba(0, 32, 147, 0.4);
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .floating-mobile-cart-btn:hover,
+  .floating-mobile-cart-btn:active {
+    transform: scale(1.05);
+    box-shadow: 0 14px 30px rgba(0, 32, 147, 0.5);
+  }
+
+  .floating-cart-icon-box {
+    position: relative;
     font-size: 1.35rem;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .cart-text-info span {
-    display: block !important;
-    font-size: 0.68rem !important;
-    color: #64748b;
-    margin-bottom: 0;
+  .floating-cart-bubble {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #FCBE00;
+    color: #000E1F;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1.5px solid #002093;
+    line-height: 1;
   }
 
-  .cart-text-info strong {
-    font-size: 0.88rem !important;
+  .floating-cart-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
   }
+
+  .floating-cart-tag {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .floating-cart-price {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
+}
 
   /* FILA 2 MÓVIL: Sandwich pegado más cerca al borde izquierdo + Buscador */
   .header-search-row {

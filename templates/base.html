@@ -568,14 +568,30 @@ if (!links.contains(e.target) && !toggle.contains(e.target)) {
     </div>
 </div>
 
+<!-- BOTÓN FLOTANTE DEL CARRITO EN MÓVIL (SÓLO MOBILE CUANDO SE USA) -->
+<div class="floating-mobile-cart-btn {% if carrito|length > 0 %}active{% endif %}" id="floating-mobile-cart-btn" onclick="abrirCarrito()" title="Ver mi carrito">
+    <div class="floating-cart-icon-box">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="floating-cart-bubble">{{ carrito|length|default:0 }}</span>
+    </div>
+    <div class="floating-cart-info">
+        <span class="floating-cart-tag">Tu carrito:</span>
+        <strong class="floating-cart-price">${{ carrito.get_total|default:0 }}</strong>
+    </div>
+</div>
+
 <script>
     function abrirCarrito() {
         document.getElementById('sidebar-carrito').classList.add('abierto');
         document.getElementById('overlay-carrito').classList.add('abierto');
+        const floatBtn = document.getElementById('floating-mobile-cart-btn');
+        if (floatBtn) floatBtn.classList.add('oculto');
     }
     function cerrarCarrito() {
         document.getElementById('sidebar-carrito').classList.remove('abierto');
         document.getElementById('overlay-carrito').classList.remove('abierto');
+        const floatBtn = document.getElementById('floating-mobile-cart-btn');
+        if (floatBtn) floatBtn.classList.remove('oculto');
     }
 
     // Truco: Si la URL dice que el carrito debe estar abierto, lo abrimos automáticamente
