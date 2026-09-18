@@ -1282,7 +1282,7 @@ section:nth-of-type(4) {
   }
 
   .header-logo-img {
-    height: 52px;
+    height: 45px;
     width: auto;
   }
 
@@ -2141,7 +2141,7 @@ section:nth-of-type(4) {
 /* Main Header Row */
 .main-header-row {
   background: transparent;
-  padding: 14px 1.5rem;
+  padding: 4px 1.5rem;
 }
 
 .main-header-container {
@@ -2165,7 +2165,7 @@ section:nth-of-type(4) {
 }
 
 .header-logo-img {
-  height: 88px;
+  height: 110px;
   width: auto;
   object-fit: contain;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
