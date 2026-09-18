@@ -125,7 +125,6 @@
         <div class="benefit-direct-icon"><i class="fa-regular fa-credit-card"></i></div>
         <div class="benefit-info">
           <h4>Medios de pago seguros</h4>
-          <p class="tb-sublabel">Transbank</p>
           <div class="payment-logos-wrapper">
             <img src="{% static 'img/payment_brands_row.svg' %}" alt="Medios de pago Transbank, VISA, Mastercard, Magna, Redcompra" class="payment-brands-row-img">
           </div>
@@ -277,19 +276,6 @@
       {% for p in productos_destacados %}
         <div class="modern-product-card">
           
-          <!-- Badges & Heart Wishlist -->
-          <div class="card-badges-top">
-            {% if p.precio >= 19990 %}
-              <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
-            {% else %}
-              <span class="badge-tag-std">Garantizado</span>
-            {% endif %}
-            
-            {% if not p.disponible %}
-              <span class="badge-out-stock">Agotado</span>
-            {% endif %}
-          </div>
-
           <a href="{% url 'toggle_deseos' p.id %}" class="card-heart-wishlist" title="Guardar en Lista de Deseos">
             <i class="fa-solid fa-heart"></i>
           </a>
@@ -301,6 +287,19 @@
             {% else %}
               <div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>
             {% endif %}
+
+            <!-- Badges (Posicionadas en la esquina inferior de la imagen) -->
+            <div class="card-badges-bottom">
+              {% if p.precio >= 19990 %}
+                <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
+              {% else %}
+                <span class="badge-tag-std">Garantizado</span>
+              {% endif %}
+              
+              {% if not p.disponible %}
+                <span class="badge-out-stock">Agotado</span>
+              {% endif %}
+            </div>
           </a>
 
           <!-- Details -->
@@ -558,7 +557,7 @@
     <!-- Bloque Horarios & Compromiso -->
     <div style="text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 24px; max-width: 750px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
       <p style="margin: 0 0 6px 0; font-size: 0.9rem; color: #000E1F; font-weight: 600; font-family: 'Montserrat', sans-serif;">
-        <i class="fa-solid fa-clock" style="color: #FCBE00; margin-right: 6px;"></i> Horario de Atención Corporativa: Lunes a Viernes de 08:30 a 18:30 hrs.
+        <i class="fa-solid fa-clock" style="color: #FCBE00; margin-right: 6px;"></i> Horario de Atención Corporativa: Lunes a Viernes de 10:00 a 16:00 hrs.
       </p>
       <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.86rem; color: #64748b;">
         <i class="fa-solid fa-building"></i> <strong>Rapidassure SPA</strong> — Respaldo, Tecnología y Cobertura a nivel nacional.
@@ -632,14 +631,14 @@ async function shuffleDestacados() {
       data.productos.forEach(p => {
         const cardHtml = `
           <div class="modern-product-card">
-            <div class="card-badges-top">
-              <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
-            </div>
             <a href="/deseos/toggle/${p.id}/" class="card-heart-wishlist" title="Guardar en Lista de Deseos">
               <i class="fa-solid fa-heart"></i>
             </a>
             <a href="${p.url}" class="card-image-box">
               ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy">` : '<div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>'}
+              <div class="card-badges-bottom">
+                <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
+              </div>
             </a>
             <div class="card-body">
               <span class="card-category-tag">${p.badge || 'DESTACADO TECH'}</span>

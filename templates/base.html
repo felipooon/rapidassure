@@ -57,63 +57,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <header class="header-site-rapidassure">
-    
-    <!-- 1. TOP BAR (Llámenos, Envíos, Usuario) -->
-    <div class="top-bar">
-        <div class="top-bar-container">
-            <div class="top-bar-left">
-                <span><i class="fa-solid fa-headset"></i> Llámenos al: <strong style="color: #002093;">+56 9 2978 9628</strong></span>
-                <span class="top-divider">|</span>
-                <span style="color: #64748b;">Envíos Gratuitos en RM sobre <strong style="color: #FCBE00;">$19.990</strong></span>
-            </div>
-
-            <div class="top-bar-right">
-            </div>
-        </div>
-    </div>
-
     <!-- 2. MAIN HEADER ROW (Logo, Buscador integrado, Carrito Widget) -->
     <div class="main-header-row">
         <div class="main-header-container">
             
-            <div class="header-brand-box">
-                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+            <!-- Fila Superior Móvil / Elementos Superiores -->
+            <div class="header-top-row">
                 <a href="/" class="header-logo-link">
                     <img src="{% static 'img/Logo_Horizontal.png' %}" alt="Rapidassure Retail Logo" class="header-logo-img">
                 </a>
+
+                <!-- Widget del Carrito -->
+                <div class="cart-header-widget" onclick="abrirCarrito()">
+                    <div class="cart-icon-wrapper">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="cart-bubble-count">{{ carrito|length|default:0 }}</span>
+                    </div>
+                    <div class="cart-text-info">
+                        <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
+                        <strong style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total|default:0 }}</strong>
+                    </div>
+                </div>
             </div>
 
-            <!-- Buscador Integrado con Selector de Categorías -->
-            <div class="integrated-search-box">
-                <div class="search-cat-dropdown">
-                    <select onchange="if(this.value) window.location.href=this.value;">
-                        <option value="">Todas las categorías</option>
-                        {% for cat in categorias_globales %}
-                            <option value="{% url 'categoria' cat.slug %}">{{ cat.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                    <i class="fa-solid fa-chevron-down select-arrow"></i>
-                </div>
+            <!-- Fila Inferior Móvil / Buscador y Sandwich -->
+            <div class="header-search-row">
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
 
-                <div class="search-input-box">
-                    <input type="text" id="live-search-input" placeholder="Buscar productos..." autocomplete="off">
-                    <div id="live-search-results" class="live-search-dropdown"></div>
-                </div>
+                <!-- Buscador Integrado con Selector de Categorías -->
+                <div class="integrated-search-box">
+                    <div class="search-cat-dropdown">
+                        <select onchange="if(this.value) window.location.href=this.value;">
+                            <option value="">Todas las categorías</option>
+                            {% for cat in categorias_globales %}
+                                <option value="{% url 'categoria' cat.slug %}">{{ cat.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                    </div>
 
-                <button type="button" class="search-submit-btn" aria-label="Buscar">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-            </div>
+                    <div class="search-input-box">
+                        <input type="text" id="live-search-input" placeholder="Buscar productos..." autocomplete="off">
+                        <div id="live-search-results" class="live-search-dropdown"></div>
+                    </div>
 
-            <!-- Widget del Carrito -->
-            <div class="cart-header-widget" onclick="abrirCarrito()">
-                <div class="cart-icon-wrapper">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="cart-bubble-count">{{ carrito|length|default:0 }}</span>
-                </div>
-                <div class="cart-text-info">
-                    <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
-                    <strong style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total|default:0 }}</strong>
+                    <button type="button" class="search-submit-btn" aria-label="Buscar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </div>
             </div>
 
