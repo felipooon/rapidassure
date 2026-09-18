@@ -39,13 +39,13 @@
     
     <!-- Header superior: Migas de Pan y Botón Volver -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; width: 100%;">
-        <nav style="font-size: 0.9rem; color: #777; word-break: break-word; padding: 0 4px;">
-            <a href="/" style="color: #666; text-decoration: none;">Inicio</a> &nbsp;›&nbsp;
-            <a href="{% url 'categoria' producto.categoria.slug %}" style="color: #666; text-decoration: none;">{{ producto.categoria.nombre }}</a> &nbsp;›&nbsp;
-            <span style="color: #002093; font-weight: 600;">{{ producto.nombre }}</span>
+        <nav style="font-size: 0.9rem; color: #64748b; word-break: break-word; padding: 0 4px;">
+            <a href="/" style="color: #475569; text-decoration: none; font-weight: 500;">Inicio</a> &nbsp;›&nbsp;
+            <a href="{% url 'categoria' producto.categoria.slug %}" style="color: #475569; text-decoration: none; font-weight: 500;">{{ producto.categoria.nombre }}</a> &nbsp;›&nbsp;
+            <span style="color: #000E1F; font-weight: 700;">{{ producto.nombre }}</span>
         </nav>
         
-        <a href="javascript:history.back()" class="btn-volver" style="margin: 0;">
+        <a href="javascript:history.back()" class="btn-volver" style="margin: 0; background: #ffffff; border: 1px solid #cbd5e1; color: #000E1F; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
             ← Volver
         </a>
     </div>

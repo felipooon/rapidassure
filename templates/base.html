@@ -86,14 +86,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <!-- Buscador Integrado con Selector de Categorías -->
                 <div class="integrated-search-box">
-                    <div class="search-cat-dropdown">
-                        <select onchange="if(this.value) window.location.href=this.value;">
-                            <option value="">Todas las categorías</option>
+                    <div class="search-cat-dropdown" id="custom-cat-dropdown">
+                        <button type="button" class="custom-cat-trigger" id="custom-cat-trigger">
+                            <span>Todas las categorías</span>
+                            <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        </button>
+
+                        <div class="custom-cat-menu" id="custom-cat-menu">
+                            <a href="/#categorias" class="custom-cat-item">
+                                <i class="fa-solid fa-layer-group"></i> Todas las categorías
+                            </a>
                             {% for cat in categorias_globales %}
-                                <option value="{% url 'categoria' cat.slug %}">{{ cat.nombre }}</option>
+                                <a href="{% url 'categoria' cat.slug %}" class="custom-cat-item">
+                                    {% if 'pos' in cat.nombre.lower or 'retail' in cat.nombre.lower %}
+                                        <i class="fa-solid fa-cash-register"></i>
+                                    {% elif 'audio' in cat.nombre.lower or 'bluetooth' in cat.nombre.lower %}
+                                        <i class="fa-solid fa-headphones"></i>
+                                    {% elif 'proteccion' in cat.nombre.lower or 'garantia' in cat.nombre.lower %}
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-microchip"></i>
+                                    {% endif %}
+                                    {{ cat.nombre }}
+                                </a>
                             {% endfor %}
-                        </select>
-                        <i class="fa-solid fa-chevron-down select-arrow"></i>
+                        </div>
                     </div>
 
                     <div class="search-input-box">
@@ -665,6 +682,23 @@ if (!links.contains(e.target) && !toggle.contains(e.target)) {
             }
         });
     });
+
+    // Desplegable de Categorías Personalizado en el Buscador
+    const catTrigger = document.getElementById('custom-cat-trigger');
+    const catDropdown = document.getElementById('custom-cat-dropdown');
+
+    if (catTrigger && catDropdown) {
+        catTrigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            catDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!catDropdown.contains(e.target)) {
+                catDropdown.classList.remove('active');
+            }
+        });
+    }
 </script>
 
 </body>

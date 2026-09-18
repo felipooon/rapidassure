@@ -12,12 +12,12 @@
 
 <div class="categoria-wrapper">
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; width: 100%;">
-    <h1 style="margin: 0; word-break: break-word; color: white; font-family: 'Montserrat', sans-serif;">{{ categoria.nombre }}</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; width: 100%; max-width: 1280px; margin-left: auto; margin-right: auto;">
+    <h1 style="margin: 0; word-break: break-word; color: #000E1F; font-weight: 800; font-family: 'Montserrat', sans-serif;">{{ categoria.nombre }}</h1>
     
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; max-width: 100%;">
-        <label for="ordenarSelect" style="font-size: 0.9rem; color: #ffffff; font-weight: 600;">Ordenar por:</label>
-        <select id="ordenarSelect" onchange="location = this.value;" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: white; cursor: pointer; max-width: 100%;">
+        <label for="ordenarSelect" style="font-size: 0.9rem; color: #334155; font-weight: 600;">Ordenar por:</label>
+        <select id="ordenarSelect" onchange="location = this.value;" style="padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: white; color: #000E1F; cursor: pointer; max-width: 100%;">
             <option value="?orden=" {% if not orden_actual %}selected{% endif %}>Defecto</option>
             <option value="?orden=precio_asc" {% if orden_actual == 'precio_asc' %}selected{% endif %}>Precio: Menor a Mayor</option>
             <option value="?orden=precio_desc" {% if orden_actual == 'precio_desc' %}selected{% endif %}>Precio: Mayor a Menor</option>
@@ -25,7 +25,7 @@
             <option value="?orden=nombre" {% if orden_actual == 'nombre' %}selected{% endif %}>Nombre A-Z</option>
         </select>
         
-        <a href="{% url 'index' %}" class="btn-volver" style="margin: 0;">
+        <a href="{% url 'index' %}" class="btn-volver" style="margin: 0; background: #ffffff; border: 1px solid #cbd5e1; color: #000E1F; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
             ← Volver al inicio
         </a>
     </div>
