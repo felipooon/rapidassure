@@ -3039,4 +3039,634 @@ section:nth-of-type(4) {
   box-shadow: 0 6px 16px rgba(0, 32, 147, 0.35);
 }
 
+/* ==========================================
+   HERO BANNER UNIFICADO DE ALTA FIDELIDAD (ESCENA DE ESTUDIO REAL)
+========================================== */
+.hero-banner-section.hero-scene-bg {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  max-width: 100vw;
+  background: url('../img/hero_studio_banner_bg.jpg') no-repeat center right / cover;
+  padding: 4rem clamp(1.2rem, 5vw, 4.5rem) 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.hero-banner-section.hero-scene-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 58%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.9) 70%, rgba(248, 250, 252, 0) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-card-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 3.5rem;
+}
+
+/* Columna Izquierda */
+.hero-left-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* En Desktop: Contenedores totalmente transparentes sin tarjetas */
+.hero-title-glass-card {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.hero-features-glass-card {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.hero-features-glass-card .hero-key-features-row {
+  margin-bottom: 2.2rem;
+}
+
+/* Yellow Badge Top */
+.hero-yellow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFC700;
+  color: #000E1F;
+  padding: 6px 18px 6px 8px;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(255, 199, 0, 0.35);
+  margin-bottom: 1.4rem;
+}
+
+.hero-yellow-badge .badge-icon-box {
+  width: 28px;
+  height: 28px;
+  background: #000E1F;
+  color: #FFC700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+}
+
+/* Main Heading */
+.hero-main-heading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(1.9rem, 3.5vw, 3rem);
+  font-weight: 900;
+  color: #002A9E;
+  line-height: 1.18;
+  letter-spacing: -0.5px;
+  margin: 0 0 1.2rem 0;
+  text-transform: uppercase;
+}
+
+.hero-main-heading .heading-blue-highlight {
+  color: #0038FF;
+}
+
+/* Subtitle */
+.hero-description-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.08rem;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0 0 1.8rem 0;
+  max-width: 600px;
+}
+
+/* Tira de 4 Iconos de Características */
+.hero-key-features-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 2.2rem;
+}
+
+.key-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #002A9E;
+}
+
+.key-feature-item .feature-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  border: 1.5px solid #0038FF;
+  color: #0038FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 56, 255, 0.08);
+}
+
+/* Botón CTA Blue Pill + Frase */
+.hero-cta-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-hero-blue-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #0038FF 0%, #002093 100%);
+  color: #ffffff !important;
+  padding: 15px 34px;
+  border-radius: 35px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0, 56, 255, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-hero-blue-pill:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 56, 255, 0.45);
+}
+
+.hero-handwritten-note {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: 'Montserrat', sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #0038FF;
+}
+
+.handwritten-underline {
+  width: 120px;
+  height: 10px;
+  margin-top: -2px;
+}
+
+/* Columna Derecha (Visual) */
+.hero-right-visual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Bluexpress floating badge — MÁS GRANDE Y UBICADA MÁS ARRIBA A LA DERECHA */
+.hero-bluexpress-floating-card {
+  position: absolute;
+  top: 35px;
+  right: clamp(20px, 4vw, 50px);
+  z-index: 10;
+  background: linear-gradient(135deg, rgba(0, 56, 255, 0.94) 0%, rgba(0, 32, 147, 0.97) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 18px;
+  padding: 12px 22px;
+  box-shadow: 0 14px 35px rgba(0, 32, 147, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  max-width: 500px;
+  color: #ffffff;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-bluexpress-floating-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 42px rgba(0, 32, 147, 0.4);
+}
+
+.hero-bluexpress-floating-card .bx-left-section {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.hero-bluexpress-floating-card .bx-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.9px;
+  margin-bottom: 3px;
+  line-height: 1;
+}
+
+.hero-bluexpress-floating-card .bx-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-bluexpress-floating-card .bx-logo-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.hero-bluexpress-floating-card .bx-brand {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.18rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+}
+
+.hero-bluexpress-floating-card .bx-vertical-divider {
+  width: 1.5px;
+  height: 42px;
+  background: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.hero-bluexpress-floating-card .bx-right-section {
+  display: flex;
+  align-items: center;
+}
+
+.hero-bluexpress-floating-card .bx-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* Tira Unificada de 4 Beneficios en la parte inferior del Hero */
+.hero-bottom-benefits-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.15fr 1fr;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(248, 250, 252, 0.72) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 16px;
+  padding: 18px 22px;
+  box-shadow: 0 10px 32px rgba(0, 32, 147, 0.09), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  position: relative;
+  z-index: 5;
+  margin-top: 3.5rem;
+  margin-bottom: 0.8rem;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.hero-bottom-benefits-strip:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 0.85) 100%);
+  box-shadow: 0 14px 38px rgba(0, 32, 147, 0.13);
+}
+
+.benefit-strip-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 18px;
+  border-right: 1px solid rgba(0, 56, 255, 0.12);
+}
+
+.benefit-strip-item:first-child {
+  padding-left: 6px;
+}
+
+.benefit-strip-item.no-border {
+  border-right: none;
+  padding-right: 6px;
+}
+
+.benefit-direct-icon {
+  font-size: 2.1rem;
+  color: #0038FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.benefit-bx-icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+
+.benefit-info h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #001A72;
+  margin: 0 0 2px 0;
+  line-height: 1.25;
+}
+
+.benefit-info p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.badge-free-yellow {
+  background: #FFD600;
+  color: #000E1F;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 5px;
+  box-shadow: 0 2px 6px rgba(255, 214, 0, 0.4);
+}
+
+.subtext-bx {
+  color: #0038FF;
+  font-weight: 700;
+}
+
+.benefit-info p.tb-sublabel {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #0038FF;
+  margin: 3px 0 6px 0;
+  display: block;
+}
+
+.payment-logos-wrapper {
+  margin-top: 6px;
+  display: block;
+}
+
+.payment-brands-row-img {
+  max-height: 22px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Cinta Azul Inferior de Ancho Completo */
+.hero-ticker-ribbon {
+  position: relative;
+  z-index: 5;
+  background: linear-gradient(135deg, #002093 0%, #001460 100%);
+  color: #ffffff;
+  text-align: center;
+  padding: 14px 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-top: 2.5rem;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  box-shadow: 0 4px 15px rgba(0, 32, 147, 0.2);
+}
+
+.hero-ticker-ribbon span {
+  color: #ffffff;
+}
+
+/* Responsivo para Móviles y Tablets */
+@media (max-width: 1024px) {
+  .hero-banner-section {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  /* Mantenemos el fondo de la foto 100% visible con un velo ultra liviano */
+  .hero-banner-section.hero-scene-bg::before {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+  }
+
+  .hero-left-content {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .hero-title-glass-card {
+    padding: 20px 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.52) 0%, rgba(248, 250, 252, 0.35) 100%);
+    backdrop-filter: blur(18px) saturate(190%);
+    -webkit-backdrop-filter: blur(18px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 10px 35px rgba(0, 32, 147, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.85);
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-features-glass-card {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(248, 250, 252, 0.28) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 25px rgba(0, 32, 147, 0.06);
+    margin-bottom: 1.6rem;
+  }
+
+  .hero-features-glass-card .hero-key-features-row {
+    margin-bottom: 0;
+  }
+
+  .hero-main-heading {
+    font-size: clamp(1.5rem, 5.5vw, 2.1rem);
+    line-height: 1.25;
+  }
+
+  .hero-ticker-ribbon {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .hero-card-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .hero-right-visual {
+    align-items: center;
+  }
+
+  .hero-bluexpress-floating-card {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-bottom: 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hero-bottom-benefits-strip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .benefit-strip-item {
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 56, 255, 0.1);
+    padding: 10px 8px;
+  }
+
+  .benefit-strip-item:nth-child(3),
+  .benefit-strip-item.no-border {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-banner-section {
+    padding: 1.5rem 0.8rem 1rem;
+  }
+
+  .hero-bottom-benefits-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .benefit-strip-item {
+    border-bottom: 1px solid rgba(0, 56, 255, 0.1);
+  }
+
+  .benefit-strip-item.no-border {
+    border-bottom: none;
+  }
+
+  .hero-key-features-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+/* ==========================================
+   OPCIÓN 1: CORTE GEOMÉTRICO DIAGONAL (MOCKUP ORIGINAL)
+========================================== */
+.hero-banner-opcion1 {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  max-width: 100vw;
+  background: linear-gradient(135deg, #f8fafc 0%, #edf4ff 50%, #dbeafe 100%);
+  padding: 3.5rem clamp(1.2rem, 5vw, 4rem) 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.hero-diagonal-bg-accent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(125deg, rgba(0, 56, 255, 0.1) 0%, rgba(50, 48, 194, 0.18) 100%);
+  clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%);
+  pointer-events: none;
+}
+
+.hero-banner-opcion1 .hero-fused-image-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+  box-shadow: 0 20px 50px rgba(0, 32, 147, 0.18);
+}
+
+.hero-banner-opcion1 .hero-fused-hardware-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  mix-blend-mode: normal;
+}
+
+/* ==========================================
+   OPCIÓN 2: MITAD BLANCO PURO & DIFUMINADO SUAVE
+========================================== */
+.hero-banner-opcion2 {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  max-width: 100vw;
+  background: linear-gradient(to right, #ffffff 0%, #ffffff 48%, #edf4ff 75%, #e2eeff 100%);
+  padding: 3.5rem clamp(1.2rem, 5vw, 4rem) 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.hero-banner-opcion2 .hero-fused-image-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.hero-banner-opcion2 .hero-fused-hardware-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  filter: contrast(1.02) brightness(1.02);
+}
+
 

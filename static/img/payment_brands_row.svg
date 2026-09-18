@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 32" width="340" height="32">
+  <!-- 1. Logo Transbank (Texto Magenta Oficial con punto) -->
+  <g transform="translate(0, 4)">
+    <text x="0" y="18" font-family="'Montserrat', 'Helvetica Neue', Arial, sans-serif" font-size="18" font-weight="800" fill="#E50043" letter-spacing="-0.5px">transbank<tspan fill="#E50043">.</tspan></text>
+  </g>
+
+  <!-- 2. Logo VISA -->
+  <g transform="translate(110, 6)">
+    <rect x="0" y="0" width="46" height="20" rx="3" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1"/>
+    <!-- Icono VISA -->
+    <path d="M12.5 15L15 4H18.2L15.7 15H12.5ZM24.8 4.3C24.1 4 23 3.8 21.7 3.8C18.4 3.8 16.1 5.5 16.1 7.9C16.1 9.7 17.8 10.7 19 11.3C20.3 11.9 20.7 12.3 20.7 12.9C20.7 13.8 19.6 14.2 18.5 14.2C17.2 14.2 16.2 13.9 15.4 13.5L14.9 13.3L14.4 16.1C15.4 16.6 16.9 17 18.5 17C22 17 24.2 15.3 24.2 12.7C24.2 9.7 19.9 9.4 19.9 8.1C19.9 7.6 20.4 7 21.6 7C22.5 7 23.4 7.2 24.1 7.5L24.5 7.7L24.8 4.3ZM31 4H28.4C27.6 4 27 4.2 26.6 5L22.7 15H26.1L26.8 13H30.9L31.3 15H34.3L31 4ZM27.6 10.6L29.3 5.8L30.3 10.6H27.6ZM10.5 4L7.3 15H4.1L2.1 6C2 5.5 1.8 5.3 1.3 5C0.8 4.7 0.1 4.4 0 4.3L0.1 4H5.3C6.1 4 6.8 4.6 7 5.5L8.3 12.3L11.5 4H14.7L10.5 4Z" fill="#1A1F71"/>
+    <path d="M5.3 4H0.1L0 4.3C1.8 4.8 3.5 5.4 4.8 6.3C5.6 6.8 5.8 7.2 6.1 8L8.3 15H11.5L14.7 4H10.5L8.3 12.3L7 5.5C6.8 4.6 6.1 4 5.3 4Z" fill="#FAA61A"/>
+  </g>
+
+  <!-- 3. Logo Mastercard (Círculos Rojo y Amarillo Solapados) -->
+  <g transform="translate(166, 4)">
+    <circle cx="12" cy="12" r="11" fill="#EB001B"/>
+    <circle cx="22" cy="12" r="11" fill="#F79E1B"/>
+    <path d="M17 3.2A11 11 0 0 0 17 20.8A11 11 0 0 0 17 3.2Z" fill="#FF5F00"/>
+  </g>
+
+  <!-- 4. Logo MAGNA (Insignia Azul con Texto Blanco) -->
+  <g transform="translate(208, 6)">
+    <rect x="0" y="0" width="46" height="20" rx="3" fill="#0038FF"/>
+    <text x="23" y="14" font-family="'Montserrat', sans-serif" font-size="9" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5px">MAGNA</text>
+  </g>
+
+  <!-- 5. Logo Redcompra (Insignia Roja y Azul con Texto Itálico Blanco) -->
+  <g transform="translate(262, 6)">
+    <!-- Mitad Izquierda Roja -->
+    <path d="M0 3C0 1.34315 1.34315 0 3 0H35V20H0V3Z" fill="#E50043"/>
+    <!-- Mitad Derecha Azul -->
+    <path d="M35 0H72C73.6569 0 75 1.34315 75 3V17C75 18.6569 73.6569 20 72 20H35V0Z" fill="#001A72"/>
+    <!-- Líneas de velocidad Rojas a la izquierda -->
+    <line x1="4" y1="6" x2="14" y2="6" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="2" y1="10" x2="14" y2="10" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="4" y1="14" x2="14" y2="14" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Texto Redcompra -->
+    <text x="44" y="14" font-family="'Montserrat', sans-serif" font-style="italic" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">Red compra</text>
+  </g>
+</svg>

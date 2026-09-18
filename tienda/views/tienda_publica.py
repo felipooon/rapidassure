@@ -42,6 +42,44 @@ def index(request):
     })
 
 
+def index_opcion1(request):
+    categorias = Categoria.objects.filter(producto__disponible=True).distinct()
+    orden = request.GET.get('orden', '')
+    productos = Producto.objects.filter(disponible=True)
+    productos = aplicar_ordenamiento(productos, orden)
+    productos_destacados = Producto.objects.filter(disponible=True).order_by('?')[:8]
+    resenas = ResenaProducto.objects.filter(aprobado=True).select_related('producto')[:8]
+    ultimas_entradas_blog = BlogPost.objects.filter(publicado=True).order_by('-fecha_creacion')[:3]
+
+    return render(request, "index_opcion1.html", {
+        "categorias": categorias,
+        "productos": productos,
+        "productos_destacados": productos_destacados,
+        "resenas": resenas,
+        "ultimas_entradas_blog": ultimas_entradas_blog,
+        "orden_actual": orden
+    })
+
+
+def index_opcion2(request):
+    categorias = Categoria.objects.filter(producto__disponible=True).distinct()
+    orden = request.GET.get('orden', '')
+    productos = Producto.objects.filter(disponible=True)
+    productos = aplicar_ordenamiento(productos, orden)
+    productos_destacados = Producto.objects.filter(disponible=True).order_by('?')[:8]
+    resenas = ResenaProducto.objects.filter(aprobado=True).select_related('producto')[:8]
+    ultimas_entradas_blog = BlogPost.objects.filter(publicado=True).order_by('-fecha_creacion')[:3]
+
+    return render(request, "index_opcion2.html", {
+        "categorias": categorias,
+        "productos": productos,
+        "productos_destacados": productos_destacados,
+        "resenas": resenas,
+        "ultimas_entradas_blog": ultimas_entradas_blog,
+        "orden_actual": orden
+    })
+
+
 def terminos_condiciones(request):
     return render(request, "terminos.html")
 
