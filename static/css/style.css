@@ -1250,7 +1250,9 @@ section:nth-of-type(4) {
    ========================= */
 
 .mobile-menu-overlay,
-.mobile-drawer {
+.mobile-drawer,
+.floating-mobile-cart-btn,
+.floating-mobile-cart-btn.oculto {
   display: none !important;
 }
 
@@ -1294,14 +1296,8 @@ section:nth-of-type(4) {
     display: none !important;
   }
 
-/* Floating Mobile Cart Button (Solo Móvil) */
-.floating-mobile-cart-btn,
-.floating-mobile-cart-btn.oculto {
-  display: none !important;
-}
-
-@media (max-width: 768px) {
-  .floating-mobile-cart-btn {
+  /* Floating Mobile Cart Button (Solo Móvil cuando active y no oculto) */
+  .floating-mobile-cart-btn.active:not(.oculto) {
     display: flex !important;
     position: fixed;
     bottom: 20px;
@@ -1318,6 +1314,10 @@ section:nth-of-type(4) {
     cursor: pointer;
     backdrop-filter: blur(8px);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .floating-mobile-cart-btn.oculto {
+    display: none !important;
   }
 
   .floating-mobile-cart-btn:hover,
@@ -1369,7 +1369,6 @@ section:nth-of-type(4) {
     font-weight: 800;
     color: #ffffff;
   }
-}
 
   /* FILA 2 MÓVIL: Sandwich pegado más cerca al borde izquierdo + Buscador */
   .header-search-row {

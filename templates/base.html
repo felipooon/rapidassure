@@ -482,10 +482,12 @@ if (!links.contains(e.target) && !toggle.contains(e.target)) {
         -webkit-backdrop-filter: blur(25px);
         box-shadow: -10px 0 30px rgba(0,0,0,0.1);
         border-left: 1px solid rgba(255, 255, 255, 0.5);
-        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 1050; 
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0.4s; z-index: 1050; 
         display: flex; flex-direction: column;
+        visibility: hidden;
+        pointer-events: none;
     }
-    .sidebar-carrito.abierto { right: 0; /* Aparece */ }
+    .sidebar-carrito.abierto { right: 0; visibility: visible; pointer-events: auto; /* Aparece */ }
 
 </style>
 
