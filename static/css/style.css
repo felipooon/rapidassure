@@ -1259,6 +1259,7 @@ section:nth-of-type(4) {
 @media (max-width: 768px) {
   .main-header-row {
     padding: 4px 8px 6px;
+    transition: padding 0.3s ease;
   }
 
   .main-header-container {
@@ -1267,9 +1268,10 @@ section:nth-of-type(4) {
     gap: 4px;
     width: 100%;
     box-sizing: border-box;
+    transition: gap 0.3s ease;
   }
 
-  /* FILA 1 MÓVIL: Logo Centrado */
+  /* FILA 1 MÓVIL: Logo Centrado (con colapso suave en scroll down) */
   .header-top-row {
     display: flex !important;
     width: 100%;
@@ -1277,6 +1279,29 @@ section:nth-of-type(4) {
     justify-content: center !important;
     text-align: center;
     padding: 0;
+    max-height: 55px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s ease, margin 0.3s ease;
+  }
+
+  /* Al hacer scroll down en móvil se oculta el logo manteniendo la barra de búsqueda fija */
+  .header-site-rapidassure.logo-hidden .header-top-row {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  .header-site-rapidassure.logo-hidden .main-header-container {
+    gap: 0 !important;
+  }
+
+  .header-site-rapidassure.logo-hidden .main-header-row {
+    padding-top: 3px;
+    padding-bottom: 4px;
   }
 
   .header-logo-link {

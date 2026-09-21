@@ -386,17 +386,32 @@ document.querySelectorAll("#mobile-drawer a").forEach(link => {
     link.addEventListener("click", cerrarMenuMovil);
 });
 
-  // efecto scroll navbar
-window.addEventListener("scroll", () => {
-    document.querySelector(".navbar")
-    .classList.toggle("scrolled", window.scrollY > 10);
-});
+  // Ocultar logo en móvil al hacer scroll down manteniendo fija la barra de búsqueda
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+  const siteHeader = document.querySelector(".header-site-rapidassure");
 
-document.addEventListener("click", (e) => {
-if (!links.contains(e.target) && !toggle.contains(e.target)) {
-    links.classList.remove("show");
-}
-});
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        
+        if (window.innerWidth <= 768 && siteHeader) {
+          if (currentScrollY > lastScrollY && currentScrollY > 35) {
+            siteHeader.classList.add("logo-hidden");
+          } else if (currentScrollY < lastScrollY || currentScrollY <= 15) {
+            siteHeader.classList.remove("logo-hidden");
+          }
+        } else if (siteHeader) {
+          siteHeader.classList.remove("logo-hidden");
+        }
+        
+        lastScrollY = Math.max(0, currentScrollY);
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
 
 });
 </script>
