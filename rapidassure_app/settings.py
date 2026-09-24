@@ -48,10 +48,17 @@ CSRF_TRUSTED_ORIGINS = [
 
 MP_ACCESS_TOKEN = os.environ.get('MERCADOPAGO_ACCESS_TOKEN', '')
 
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
+CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
+CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
+
+USE_CLOUDINARY = bool(CLOUDINARY_URL or (CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET))
+
 # Application definition
 
 INSTALLED_APPS = [
-    # 'cloudinary_storage',
+    *(['cloudinary_storage'] if USE_CLOUDINARY else []),
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,7 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'tienda',
-    # 'cloudinary',
+    *(['cloudinary'] if USE_CLOUDINARY else []),
     'corsheaders',
 ]
 
@@ -185,20 +192,38 @@ WHITENOISE_USE_FINDERS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #---------------------
-#  STORAGES
+#  STORAGES & MEDIA
 #---------------------
 
-# ALMACENAMIENTO LOCAL DE ARCHIVOS (Cloudinary comentado)
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+if USE_CLOUDINARY:
+    CLOUDINARY_STORAGE = {}
+    if CLOUDINARY_CLOUD_NAME:
+        CLOUDINARY_STORAGE['CLOUD_NAME'] = CLOUDINARY_CLOUD_NAME
+    if CLOUDINARY_API_KEY:
+        CLOUDINARY_STORAGE['API_KEY'] = CLOUDINARY_API_KEY
+    if CLOUDINARY_API_SECRET:
+        CLOUDINARY_STORAGE['API_SECRET'] = CLOUDINARY_API_SECRET
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
 
 
