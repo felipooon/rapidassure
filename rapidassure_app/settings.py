@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-# import dj_database_url
+import dj_database_url
 # import cloudinary
 # import cloudinary.uploader
 # import cloudinary.api
@@ -105,8 +105,6 @@ WSGI_APPLICATION = 'rapidassure_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# CONFIGURACIÓN LOCAL CON SQLITE (Neon / DATABASE_URL comentado)
-"""
 if os.environ.get('DATABASE_URL'):
     db_url = os.environ.get('DATABASE_URL')
     is_sqlite = db_url.startswith('sqlite')
@@ -130,13 +128,12 @@ if os.environ.get('DATABASE_URL'):
         'default': db_config
     }
 else:
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 
 LOGIN_URL = '/login/'
