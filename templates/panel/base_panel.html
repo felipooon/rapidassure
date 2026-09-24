@@ -16,9 +16,23 @@
 
 <div class="panel-layout">
 
-  <nav class="panel-nav" style="background: #000E1F;">
-    <div style="padding: 10px 0 20px; border-bottom: 1px solid rgba(252, 190, 0, 0.2); margin-bottom: 15px;">
-        <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Panel" style="max-width: 160px; height: auto;">
+  <nav class="panel-nav" style="background: #000E1F; overflow-y: auto;">
+    <div style="padding: 10px 0 16px; border-bottom: 1px solid rgba(252, 190, 0, 0.2); margin-bottom: 15px;">
+        <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Panel" style="max-width: 155px; height: auto;">
+        
+        {% if user.is_authenticated %}
+        <div style="margin-top: 12px; display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.05); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(252, 190, 0, 0.25);">
+            <div style="width: 30px; height: 30px; border-radius: 50%; background: #FCBE00; display: flex; align-items: center; justify-content: center; color: #000E1F; font-size: 0.8rem; flex-shrink: 0; box-shadow: 0 0 8px rgba(252,190,0,0.3);">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <div style="overflow: hidden; text-align: left; line-height: 1.25;">
+                <span style="display: block; font-size: 0.68rem; color: rgba(255, 255, 255, 0.65); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Bienvenido</span>
+                <span style="display: block; font-size: 0.88rem; color: #ffffff; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Montserrat', sans-serif;" title="{{ user.get_full_name|default:user.username }}">
+                    {{ user.get_full_name|default:user.username }}
+                </span>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <a href="/panel/"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
