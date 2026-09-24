@@ -274,16 +274,18 @@ LOGGING = {
 #  EMAIL
 #---------------
 
-if DEBUG:
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', '')
+
+if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD or DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'Rapidassure Retail <soporte@rapidassure.cl>'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
-    
-    EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+    EMAIL_TIMEOUT = 3  # Timeout de 3 segundos para que nunca bloquee al worker de Gunicorn
     DEFAULT_FROM_EMAIL = f"Rapidassure Retail <{EMAIL_HOST_USER}>"
 
 CORS_ALLOWED_ORIGINS = [

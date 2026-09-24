@@ -1,5 +1,6 @@
 import json
 import re
+import threading
 import mercadopago
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -16,6 +17,26 @@ from transbank.common.integration_api_keys import IntegrationApiKeys
 from ..models import Producto, Pedido, ItemPedido, Cupon, LogProducto, LogPedido
 from ..carrito import Carrito
 from ..deseos import Deseos
+
+
+def enviar_correo_asincrono(asunto, mensaje, destinatario):
+    """
+    Envía correos electrónicos en un hilo secundario para evitar que 
+    fallas o latencias en el servidor SMTP bloqueen al worker de Gunicorn.
+    """
+    if not getattr(settings, 'EMAIL_HOST_USER', None):
+        return
+    try:
+        send_mail(
+            asunto,
+            mensaje,
+            settings.DEFAULT_FROM_EMAIL,
+            [destinatario],
+            fail_silently=True,
+        )
+    except Exception as e:
+        print(f"Error asíncrono al enviar correo a {destinatario}: {e}")
+
 
 
 def get_webpay_transaction():
@@ -372,9 +393,8 @@ def procesar_pedido(request):
         )
 
         if getattr(settings, 'EMAIL_HOST_USER', None):
-            try:
-                asunto_admin = f"NUEVO PEDIDO RAPIDASSURE #{pedido.codigo_orden} - {pedido.nombre_completo}"
-                mensaje_admin = f"""¡Atención! Acaba de entrar un nuevo pedido.
+            asunto_admin = f"NUEVO PEDIDO RAPIDASSURE #{pedido.codigo_orden} - {pedido.nombre_completo}"
+            mensaje_admin = f"""¡Atención! Acaba de entrar un nuevo pedido.
 
 Cliente: {pedido.nombre_completo}
 Ciudad: {pedido.ciudad}
@@ -384,15 +404,11 @@ Teléfono: +56{pedido.telefono}
 Revisa el panel de administración para ver el detalle completo.
 https://rapidassure.cl/panel/
 """
-                send_mail(
-                    asunto_admin,
-                    mensaje_admin,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [settings.EMAIL_HOST_USER],
-                    fail_silently=True,
-                )
-            except Exception as e:
-                print(f"Error silencioso al enviar alerta de pedido: {e}")
+            threading.Thread(
+                target=enviar_correo_asincrono,
+                args=(asunto_admin, mensaje_admin, settings.EMAIL_HOST_USER),
+                daemon=True
+            ).start()
 
         # Iniciar transacción con Transbank Webpay Plus
         try:
@@ -611,16 +627,13 @@ Estamos preparando tus productos de inmediato. En cuanto sean despachados te con
 ¡Muchas gracias por tu compra en Rapidassure Retail!
 https://rapidassure.cl
 '''
-            try:
-                send_mail(
-                    asunto,
-                    mensaje,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [pedido.email],
-                    fail_silently=True,
-                )
-            except Exception as mail_err:
-                print(f"Error al enviar correo de pago Webpay: {mail_err}")
+            # Enviamos el correo de confirmación de forma asíncrona para que la respuesta al cliente sea instantánea
+            if getattr(settings, 'EMAIL_HOST_USER', None):
+                threading.Thread(
+                    target=enviar_correo_asincrono,
+                    args=(asunto, mensaje, pedido.email),
+                    daemon=True
+                ).start()
 
             return redirect('pedido_confirmado', pedido_id=pedido.id)
         else:
