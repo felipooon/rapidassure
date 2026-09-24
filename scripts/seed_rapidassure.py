@@ -19,7 +19,12 @@ def run():
     config.mostrar_resenas = False
     config.save()
 
-    # Limpiar datos antiguos
+    # Seguridad: no sobrescribir si ya existen productos a menos que se fuerce explícitamente
+    if Producto.objects.exists() and "--force" not in sys.argv:
+        print("Ya existen productos en la base de datos. Omitiendo seed para proteger tus datos.")
+        return
+
+    # Limpiar datos antiguos solo si está vacío o con --force
     Producto.objects.all().delete()
     Categoria.objects.all().delete()
     BlogPost.objects.all().delete()
