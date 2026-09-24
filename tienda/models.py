@@ -99,6 +99,10 @@ class Producto(models.Model):
     stock = models.PositiveIntegerField(default=0, help_text="Cantidad disponible en inventario")
     disponible = models.BooleanField(default=True)
 
+    # Control de Ofertas y Descuentos
+    en_oferta = models.BooleanField(default=False, help_text="Marcar para activar precio de oferta promocional")
+    porcentaje_descuento = models.PositiveIntegerField(default=0, help_text="Porcentaje de descuento (ej: 15 para 15% OFF)")
+
     # Especificación Técnica Extendida
     tiene_ficha_especie = models.BooleanField(default=True, help_text="Marcar para incluir Especificación Técnica Extendida")
     especie_nombre_comun = models.CharField(max_length=150, blank=True, help_text="Ej: Terminal POS Táctil 15'', Lector Láser 2D")
@@ -106,6 +110,21 @@ class Producto(models.Model):
     especie_habitat = models.CharField(max_length=200, blank=True, help_text="Ej: Retail, Supermercados, Bodegas y Logística")
     especie_estado_conservacion = models.CharField(max_length=100, blank=True, help_text="Ej: Garantía 24 Meses, Norma IP65")
     especie_dato_curioso = models.TextField(blank=True, help_text="Ficha técnica o características destacadas del equipo")
+
+    @property
+    def tiene_descuento(self):
+        return bool(self.en_oferta and self.porcentaje_descuento and 0 < self.porcentaje_descuento < 100)
+
+    @property
+    def precio_final(self):
+        if self.tiene_descuento:
+            descuento = (self.precio * self.porcentaje_descuento) / 100.0
+            return int(round(self.precio - descuento))
+        return self.precio
+
+    @property
+    def monto_ahorro(self):
+        return max(0, self.precio - self.precio_final)
 
     def __str__(self):
         return self.nombre
@@ -145,6 +164,10 @@ class Producto(models.Model):
             return 0
         total = sum(r.calificacion for r in resenas)
         return round(total / resenas.count(), 1)
+
+    @property
+    def total_resenas(self):
+        return self.resenas.filter(aprobado=True).count()
 
     @property
     def todas_las_imagenes(self):
@@ -398,25 +421,79 @@ class ConfiguracionSitio(models.Model):
 
 class BannerPromocional(models.Model):
     ESTILO_CHOICES = [
-        ('dark-navy', 'Dark Navy Metallic'),
-        ('vibrant-blue', 'Azul Vibrante'),
-        ('gradient-purple', 'Púrpura Deep'),
-        ('emerald-green', 'Verde Esmeralda'),
+        ('dark-navy', 'Dark Navy Metallic (Azul Marino & Índigo)'),
+        ('vibrant-blue', 'Azul Cobalto Tech (Azul Eléctrico & Royal)'),
+        ('gradient-purple', 'Cyberpunk Violet (Púrpura & Violeta Profundo)'),
+        ('emerald-green', 'Cyber Emerald (Verde Esmeralda Tech)'),
+        ('neon-cyan', 'Neón Cyan & Deep Sea (Turquesa & Cyan Brillante)'),
+        ('crimson-red', 'Crimson Gamer (Rojo Rubí & Carmesí Tech)'),
+        ('sunset-amber', 'Ámbar Gold & Sunset (Dorado Ámbar & Cobre)'),
+        ('titanium-carbon', 'Titanio & Carbón (Negro Grafito & Pizarra)'),
+        ('electric-violet', 'Violeta Neón & Magenta (Fucsia Cyber & Púrpura)'),
+        ('matrix-tech', 'Matrix Tech (Verde Neón Terminal)'),
+        ('midnight-aurora', 'Aurora Boreal (Azul Medianoche & Teal)'),
+        ('solar-flare', 'Solar Flare (Naranja Fuego & Bronce Tech)'),
     ]
 
     ICONO_CHOICES = [
+        # Retail, Punto de Venta & Pagos
         ('fa-cash-register', 'Caja Registradora / Smart POS'),
-        ('fa-headphones', 'Audífonos / Audio Profesional'),
-        ('fa-print', 'Impresora Térmica / Insumos'),
-        ('fa-microchip', 'Microchip / Gadgets Tech'),
-        ('fa-truck-fast', 'Despacho Corporativo'),
-        ('fa-shield-halved', 'Garantía / Cobertura Care+'),
-        ('fa-bolt', 'Smart / Oferta Relámpago'),
-        ('fa-tag', 'Etiqueta de Descuento / Oferta'),
+        ('fa-mobile-screen', 'POS Móvil Android / Terminal Portátil'),
+        ('fa-barcode', 'Lector de Código de Barras'),
+        ('fa-qrcode', 'Código QR / Pago Digital'),
+        ('fa-print', 'Impresora Térmica / Recibos y Tickets'),
+        ('fa-receipt', 'Boleta / Facturación Electrónica'),
+        ('fa-credit-card', 'Tarjeta de Crédito / Terminal Transbank'),
         ('fa-store', 'Tienda / Comercio Retail'),
-        ('fa-qrcode', 'Lector QR / Código de Barras'),
-        ('fa-mobile-screen', 'POS Móvil Android'),
-        ('fa-boxes-stacked', 'Inventario / Accesorios'),
+        
+        # Computación, Pantallas & Servidores
+        ('fa-laptop', 'Laptop / Computador Portátil'),
+        ('fa-desktop', 'PC Escritorio / All-in-One'),
+        ('fa-server', 'Servidores / Cloud Data Center'),
+        ('fa-tv', 'Smart TV / Monitores & Pantallas'),
+        ('fa-tablet-screen-button', 'Tablet / Pantalla Táctil'),
+        ('fa-mobile-screen-button', 'Smartphone / Telefonía Móvil'),
+        
+        # Audio, Sonido & Multimedia
+        ('fa-headphones', 'Audífonos / Audio Profesional'),
+        ('fa-volume-high', 'Parlantes Bluetooth / Sonido'),
+        ('fa-sliders', 'Mezclador / Consola de Audio'),
+        ('fa-microphone', 'Micrófono / Streaming Tech'),
+        
+        # Gaming & Realidad Virtual
+        ('fa-gamepad', 'Gaming / Consolas & Joysticks'),
+        ('fa-vr-cardboard', 'Realidad Virtual / Visores VR'),
+        
+        # Redes, Conectividad & Almacenamiento
+        ('fa-wifi', 'WiFi / Router & Conectividad'),
+        ('fa-network-wired', 'Red Cableada / Ethernet & Switches'),
+        ('fa-satellite-dish', 'Telecomunicaciones / Antenas'),
+        ('fa-cloud-arrow-up', 'Nube / Copia de Seguridad & Cloud'),
+        ('fa-microchip', 'Microchip / Procesadores & Hardware'),
+        ('fa-hard-drive', 'Disco SSD / Almacenamiento de Datos'),
+        
+        # Periféricos, Energía & Accesorios
+        ('fa-keyboard', 'Teclados & Mouse Periféricos'),
+        ('fa-battery-full', 'Baterías / Powerbanks & Autonomía'),
+        ('fa-plug', 'Cargadores / Enchufes & Cables Tech'),
+        ('fa-boxes-stacked', 'Inventario / Accesorios Tech'),
+        
+        # Seguridad, Reparación & Biometría
+        ('fa-video', 'Cámaras de Seguridad & CCTV'),
+        ('fa-camera', 'Cámaras Fotográficas / Lentes'),
+        ('fa-shield-halved', 'Garantía / Cobertura Rapidassure Care+'),
+        ('fa-shield-check', 'Ciberseguridad / Protección Digital'),
+        ('fa-fingerprint', 'Biometría / Control de Acceso'),
+        ('fa-robot', 'Robótica & Inteligencia Artificial'),
+        ('fa-screwdriver-wrench', 'Servicio Técnico & Reparación'),
+        
+        # Ofertas, Descuentos & Despacho
+        ('fa-bolt', 'Oferta Relámpago / Flash Tech'),
+        ('fa-fire', 'Hot Tech / Lo Más Vendido'),
+        ('fa-tag', 'Etiqueta de Descuento / Promo'),
+        ('fa-percent', 'Porcentaje Descuento / Cyber Sale'),
+        ('fa-gem', 'Edición Premium / Gama Alta'),
+        ('fa-truck-fast', 'Despacho Express / Envío Rápido'),
     ]
 
     titulo = models.CharField(max_length=150, help_text="Título principal del banner")

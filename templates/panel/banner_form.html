@@ -61,7 +61,12 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 22px;">
                 <div>
                     <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Estilo de Gradiente</label>
-                    {{ form.estilo_fondo }}
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div style="flex: 1;">
+                            {{ form.estilo_fondo }}
+                        </div>
+                        <div id="gradient-swatch-box" style="width: 44px; height: 44px; border-radius: 10px; border: 2px solid #cbd5e1; flex-shrink: 0; box-shadow: inset 0 0 4px rgba(0,0,0,0.2); transition: all 0.25s ease;" title="Muestra del gradiente seleccionado"></div>
+                    </div>
                 </div>
                 <div>
                     <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Icono FontAwesome Decorativo</label>
@@ -72,6 +77,30 @@
                         <div id="icon-preview-box" style="width: 44px; height: 44px; background: #e0e7ff; border: 1px solid #c7d2fe; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #002093; flex-shrink: 0;" title="Vista previa del icono">
                             <i class="fa-solid fa-cash-register" id="icon-preview"></i>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA PREVIA EN VIVO DEL BANNER -->
+            <div style="margin-bottom: 25px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 18px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 800; color: #002093; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Vista Previa en Tiempo Real
+                    </span>
+                    <span style="font-size: 0.78rem; color: #64748b;">Visualización exacta de la tarjeta promocional en portada</span>
+                </div>
+                
+                <div id="live-banner-card" class="promo-banner-card dark-navy" style="margin: 0; min-height: 175px;">
+                    <div class="promo-content">
+                        <span id="live-preview-badge" class="promo-badge">OFERTA TECH</span>
+                        <h3 id="live-preview-title">Título del Banner</h3>
+                        <p id="live-preview-sub">Descripción o detalles promocionales del banner</p>
+                        <span class="btn-banner-link" style="pointer-events: none;">
+                            <span id="live-preview-btn-text">Ver Colección</span> <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </div>
+                    <div class="promo-banner-icon">
+                        <i id="live-preview-icon" class="fa-solid fa-cash-register"></i>
                     </div>
                 </div>
             </div>
@@ -102,8 +131,41 @@
 document.addEventListener("DOMContentLoaded", function() {
     const urlSelect = document.getElementById("url_destino_select");
     const urlInput = document.getElementById("url_destino_input");
+    
+    // Inputs del formulario
+    const tituloInput = document.getElementById("banner_titulo_input");
+    const subtituloInput = document.getElementById("banner_subtitulo_input");
+    const badgeInput = document.getElementById("banner_badge_input");
+    const badgeGoldInput = document.getElementById("banner_badge_gold_input");
+    const btnInput = document.getElementById("banner_btn_input");
+    const gradientSelect = document.getElementById("estilo_fondo_select");
     const iconSelect = document.getElementById("icono_select");
+
+    // Elementos de la vista previa
+    const liveCard = document.getElementById("live-banner-card");
+    const liveTitle = document.getElementById("live-preview-title");
+    const liveSub = document.getElementById("live-preview-sub");
+    const liveBadge = document.getElementById("live-preview-badge");
+    const liveBtnText = document.getElementById("live-preview-btn-text");
+    const liveIcon = document.getElementById("live-preview-icon");
     const iconPreview = document.getElementById("icon-preview");
+    const gradientSwatch = document.getElementById("gradient-swatch-box");
+
+    // Mapa de gradientes para la muestra
+    const gradientGradients = {
+        'dark-navy': 'linear-gradient(135deg, #000E1F, #002093)',
+        'vibrant-blue': 'linear-gradient(135deg, #002093, #3230C2)',
+        'gradient-purple': 'linear-gradient(135deg, #1e1b4b, #581c87, #312e81)',
+        'emerald-green': 'linear-gradient(135deg, #022c22, #065f46, #047857)',
+        'neon-cyan': 'linear-gradient(135deg, #042f2e, #0891b2, #06b6d4)',
+        'crimson-red': 'linear-gradient(135deg, #450a0a, #991b1b, #dc2626)',
+        'sunset-amber': 'linear-gradient(135deg, #451a03, #b45309, #d97706)',
+        'titanium-carbon': 'linear-gradient(135deg, #090d16, #1e293b, #334155)',
+        'electric-violet': 'linear-gradient(135deg, #3b0764, #701a75, #a21caf)',
+        'matrix-tech': 'linear-gradient(135deg, #052e16, #15803d, #22c55e)',
+        'midnight-aurora': 'linear-gradient(135deg, #020617, #064e3b, #0284c7)',
+        'solar-flare': 'linear-gradient(135deg, #431407, #9a3412, #ea580c)'
+    };
 
     // Sincronización de URL
     if (urlSelect && urlInput) {
@@ -116,15 +178,52 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Vista previa de icono FontAwesome
-    if (iconSelect && iconPreview) {
-        function updateIcon() {
-            const val = iconSelect.value || "fa-cash-register";
-            iconPreview.className = "fa-solid " + val;
+    // Actualizador de Vista Previa
+    function updateLivePreview() {
+        if (tituloInput && liveTitle) {
+            liveTitle.textContent = tituloInput.value.trim() || "Título del Banner";
         }
-        iconSelect.addEventListener("change", updateIcon);
-        updateIcon();
+        if (subtituloInput && liveSub) {
+            liveSub.textContent = subtituloInput.value.trim() || "Descripción o detalles promocionales del banner";
+        }
+        if (badgeInput && liveBadge) {
+            liveBadge.textContent = badgeInput.value.trim() || "OFERTA TECH";
+        }
+        if (badgeGoldInput && liveBadge) {
+            if (badgeGoldInput.checked) {
+                liveBadge.classList.add("gold");
+            } else {
+                liveBadge.classList.remove("gold");
+            }
+        }
+        if (btnInput && liveBtnText) {
+            liveBtnText.textContent = btnInput.value.trim() || "Ver Colección";
+        }
+        if (gradientSelect && liveCard) {
+            const val = gradientSelect.value || "dark-navy";
+            liveCard.className = "promo-banner-card " + val;
+            if (gradientSwatch) {
+                gradientSwatch.style.background = gradientGradients[val] || '#000E1F';
+            }
+        }
+        if (iconSelect) {
+            const iconVal = iconSelect.value || "fa-cash-register";
+            if (liveIcon) liveIcon.className = "fa-solid " + iconVal;
+            if (iconPreview) iconPreview.className = "fa-solid " + iconVal;
+        }
     }
+
+    // Escuchar eventos de entrada
+    [tituloInput, subtituloInput, badgeInput, btnInput].forEach(el => {
+        if (el) el.addEventListener("input", updateLivePreview);
+    });
+
+    if (badgeGoldInput) badgeGoldInput.addEventListener("change", updateLivePreview);
+    if (gradientSelect) gradientSelect.addEventListener("change", updateLivePreview);
+    if (iconSelect) iconSelect.addEventListener("change", updateLivePreview);
+
+    // Inicializar al cargar
+    updateLivePreview();
 });
 </script>
 {% endblock %}

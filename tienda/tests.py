@@ -331,6 +331,21 @@ class DeseosTests(TestCase):
         self.assertEqual(len(deseos), 0)
         self.assertEqual(len(carrito), 1)
 
+    def test_deseos_context_processor_ids(self):
+        """Verifica que deseos_global proporcione la lista de IDs para el estado de los corazones."""
+        from .context_processors import deseos_global
+        request = self.factory.get('/')
+        middleware = SessionMiddleware(lambda r: None)
+        middleware.process_request(request)
+        request.session.save()
+
+        ctx = deseos_global(request)
+        self.assertEqual(ctx['deseos_ids'], [])
+
+        ctx['deseos'].toggle(self.p1)
+        ctx_actualizado = deseos_global(request)
+        self.assertIn(self.p1.id, ctx_actualizado['deseos_ids'])
+
 
 class BannerPromocionalTests(TestCase):
     def test_banner_promocional_creation_and_context(self):
@@ -348,12 +363,31 @@ class BannerPromocionalTests(TestCase):
             orden=1,
             activo=True
         )
-        self.assertEqual(str(banner), "Banner Test POS (Dark Navy Metallic)")
+        self.assertEqual(str(banner), "Banner Test POS (Dark Navy Metallic (Azul Marino & Índigo))")
         
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         banners_en_contexto = list(response.context['banners_promocionales'])
         self.assertIn(banner, banners_en_contexto)
+
+    def test_banner_promocional_nuevos_gradientes_e_iconos(self):
+        """Verifica que los nuevos gradientes e iconos de tecnología se guarden y muestren adecuadamente."""
+        from .models import BannerPromocional
+        banner = BannerPromocional.objects.create(
+            titulo="Gaming & Metaverso",
+            subtitulo="Consolas y visores VR",
+            badge="HOT TECH",
+            badge_gold=True,
+            url_destino="/",
+            texto_boton="Explorar",
+            estilo_fondo="electric-violet",
+            icono_fontawesome="fa-gamepad",
+            orden=2,
+            activo=True
+        )
+        self.assertEqual(banner.estilo_fondo, "electric-violet")
+        self.assertEqual(banner.icono_fontawesome, "fa-gamepad")
+        self.assertIn("Violeta Neón", banner.get_estilo_fondo_display())
 
 
 class TipoEntregaCheckoutTests(TestCase):
@@ -399,6 +433,81 @@ class TipoEntregaCheckoutTests(TestCase):
         self.assertEqual(pedido.tipo_entrega, 'RETIRO')
         self.assertEqual(pedido.direccion, 'Retiro en Local - San Diego 174 local 8')
         self.assertEqual(pedido.ciudad, 'Santiago')
+
+
+class ControladorOfertasTests(TestCase):
+    def setUp(self):
+        self.categoria = Categoria.objects.create(nombre="Smart POS")
+        self.producto_oferta = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Terminal POS Pro Táctil",
+            precio=100000,
+            stock=5,
+            disponible=True,
+            en_oferta=True,
+            porcentaje_descuento=20,
+            tiene_ficha_especie=True,
+            especie_nombre_comun="POS Pro",
+            especie_habitat="Retail",
+            especie_estado_conservacion="Garantía 24M",
+            especie_dato_curioso="Pantalla capacitiva HD"
+        )
+        self.producto_normal = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Lector Código de Barras 2D",
+            precio=50000,
+            stock=10,
+            disponible=True,
+            en_oferta=False,
+            porcentaje_descuento=0,
+            tiene_ficha_especie=True,
+            especie_nombre_comun="Lector 2D",
+            especie_habitat="Logística",
+            especie_estado_conservacion="Garantía 12M",
+            especie_dato_curioso="Sensor CMOS rápido"
+        )
+
+    def test_calculo_precio_oferta_y_ahorro(self):
+        """El precio_final debe descontar el porcentaje y el monto_ahorro ser exacto."""
+        self.assertTrue(self.producto_oferta.tiene_descuento)
+        self.assertEqual(self.producto_oferta.precio_final, 80000)
+        self.assertEqual(self.producto_oferta.monto_ahorro, 20000)
+
+        # Producto regular sin oferta
+        self.assertFalse(self.producto_normal.tiene_descuento)
+        self.assertEqual(self.producto_normal.precio_final, 50000)
+        self.assertEqual(self.producto_normal.monto_ahorro, 0)
+
+    def test_carrito_con_precio_en_oferta(self):
+        """Al agregar al carrito un producto en oferta, el precio registrado debe ser el precio_final."""
+        from tienda.carrito import Carrito
+        from django.test import RequestFactory
+        from django.contrib.sessions.middleware import SessionMiddleware
+
+        factory = RequestFactory()
+        request = factory.get('/')
+        middleware = SessionMiddleware(lambda req: None)
+        middleware.process_request(request)
+        request.session.save()
+
+        carrito = Carrito(request)
+        carrito.agregar(self.producto_oferta, cantidad=1)
+
+        item = carrito.carrito[str(self.producto_oferta.id)]
+        self.assertEqual(item['precio'], '80000')
+        self.assertEqual(item['precio_original'], '100000')
+        self.assertTrue(item['en_oferta'])
+        self.assertEqual(item['porcentaje_descuento'], 20)
+
+    def test_tienda_publica_muestra_precio_oferta_y_tachado(self):
+        """En el detalle del producto debe figurar el precio rebajado y el precio original tachado."""
+        response = self.client.get(self.producto_oferta.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        content = response.content.decode('utf-8')
+        self.assertIn('80.000', content)
+        self.assertIn('100.000', content)
+        self.assertIn('-20% OFF', content)
+
 
 
 

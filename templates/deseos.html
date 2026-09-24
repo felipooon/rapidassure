@@ -59,9 +59,19 @@
               <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; color: #0f172a; margin: 0 0 6px 0; line-height: 1.35;">
                 {{ item.nombre }}
               </h3>
-              <p style="font-weight: 800; color: #3230C2; font-size: 1.15rem; margin: 0 0 16px 0;">
-                ${{ item.precio }}
-              </p>
+              <div style="margin: 0 0 16px 0;">
+                {% if item.en_oferta %}
+                  <span style="font-size: 0.85rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ item.precio_original }}</span>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-weight: 800; color: #b45309; font-size: 1.15rem;">${{ item.precio }}</span>
+                    <span style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 0.7rem; font-weight: 800; padding: 1px 6px; border-radius: 8px;">-{{ item.porcentaje_descuento }}%</span>
+                  </div>
+                {% else %}
+                  <p style="font-weight: 800; color: #3230C2; font-size: 1.15rem; margin: 0;">
+                    ${{ item.precio }}
+                  </p>
+                {% endif %}
+              </div>
 
               <!-- Botones de Acción -->
               <div style="display: flex; gap: 8px; margin-top: auto;">

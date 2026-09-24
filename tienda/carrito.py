@@ -26,7 +26,10 @@ class Carrito:
                 self.carrito[id] = {
                     "producto_id": producto.id,
                     "nombre": producto.nombre,
-                    "precio": str(producto.precio),
+                    "precio": str(producto.precio_final),
+                    "precio_original": str(producto.precio),
+                    "en_oferta": producto.tiene_descuento,
+                    "porcentaje_descuento": producto.porcentaje_descuento if producto.tiene_descuento else 0,
                     "cantidad": producto.stock, # Lo limitamos al stock máximo
                     "imagen": producto.imagen.url if producto.imagen else ""
                 }
@@ -36,7 +39,10 @@ class Carrito:
                 self.carrito[id] = {
                     "producto_id": producto.id,
                     "nombre": producto.nombre,
-                    "precio": str(producto.precio),
+                    "precio": str(producto.precio_final),
+                    "precio_original": str(producto.precio),
+                    "en_oferta": producto.tiene_descuento,
+                    "porcentaje_descuento": producto.porcentaje_descuento if producto.tiene_descuento else 0,
                     "cantidad": cantidad,
                     "imagen": producto.imagen.url if producto.imagen else ""
                 }

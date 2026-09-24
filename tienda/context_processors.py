@@ -16,12 +16,16 @@ def carrito_global(request):
 def deseos_global(request):
     """Procesador de contexto global para la Lista de Deseos"""
     try:
+        deseos_obj = Deseos(request)
+        deseos_ids = [int(k) for k in deseos_obj.deseos.keys() if str(k).isdigit()]
         return {
-            'deseos': Deseos(request)
+            'deseos': deseos_obj,
+            'deseos_ids': deseos_ids
         }
     except Exception:
         return {
-            'deseos': None
+            'deseos': None,
+            'deseos_ids': []
         }
 
 

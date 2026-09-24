@@ -79,7 +79,10 @@ def api_buscar_productos(request):
         data.append({
             'id': p.id,
             'nombre': p.nombre,
-            'precio': f"${p.precio:,}".replace(',', '.'),
+            'precio': f"${p.precio_final:,}".replace(',', '.'),
+            'precio_original': f"${p.precio:,}".replace(',', '.') if p.tiene_descuento else '',
+            'tiene_descuento': p.tiene_descuento,
+            'porcentaje_descuento': p.porcentaje_descuento if p.tiene_descuento else 0,
             'url': p.get_absolute_url(),
             'imagen': p.imagen.url if p.imagen else ''
         })
@@ -287,14 +290,24 @@ def api_destacados_random(request):
     random.shuffle(badges_pool)
     productos = Producto.objects.filter(disponible=True).order_by('?')[:8]
     
+    from ..deseos import Deseos
+    deseos_obj = Deseos(request)
+    deseos_ids = set(int(k) for k in deseos_obj.deseos.keys() if str(k).isdigit())
+
     data = []
     for idx, p in enumerate(productos):
         data.append({
             'id': p.id,
             'nombre': p.nombre,
             'precio': f"{p.precio:,}".replace(',', '.'),
+            'precio_final': f"{p.precio_final:,}".replace(',', '.'),
+            'tiene_descuento': p.tiene_descuento,
+            'porcentaje_descuento': p.porcentaje_descuento if p.tiene_descuento else 0,
+            'en_deseos': p.id in deseos_ids,
+            'total_resenas': p.total_resenas,
+            'promedio_calificacion': p.promedio_calificacion,
             'url': p.get_absolute_url(),
             'imagen': p.get_imagen_url_absoluta,
-            'badge': badges_pool[idx % len(badges_pool)]
+            'badge': f"-{p.porcentaje_descuento}% OFF" if p.tiene_descuento else badges_pool[idx % len(badges_pool)]
         })
     return JsonResponse({'productos': data})

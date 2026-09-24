@@ -109,7 +109,19 @@
             {% endif %}
         </td>
         
-        <td style="padding: 12px; color: #444;">${{ p.precio }}</td>
+        <td style="padding: 12px; color: #444;">
+          {% if p.tiene_descuento %}
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-weight: 800; color: #b45309; font-size: 0.95rem;">${{ p.precio_final }}</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through;">${{ p.precio }}</span>
+                <span style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 0.7rem; font-weight: 800; padding: 1px 6px; border-radius: 8px;">-{{ p.porcentaje_descuento }}%</span>
+              </div>
+            </div>
+          {% else %}
+            <span style="font-weight: 600;">${{ p.precio }}</span>
+          {% endif %}
+        </td>
 
         <td style="padding: 12px; vertical-align: middle;">
           <a href="{% url 'toggle_producto' p.id %}?next={{ request.get_full_path|urlencode }}" 

@@ -292,6 +292,49 @@ function ejecutarCopiaFormModal() {
                 </div>
             </div>
         </div>
+
+        <!-- SECCIÓN DE CONTROL DE OFERTAS (% OFF) -->
+        <div style="background: #fffdf5; border: 1.5px solid #fef08a; border-radius: 14px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(234, 179, 8, 0.08);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 38px; height: 38px; border-radius: 10px; background: #fef08a; color: #a16207; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 800; color: #713f12;">Control de Oferta Promocional</h4>
+                        <span style="font-size: 0.8rem; color: #854d0e;">Aplica un % de descuento sobre el precio regular para mostrarlo tachado en la tienda</span>
+                    </div>
+                </div>
+
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: white; padding: 8px 14px; border-radius: 20px; border: 1.5px solid #fde047; font-weight: 700; font-size: 0.9rem; color: #854d0e; user-select: none;">
+                    {{ form.en_oferta }} Activar Oferta
+                </label>
+            </div>
+
+            <div id="seccion-descuento-inputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="id_porcentaje_descuento" style="color: #713f12; font-weight: 700;">Porcentaje de Descuento (% OFF)</label>
+                    <div style="position: relative;">
+                        {{ form.porcentaje_descuento }}
+                        <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-weight: 800; color: #a16207; pointer-events: none;">%</span>
+                    </div>
+                    {% if form.porcentaje_descuento.errors %}
+                        <div style="color: #ef4444; font-size: 0.82rem; margin-top: 4px;">{{ form.porcentaje_descuento.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Calculadora / Resumen en vivo -->
+                <div style="background: white; border-radius: 10px; border: 1px solid #fef08a; padding: 12px 16px; display: flex; flex-direction: column; justify-content: center;">
+                    <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: #854d0e; letter-spacing: 0.5px; margin-bottom: 4px;">Resumen del Precio en Tienda:</span>
+                    <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+                        <span id="preview-precio-regular" style="font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$0</span>
+                        <span id="preview-precio-oferta" style="font-size: 1.3rem; color: #b45309; font-weight: 800; font-family: 'Montserrat', sans-serif;">$0</span>
+                        <span id="preview-badge-ahorro" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; display: none;">0% OFF</span>
+                    </div>
+                    <span id="preview-monto-ahorro" style="font-size: 0.8rem; color: #16a34a; font-weight: 700; margin-top: 3px;"></span>
+                </div>
+            </div>
+        </div>
         
         <div class="form-group file-upload-box" style="margin-bottom: 25px;">
             <label style="display:block; margin-bottom: 10px; font-weight: 700; color: #1e293b; font-size: 1.05rem;">
@@ -423,6 +466,66 @@ function ejecutarCopiaFormModal() {
                 stockInput.value = nuevo;
             }
         }
+
+        // Calculadora en vivo de Ofertas / % OFF
+        document.addEventListener("DOMContentLoaded", function() {
+            var precioInput = document.getElementById("{{ form.precio.id_for_label }}");
+            var enOfertaCheckbox = document.getElementById("id_en_oferta");
+            var porcentajeInput = document.getElementById("id_porcentaje_descuento");
+            
+            var prevRegular = document.getElementById("preview-precio-regular");
+            var prevOferta = document.getElementById("preview-precio-oferta");
+            var prevBadge = document.getElementById("preview-badge-ahorro");
+            var prevAhorro = document.getElementById("preview-monto-ahorro");
+
+            function formatoCLP(valor) {
+                return "$" + Math.round(valor).toLocaleString('es-CL');
+            }
+
+            function actualizarCalculadoraOferta() {
+                if (!precioInput) return;
+                
+                // Parsear precio (quitando puntos y caracteres no numéricos)
+                var precioStr = (precioInput.value || "0").replace(/[^0-9]/g, '');
+                var precio = parseInt(precioStr, 10) || 0;
+
+                var enOferta = enOfertaCheckbox ? enOfertaCheckbox.checked : false;
+                var porcentaje = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+
+                if (porcentajeInput) {
+                    porcentajeInput.style.opacity = enOferta ? "1" : "0.5";
+                }
+
+                if (enOferta && porcentaje > 0 && precio > 0) {
+                    var ahorro = Math.round((precio * porcentaje) / 100);
+                    var precioFinal = Math.max(0, precio - ahorro);
+
+                    prevRegular.style.display = "inline";
+                    prevRegular.textContent = formatoCLP(precio);
+
+                    prevOferta.textContent = formatoCLP(precioFinal);
+                    prevOferta.style.color = "#b45309";
+
+                    prevBadge.style.display = "inline-block";
+                    prevBadge.textContent = "-" + porcentaje + "% OFF";
+
+                    prevAhorro.style.display = "block";
+                    prevAhorro.textContent = "El cliente ahorra " + formatoCLP(ahorro);
+                } else {
+                    prevRegular.style.display = "none";
+                    prevOferta.textContent = formatoCLP(precio);
+                    prevOferta.style.color = "#000E1F";
+                    prevBadge.style.display = "none";
+                    prevAhorro.style.display = "none";
+                }
+            }
+
+            if (precioInput) precioInput.addEventListener("input", actualizarCalculadoraOferta);
+            if (enOfertaCheckbox) enOfertaCheckbox.addEventListener("change", actualizarCalculadoraOferta);
+            if (porcentajeInput) porcentajeInput.addEventListener("input", actualizarCalculadoraOferta);
+
+            actualizarCalculadoraOferta();
+        });
         </script>
 
         <div class="form-actions">

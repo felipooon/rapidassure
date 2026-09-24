@@ -266,12 +266,22 @@
       {% for p in productos_destacados %}
         <div class="modern-product-card">
           
-          <a href="{% url 'toggle_deseos' p.id %}" class="card-heart-wishlist" title="Guardar en Lista de Deseos">
-            <i class="fa-solid fa-heart"></i>
+          <a href="{% url 'toggle_deseos' p.id %}" class="card-heart-wishlist {% if p.id in deseos_ids %}active{% endif %}" title="{% if p.id in deseos_ids %}Quitar de favoritos{% else %}Guardar en favoritos{% endif %}">
+            {% if p.id in deseos_ids %}
+              <i class="fa-solid fa-heart"></i>
+            {% else %}
+              <i class="fa-regular fa-heart"></i>
+            {% endif %}
           </a>
 
           <!-- Image Container -->
-          <a href="{{ p.get_absolute_url }}" class="card-image-box">
+          <a href="{{ p.get_absolute_url }}" class="card-image-box" style="position: relative;">
+            {% if p.tiene_descuento %}
+              <span style="position: absolute; top: 10px; left: 10px; z-index: 5; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-bolt" style="font-size: 0.65rem;"></i> -{{ p.porcentaje_descuento }}% OFF
+              </span>
+            {% endif %}
+
             {% if p.imagen %}
               <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
             {% else %}
@@ -297,12 +307,20 @@
             <span class="card-category-tag">{{ p.categoria.nombre|default:"Equipamiento Tech" }}</span>
             
             <div class="card-stars-row">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <span>5.0 (24 reseñas)</span>
+              {% if p.total_resenas > 0 %}
+                {% for i in "12345"|make_list %}
+                  {% if forloop.counter <= p.promedio_calificacion %}
+                    <i class="fa-solid fa-star"></i>
+                  {% else %}
+                    <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
+                  {% endif %}
+                {% endfor %}
+                <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s" }})</span>
+              {% else %}
+                <span style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="fa-regular fa-star" style="color: #cbd5e1;"></i> Sin reseñas aún
+                </span>
+              {% endif %}
             </div>
 
             <h3 class="card-title">
@@ -310,7 +328,14 @@
             </h3>
 
             <div class="card-price-container">
-              <span class="card-price-value">${{ p.precio }}</span>
+              {% if p.tiene_descuento %}
+                <div style="display: flex; flex-direction: column;">
+                  <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
+                  <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
+                </div>
+              {% else %}
+                <span class="card-price-value">${{ p.precio }}</span>
+              {% endif %}
               <span class="card-vat-note">IVA Incluido</span>
             </div>
 
@@ -621,10 +646,15 @@ async function shuffleDestacados() {
       data.productos.forEach(p => {
         const cardHtml = `
           <div class="modern-product-card">
-            <a href="/deseos/toggle/${p.id}/" class="card-heart-wishlist" title="Guardar en Lista de Deseos">
-              <i class="fa-solid fa-heart"></i>
+            <a href="/deseos/toggle/${p.id}/" class="card-heart-wishlist ${p.en_deseos ? 'active' : ''}" title="${p.en_deseos ? 'Quitar de favoritos' : 'Guardar en favoritos'}">
+              ${p.en_deseos ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}
             </a>
-            <a href="${p.url}" class="card-image-box">
+            <a href="${p.url}" class="card-image-box" style="position: relative;">
+              ${p.tiene_descuento ? `
+                <span style="position: absolute; top: 10px; left: 10px; z-index: 5; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="fa-solid fa-bolt" style="font-size: 0.65rem;"></i> -${p.porcentaje_descuento}% OFF
+                </span>
+              ` : ''}
               ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy">` : '<div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>'}
               <div class="card-badges-bottom">
                 <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
@@ -633,18 +663,27 @@ async function shuffleDestacados() {
             <div class="card-body">
               <span class="card-category-tag">${p.badge || 'DESTACADO TECH'}</span>
               <div class="card-stars-row">
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <span>5.0 (24 reseñas)</span>
+                ${p.total_resenas > 0 ? `
+                  <i class="fa-solid fa-star"></i>
+                  <span>${p.promedio_calificacion} (${p.total_resenas} reseña${p.total_resenas > 1 ? 's' : ''})</span>
+                ` : `
+                  <span style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
+                    <i class="fa-regular fa-star" style="color: #cbd5e1;"></i> Sin reseñas aún
+                  </span>
+                `}
               </div>
               <h3 class="card-title">
                 <a href="${p.url}">${p.nombre}</a>
               </h3>
               <div class="card-price-container">
-                <span class="card-price-value">$${p.precio}</span>
+                ${p.tiene_descuento ? `
+                  <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$${p.precio}</span>
+                    <span class="card-price-value" style="color: #b45309;">$${p.precio_final}</span>
+                  </div>
+                ` : `
+                  <span class="card-price-value">$${p.precio}</span>
+                `}
                 <span class="card-vat-note">IVA Incluido</span>
               </div>
               <div class="card-actions-row">

@@ -34,7 +34,10 @@ class Deseos:
                 self.deseos[id] = {
                     "producto_id": p_obj.id,
                     "nombre": p_obj.nombre,
-                    "precio": str(p_obj.precio),
+                    "precio": str(p_obj.precio_final),
+                    "precio_original": str(p_obj.precio),
+                    "en_oferta": p_obj.tiene_descuento,
+                    "porcentaje_descuento": p_obj.porcentaje_descuento if p_obj.tiene_descuento else 0,
                     "imagen": p_obj.imagen.url if p_obj.imagen else ""
                 }
                 self.guardar()

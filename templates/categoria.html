@@ -40,16 +40,33 @@
         <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
       {% endif %}
 
-      <a href="{% url 'toggle_deseos' p.id %}" title="Guardar en Lista de Deseos" style="position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; background: rgba(255,255,255,0.92); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #e11d48; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.12); z-index: 5; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
-        <i class="fa-solid fa-heart"></i>
+      <a href="{% url 'toggle_deseos' p.id %}" title="{% if p.id in deseos_ids %}Quitar de favoritos{% else %}Guardar en favoritos{% endif %}" style="position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.06); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: {% if p.id in deseos_ids %}#e11d48{% else %}#94a3b8{% endif %}; text-decoration: none; box-shadow: 0 4px 10px rgba(0,0,0,0.08); z-index: 5; transition: all 0.2s;" onmouseover="this.style.transform='scale(1.15)'; this.style.color='#e11d48';" onmouseout="this.style.transform='scale(1)'; this.style.color='{% if p.id in deseos_ids %}#e11d48{% else %}#94a3b8{% endif %}';">
+        {% if p.id in deseos_ids %}
+          <i class="fa-solid fa-heart"></i>
+        {% else %}
+          <i class="fa-regular fa-heart"></i>
+        {% endif %}
       </a>
+
+      {% if p.tiene_descuento %}
+        <span style="position: absolute; top: 12px; left: 12px; z-index: 5; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+          <i class="fa-solid fa-bolt" style="font-size: 0.65rem;"></i> -{{ p.porcentaje_descuento }}% OFF
+        </span>
+      {% endif %}
 
       {% if not p.disponible %}
         <span class="agotado">Agotado</span>
       {% endif %}
 
       <h3>{{ p.nombre }}</h3>
-      <p>${{ p.precio }}</p>
+      {% if p.tiene_descuento %}
+        <p style="margin: 0; line-height: 1.2;">
+          <span style="font-size: 0.85rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
+          <strong style="display: block; font-size: 1.15rem; color: #b45309;">${{ p.precio_final }}</strong>
+        </p>
+      {% else %}
+        <p>${{ p.precio }}</p>
+      {% endif %}
 
 
       <div class="producto-acciones">

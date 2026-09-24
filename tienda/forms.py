@@ -24,6 +24,8 @@ class ProductoForm(forms.ModelForm):
         exclude = ['slug']
         widgets = {
             'stock': forms.NumberInput(attrs={'min': '0', 'style': 'text-align: center; font-weight: 700; font-size: 1.05rem;'}),
+            'en_oferta': forms.CheckboxInput(attrs={'id': 'id_en_oferta'}),
+            'porcentaje_descuento': forms.NumberInput(attrs={'id': 'id_porcentaje_descuento', 'min': '0', 'max': '99', 'placeholder': 'Ej: 20', 'style': 'font-weight: 700; font-size: 1.05rem;'}),
             'especie_nombre_comun': forms.TextInput(attrs={'placeholder': 'Ej: Terminal POS T-800, Antena RFID UHF'}),
             'especie_nombre_cientifico': forms.TextInput(attrs={'placeholder': 'Ej: Modelo RA-900-V2'}),
             'especie_habitat': forms.TextInput(attrs={'placeholder': 'Ej: Retail, Supermercados, Bodegas y Logística'}),
@@ -31,6 +33,8 @@ class ProductoForm(forms.ModelForm):
             'especie_dato_curioso': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Ej: Equipamiento de alta durabilidad con batería de respaldo...'}),
         }
         labels = {
+            'en_oferta': 'Activar Oferta Promocional (% OFF)',
+            'porcentaje_descuento': 'Porcentaje de Descuento (% OFF)',
             'tiene_ficha_especie': 'Especificación Técnica Extendida',
             'especie_nombre_comun': 'Nombre del Modelo / Especificación',
             'especie_nombre_cientifico': 'Código / SKU Técnico (Opcional)',
@@ -42,6 +46,14 @@ class ProductoForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         cleaned_data['tiene_ficha_especie'] = True
+        
+        en_oferta = cleaned_data.get('en_oferta')
+        porcentaje = cleaned_data.get('porcentaje_descuento') or 0
+        if en_oferta and porcentaje <= 0:
+            self.add_error('porcentaje_descuento', 'Debes ingresar un porcentaje de descuento mayor a 0% para activar la oferta.')
+        if porcentaje >= 100:
+            self.add_error('porcentaje_descuento', 'El porcentaje de descuento debe ser menor al 100%.')
+            
         return cleaned_data
 
     def clean_precio(self):
@@ -166,12 +178,13 @@ class BannerPromocionalForm(forms.ModelForm):
         model = BannerPromocional
         fields = ['titulo', 'subtitulo', 'badge', 'badge_gold', 'url_destino_select', 'url_destino', 'texto_boton', 'estilo_fondo', 'icono_fontawesome', 'orden', 'activo']
         widgets = {
-            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Smart POS Dual Screen'}),
-            'subtitulo': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Ej: Terminales Android de alta velocidad con cobro contactless...'}),
-            'badge': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: EQUIPAMIENTO DE CAJA'}),
+            'titulo': forms.TextInput(attrs={'class': 'form-control', 'id': 'banner_titulo_input', 'placeholder': 'Ej: Smart POS Dual Screen'}),
+            'subtitulo': forms.Textarea(attrs={'class': 'form-control', 'id': 'banner_subtitulo_input', 'rows': 2, 'placeholder': 'Ej: Terminales Android de alta velocidad con cobro contactless...'}),
+            'badge': forms.TextInput(attrs={'class': 'form-control', 'id': 'banner_badge_input', 'placeholder': 'Ej: EQUIPAMIENTO DE CAJA'}),
+            'badge_gold': forms.CheckboxInput(attrs={'id': 'banner_badge_gold_input'}),
             'url_destino': forms.TextInput(attrs={'class': 'form-control', 'id': 'url_destino_input', 'placeholder': 'Ej: /categoria/smart-pos-retail-tech/'}),
-            'texto_boton': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: Equipar mi Caja'}),
-            'estilo_fondo': forms.Select(attrs={'class': 'form-control'}),
+            'texto_boton': forms.TextInput(attrs={'class': 'form-control', 'id': 'banner_btn_input', 'placeholder': 'Ej: Equipar mi Caja'}),
+            'estilo_fondo': forms.Select(attrs={'class': 'form-control', 'id': 'estilo_fondo_select'}),
             'icono_fontawesome': forms.Select(attrs={'class': 'form-control', 'id': 'icono_select'}),
             'orden': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
         }
