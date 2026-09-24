@@ -11,6 +11,14 @@ class ProductoForm(forms.ModelForm):
         if not self.instance.pk and self.initial.get('stock') is None:
             self.initial['stock'] = 1
 
+        # Especificación Técnica Extendida obligatoria
+        self.fields['tiene_ficha_especie'].widget = forms.HiddenInput()
+        self.fields['tiene_ficha_especie'].initial = True
+        self.fields['especie_nombre_comun'].required = True
+        self.fields['especie_habitat'].required = True
+        self.fields['especie_estado_conservacion'].required = True
+        self.fields['especie_dato_curioso'].required = True
+
     class Meta:
         model = Producto
         exclude = ['slug']
@@ -23,13 +31,18 @@ class ProductoForm(forms.ModelForm):
             'especie_dato_curioso': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Ej: Equipamiento de alta durabilidad con batería de respaldo...'}),
         }
         labels = {
-            'tiene_ficha_especie': 'Incluir Especificación Técnica Extendida',
+            'tiene_ficha_especie': 'Especificación Técnica Extendida',
             'especie_nombre_comun': 'Nombre del Modelo / Especificación',
-            'especie_nombre_cientifico': 'Código / SKU Técnico',
+            'especie_nombre_cientifico': 'Código / SKU Técnico (Opcional)',
             'especie_habitat': 'Campo de Aplicación / Industria',
             'especie_estado_conservacion': 'Garantía / Certificación',
             'especie_dato_curioso': 'Ficha Técnica / Destacados',
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data['tiene_ficha_especie'] = True
+        return cleaned_data
 
     def clean_precio(self):
         data = self.cleaned_data.get('precio')

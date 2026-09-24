@@ -57,9 +57,14 @@
                         <a href="{% url 'toggle_banner' b.id %}" style="color: {% if b.activo %}#e11d48{% else %}#10b981{% endif %}; text-decoration: none; margin-right: 14px; font-size: 1.1rem;" title="{% if b.activo %}Ocultar{% else %}Mostrar{% endif %}">
                             <i class="fa-solid {% if b.activo %}fa-eye-slash{% else %}fa-eye{% endif %}"></i>
                         </a>
-                        <form action="{% url 'eliminar_banner' b.id %}" method="POST" style="display: inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este banner?');">
+                        <form action="{% url 'eliminar_banner' b.id %}" method="POST" style="display: inline;">
                             {% csrf_token %}
-                            <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem; padding: 0;" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
+                            <button type="button" 
+                                    onclick="abrirModalEliminar(event, { titulo: '¿Eliminar banner promocional?', item: '{{ b.titulo|escapejs }}', form: this.closest('form') });"
+                                    style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 1.1rem; padding: 0;" 
+                                    title="Eliminar Banner">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </form>
                     </td>
                 </tr>

@@ -160,7 +160,7 @@
 
         <a href="{% url 'eliminar_producto' p.id %}" 
            title="Eliminar producto"
-           onclick="return confirm('¿Estás seguro de que quieres eliminar: {{ p.nombre }}?');"
+           onclick="abrirModalEliminar(event, { titulo: '¿Eliminar producto?', item: '{{ p.nombre|escapejs }}', detalle: 'El producto y su información se eliminarán del catálogo definitivamente.', url: '{% url 'eliminar_producto' p.id %}' });"
            style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background-color: #fff5f5; color: #dc3545; border-radius: 8px; text-decoration: none; transition: all 0.2s;"
            onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='white';" 
            onmouseout="this.style.backgroundColor='#fff5f5'; this.style.color='#dc3545';">

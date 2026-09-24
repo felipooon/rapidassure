@@ -87,6 +87,29 @@ class CloudinaryUrlTests(TestCase):
         self.assertIsNotNone(post.get_imagen_url_600)
         self.assertIsNotNone(post.get_imagen_url_1200)
 
+    def test_categoria_icono_fontawesome(self):
+        """Verifica que Categoria asigne íconos acordes a diferentes tipos de productos electrónicos."""
+        casos = [
+            ("Laptops y Computadores", "fa-laptop"),
+            ("Smartphones y Celulares", "fa-mobile-screen-button"),
+            ("Smart POS Retail", "fa-cash-register"),
+            ("Audio y Audífonos", "fa-headphones"),
+            ("Cámaras de Vigilancia", "fa-camera"),
+            ("Consolas y Gaming", "fa-gamepad"),
+            ("Impresoras Térmicas", "fa-print"),
+            ("Redes y Routers Wi-Fi", "fa-network-wired"),
+            ("Discos SSD y Almacenamiento", "fa-hard-drive"),
+            ("Cargadores y Baterías", "fa-bolt"),
+            ("Smartwatch y Relojes", "fa-clock"),
+            ("Teclados y Mouses", "fa-keyboard"),
+            ("Garantías y Protección", "fa-shield-halved"),
+            ("Domótica y Smart Home", "fa-house-signal"),
+            ("Componentes y Tarjetas", "fa-microchip"),
+        ]
+        for nombre, icono_esperado in casos:
+            cat = Categoria(nombre=nombre)
+            self.assertEqual(cat.icono_fontawesome, icono_esperado, f"Falló para categoría: {nombre}")
+
 
 class CarritoTests(TestCase):
     def setUp(self):

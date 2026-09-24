@@ -1,8 +1,6 @@
 from .tienda_publica import (
     aplicar_ordenamiento,
     index,
-    index_opcion1,
-    index_opcion2,
     terminos_condiciones,
     categoria_detail,
     api_buscar_productos,

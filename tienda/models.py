@@ -1,4 +1,5 @@
 import uuid
+import unicodedata
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
@@ -39,6 +40,51 @@ class Categoria(models.Model):
     def get_imagen_url_1200(self):
         return get_cloudinary_url(self.imagen, width=1200)
 
+    @property
+    def icono_fontawesome(self):
+        """Retorna un ícono representativo de FontAwesome según la temática tecnológica."""
+        raw = f"{self.slug or ''} {self.nombre or ''}".lower()
+        texto = ''.join(c for c in unicodedata.normalize('NFD', raw) if unicodedata.category(c) != 'Mn')
+
+        if any(k in texto for k in ['pos', 'retail', 'caja', 'punto de venta', 'voucher', 'transbank']):
+            return 'fa-cash-register'
+        elif any(k in texto for k in ['audio', 'bluetooth', 'auricular', 'audifono', 'parlante', 'sonido', 'headphone', 'speaker']):
+            return 'fa-headphones'
+        elif any(k in texto for k in ['computador', 'pc', 'laptop', 'notebook', 'desktop', 'computacion', 'ordenador', 'servidor']):
+            return 'fa-laptop'
+        elif any(k in texto for k in ['celular', 'telefono', 'smartphone', 'movil', 'iphone', 'telefonia']):
+            return 'fa-mobile-screen-button'
+        elif any(k in texto for k in ['tablet', 'ipad']):
+            return 'fa-tablet-screen-button'
+        elif any(k in texto for k in ['tv', 'television', 'pantalla', 'monitor', 'display', 'proyector', 'video']):
+            return 'fa-tv'
+        elif any(k in texto for k in ['camara', 'fotografia', 'seguridad', 'vigilancia', 'cctv', 'webcam', 'dvr', 'nvr']):
+            return 'fa-camera'
+        elif any(k in texto for k in ['gamer', 'gaming', 'juego', 'consola', 'playstation', 'xbox', 'nintendo', 'arcade']):
+            return 'fa-gamepad'
+        elif any(k in texto for k in ['impresora', 'impresion', 'scanner', 'escaner', 'termica', 'tinta', 'toner', 'boleta']):
+            return 'fa-print'
+        elif any(k in texto for k in ['reloj', 'smartwatch', 'wearable', 'band']):
+            return 'fa-clock'
+        elif any(k in texto for k in ['red', 'redes', 'wifi', 'wi-fi', 'router', 'modem', 'switch', 'conectividad', 'fibra', 'ethernet']):
+            return 'fa-network-wired'
+        elif any(k in texto for k in ['almacenamiento', 'disco', 'ssd', 'hdd', 'usb', 'pendrive', 'memoria', 'micro sd', 'sd']):
+            return 'fa-hard-drive'
+        elif any(k in texto for k in ['bateria', 'cargador', 'powerbank', 'energia', 'cable', 'alimentacion', 'ups', 'fuente']):
+            return 'fa-bolt'
+        elif any(k in texto for k in ['teclado', 'mouse', 'periferico', 'gadget', 'accesorio', 'mousepad']):
+            return 'fa-keyboard'
+        elif any(k in texto for k in ['proteccion', 'garantia', 'seguro', 'funda', 'case', 'mica', 'vidrio']):
+            return 'fa-shield-halved'
+        elif any(k in texto for k in ['domotica', 'smart home', 'sensor', 'enchufe inteligente', 'iluminacion', 'led']):
+            return 'fa-house-signal'
+        elif any(k in texto for k in ['componente', 'hardware', 'procesador', 'placa', 'ram', 'tarjeta', 'gpu', 'cpu', 'cooler']):
+            return 'fa-microchip'
+        elif any(k in texto for k in ['herramienta', 'servicio', 'soporte', 'reparacion', 'mantenimiento', 'repuesto']):
+            return 'fa-screwdriver-wrench'
+        else:
+            return 'fa-microchip'
+
 
 
 class Producto(models.Model):
@@ -53,13 +99,13 @@ class Producto(models.Model):
     stock = models.PositiveIntegerField(default=0, help_text="Cantidad disponible en inventario")
     disponible = models.BooleanField(default=True)
 
-    # Ficha de Especie / Dato Curioso (Opcional por producto)
-    tiene_ficha_especie = models.BooleanField(default=False, help_text="Marcar para incluir Ficha de Especie en la vista del producto")
-    especie_nombre_comun = models.CharField(max_length=150, blank=True, help_text="Ej: Cometocino Patagónico, Amanita muscaria")
-    especie_nombre_cientifico = models.CharField(max_length=150, blank=True, help_text="Ej: Phrygilus patagonicus")
-    especie_habitat = models.CharField(max_length=200, blank=True, help_text="Ej: Bosques templados y cordillera del sur de Chile")
-    especie_estado_conservacion = models.CharField(max_length=100, blank=True, help_text="Ej: Preocupación menor (LC), Vulnerable (VU)")
-    especie_dato_curioso = models.TextField(blank=True, help_text="Dato curioso o reseña educativa sobre la especie")
+    # Especificación Técnica Extendida
+    tiene_ficha_especie = models.BooleanField(default=True, help_text="Marcar para incluir Especificación Técnica Extendida")
+    especie_nombre_comun = models.CharField(max_length=150, blank=True, help_text="Ej: Terminal POS Táctil 15'', Lector Láser 2D")
+    especie_nombre_cientifico = models.CharField(max_length=150, blank=True, help_text="Ej: SKU-TEC-900-V2")
+    especie_habitat = models.CharField(max_length=200, blank=True, help_text="Ej: Retail, Supermercados, Bodegas y Logística")
+    especie_estado_conservacion = models.CharField(max_length=100, blank=True, help_text="Ej: Garantía 24 Meses, Norma IP65")
+    especie_dato_curioso = models.TextField(blank=True, help_text="Ficha técnica o características destacadas del equipo")
 
     def __str__(self):
         return self.nombre

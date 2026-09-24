@@ -350,48 +350,66 @@ function ejecutarCopiaFormModal() {
             </label>
         </div>
 
-        <!-- Toggle Switch para Ficha Técnica Extendida -->
-        <label for="{{ form.tiene_ficha_especie.id_for_label }}" class="switch-wrapper">
-            <span class="switch-label-text">
-                <i class="fa-solid fa-bolt"></i> Incluir Especificación Técnica Extendida
-            </span>
-            <span class="toggle-switch">
-                {{ form.tiene_ficha_especie }}
-                <span class="toggle-slider"></span>
-            </span>
-        </label>
+        {{ form.tiene_ficha_especie }}
 
-        <!-- Campos de la Ficha Técnica Extendida (Desplegable dinámicamente) -->
-        <div id="sec-ficha-especie" style="display: none; background: #fafaf9; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 22px; margin-bottom: 25px;">
-            <div style="margin-bottom: 15px; font-weight: 800; color: #334155; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                <span><i class="fa-solid fa-shield-halved"></i> Ficha Técnica / Especificaciones del Modelo</span>
+        <!-- Campos de la Especificación Técnica Extendida (Obligatoria) -->
+        <div id="sec-ficha-especie" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 22px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,32,147,0.03);">
+            <div style="margin-bottom: 16px; font-weight: 800; color: #002093; font-size: 1.05rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-microchip" style="color: #FCBE00;"></i> Especificación Técnica Extendida
+                </span>
+                <span style="font-size: 0.78rem; background: #e0e7ff; color: #3730a3; padding: 3px 10px; border-radius: 12px; font-weight: 700;">
+                    Requerido para catálogo
+                </span>
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
-                    <label for="{{ form.especie_nombre_comun.id_for_label }}">{{ form.especie_nombre_comun.label }}</label>
+                    <label for="{{ form.especie_nombre_comun.id_for_label }}">
+                        {{ form.especie_nombre_comun.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                    </label>
                     {{ form.especie_nombre_comun }}
+                    {% if form.especie_nombre_comun.errors %}
+                        <small style="color: #e11d48;">{{ form.especie_nombre_comun.errors.0 }}</small>
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="{{ form.especie_nombre_cientifico.id_for_label }}">{{ form.especie_nombre_cientifico.label }}</label>
+                    <label for="{{ form.especie_nombre_cientifico.id_for_label }}">
+                        {{ form.especie_nombre_cientifico.label }}
+                    </label>
                     {{ form.especie_nombre_cientifico }}
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
-                    <label for="{{ form.especie_habitat.id_for_label }}">{{ form.especie_habitat.label }}</label>
+                    <label for="{{ form.especie_habitat.id_for_label }}">
+                        {{ form.especie_habitat.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                    </label>
                     {{ form.especie_habitat }}
+                    {% if form.especie_habitat.errors %}
+                        <small style="color: #e11d48;">{{ form.especie_habitat.errors.0 }}</small>
+                    {% endif %}
                 </div>
                 <div class="form-group">
-                    <label for="{{ form.especie_estado_conservacion.id_for_label }}">{{ form.especie_estado_conservacion.label }}</label>
+                    <label for="{{ form.especie_estado_conservacion.id_for_label }}">
+                        {{ form.especie_estado_conservacion.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                    </label>
                     {{ form.especie_estado_conservacion }}
+                    {% if form.especie_estado_conservacion.errors %}
+                        <small style="color: #e11d48;">{{ form.especie_estado_conservacion.errors.0 }}</small>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="form-group" style="margin-bottom: 0;">
-                <label for="{{ form.especie_dato_curioso.id_for_label }}">{{ form.especie_dato_curioso.label }}</label>
+                <label for="{{ form.especie_dato_curioso.id_for_label }}">
+                    {{ form.especie_dato_curioso.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                </label>
                 {{ form.especie_dato_curioso }}
+                {% if form.especie_dato_curioso.errors %}
+                    <small style="color: #e11d48;">{{ form.especie_dato_curioso.errors.0 }}</small>
+                {% endif %}
             </div>
         </div>
 
@@ -405,26 +423,6 @@ function ejecutarCopiaFormModal() {
                 stockInput.value = nuevo;
             }
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            var chkFicha = document.getElementById("{{ form.tiene_ficha_especie.id_for_label }}");
-            var secFicha = document.getElementById("sec-ficha-especie");
-
-            function toggleFicha() {
-                if (chkFicha && secFicha) {
-                    if (chkFicha.checked) {
-                        secFicha.style.display = "block";
-                    } else {
-                        secFicha.style.display = "none";
-                    }
-                }
-            }
-
-            if (chkFicha) {
-                chkFicha.addEventListener("change", toggleFicha);
-                toggleFicha();
-            }
-        });
         </script>
 
         <div class="form-actions">

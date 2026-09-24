@@ -98,15 +98,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             </a>
                             {% for cat in categorias_globales %}
                                 <a href="{% url 'categoria' cat.slug %}" class="custom-cat-item">
-                                    {% if 'pos' in cat.nombre.lower or 'retail' in cat.nombre.lower %}
-                                        <i class="fa-solid fa-cash-register"></i>
-                                    {% elif 'audio' in cat.nombre.lower or 'bluetooth' in cat.nombre.lower %}
-                                        <i class="fa-solid fa-headphones"></i>
-                                    {% elif 'proteccion' in cat.nombre.lower or 'garantia' in cat.nombre.lower %}
-                                        <i class="fa-solid fa-shield-halved"></i>
-                                    {% else %}
-                                        <i class="fa-solid fa-microchip"></i>
-                                    {% endif %}
+                                    <i class="fa-solid {{ cat.icono_fontawesome }}"></i>
                                     {{ cat.nombre }}
                                 </a>
                             {% endfor %}
@@ -142,15 +134,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     {% for cat in categorias_globales %}
                         <li>
                             <a href="{% url 'categoria' cat.slug %}">
-                                {% if 'pos' in cat.nombre.lower or 'retail' in cat.nombre.lower %}
-                                    <i class="fa-solid fa-cash-register"></i>
-                                {% elif 'audio' in cat.nombre.lower or 'bluetooth' in cat.nombre.lower %}
-                                    <i class="fa-solid fa-headphones"></i>
-                                {% elif 'proteccion' in cat.nombre.lower or 'garantia' in cat.nombre.lower %}
-                                    <i class="fa-solid fa-shield-halved"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-microchip"></i>
-                                {% endif %}
+                                <i class="fa-solid {{ cat.icono_fontawesome }}"></i>
                                 {{ cat.nombre }}
                             </a>
                         </li>

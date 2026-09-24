@@ -105,5 +105,256 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </div>
 
+<!-- ==========================================
+     MODAL DE CONFIRMACIÓN PROPIO DEL PANEL
+========================================== -->
+<div id="panel-confirm-modal" class="panel-confirm-overlay" style="display: none;" onclick="cerrarModalConfirmacion(event)">
+  <div class="panel-confirm-backdrop"></div>
+  <div class="panel-confirm-dialog" onclick="event.stopPropagation();">
+    <div class="panel-confirm-icon-box">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <h3 id="panel-confirm-title" class="panel-confirm-title">¿Eliminar elemento?</h3>
+    <p id="panel-confirm-message" class="panel-confirm-message">
+      Esta acción es irreversible y eliminará el registro de forma permanente.
+    </p>
+    <div id="panel-confirm-item-badge" class="panel-confirm-badge" style="display: none;"></div>
+
+    <div class="panel-confirm-actions">
+      <button type="button" class="btn-confirm-cancel" onclick="cerrarModalConfirmacion()">
+        Cancelar
+      </button>
+      <button type="button" id="btn-confirm-accept" class="btn-confirm-danger">
+        <i class="fa-solid fa-trash-can"></i> <span>Sí, eliminar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* MODAL DE CONFIRMACIÓN PROPIO */
+.panel-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.panel-confirm-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.panel-confirm-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.panel-confirm-dialog {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 440px;
+  padding: 30px 26px 26px;
+  text-align: center;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  transform: scale(0.92) translateY(-10px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Open Sans', sans-serif;
+}
+.panel-confirm-overlay.active .panel-confirm-dialog {
+  transform: scale(1) translateY(0);
+}
+.panel-confirm-icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
+  animation: pulseWarning 2s infinite ease-in-out;
+}
+@keyframes pulseWarning {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+.panel-confirm-title {
+  margin: 0 0 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+.panel-confirm-message {
+  margin: 0 0 14px;
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.panel-confirm-badge {
+  background: #f8fafc;
+  color: #002093;
+  border: 1px solid #e2e8f0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin: 4px 0 20px;
+  max-width: 100%;
+  word-break: break-word;
+}
+.panel-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.btn-confirm-cancel {
+  flex: 1;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-confirm-cancel:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+.btn-confirm-danger {
+  flex: 1.2;
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+  transition: all 0.2s ease;
+}
+.btn-confirm-danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+}
+</style>
+
+<script>
+let panelPendingAction = null;
+
+window.abrirModalEliminar = function(event, config) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const modal = document.getElementById('panel-confirm-modal');
+  const titleEl = document.getElementById('panel-confirm-title');
+  const msgEl = document.getElementById('panel-confirm-message');
+  const badgeEl = document.getElementById('panel-confirm-item-badge');
+  const acceptBtn = document.getElementById('btn-confirm-accept');
+
+  if (!modal) return;
+
+  titleEl.textContent = config.titulo || '¿Estás seguro de eliminar este registro?';
+  msgEl.textContent = config.detalle || 'Esta acción no se puede deshacer y el elemento será eliminado del sistema.';
+
+  if (config.item) {
+    badgeEl.textContent = config.item;
+    badgeEl.style.display = 'inline-block';
+  } else {
+    badgeEl.style.display = 'none';
+  }
+
+  if (config.botonTexto) {
+    acceptBtn.querySelector('span').textContent = config.botonTexto;
+  } else {
+    acceptBtn.querySelector('span').textContent = 'Sí, eliminar';
+  }
+
+  panelPendingAction = function() {
+    if (config.form) {
+      config.form.submit();
+    } else if (config.url) {
+      window.location.href = config.url;
+    } else if (typeof config.callback === 'function') {
+      config.callback();
+    }
+  };
+
+  modal.style.display = 'flex';
+  requestAnimationFrame(() => {
+    modal.classList.add('active');
+  });
+  document.body.style.overflow = 'hidden';
+};
+
+window.cerrarModalConfirmacion = function(e) {
+  if (e && e.target && e.target.closest && e.target.closest('.panel-confirm-dialog') && !e.target.closest('.btn-confirm-cancel')) {
+    return;
+  }
+  const modal = document.getElementById('panel-confirm-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 200);
+  }
+  panelPendingAction = null;
+  document.body.style.overflow = '';
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  const acceptBtn = document.getElementById('btn-confirm-accept');
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', function() {
+      if (typeof panelPendingAction === 'function') {
+        const action = panelPendingAction;
+        cerrarModalConfirmacion();
+        action();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('panel-confirm-modal');
+      if (modal && modal.classList.contains('active')) {
+        cerrarModalConfirmacion();
+      }
+    }
+  });
+});
+</script>
+
 </body>
 </html>

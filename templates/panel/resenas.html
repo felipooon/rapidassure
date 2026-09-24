@@ -58,9 +58,12 @@
                             <a href="{% url 'toggle_resena' r.id %}" style="background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin-right: 6px;">
                                 {% if r.aprobado %}<i class="fa-solid fa-eye-slash"></i> Ocultar{% else %}<i class="fa-solid fa-eye"></i> Aprobar{% endif %}
                             </a>
-                            <form action="{% url 'eliminar_resena' r.id %}" method="post" style="display: inline-block;" onsubmit="return confirm('¿Eliminar esta reseña?');">
+                            <form action="{% url 'eliminar_resena' r.id %}" method="post" style="display: inline-block;">
                                 {% csrf_token %}
-                                <button type="submit" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer;">
+                                <button type="button" 
+                                        onclick="abrirModalEliminar(event, { titulo: '¿Eliminar reseña?', item: '{{ r.autor|escapejs }} ({{ r.calificacion }} ★)', detalle: 'Esta reseña se eliminará permanentemente del producto.', form: this.closest('form') });"
+                                        style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer;"
+                                        title="Eliminar Reseña">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </form>

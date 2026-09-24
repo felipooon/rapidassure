@@ -113,14 +113,19 @@
             {% if imagenes|length > 1 %}
                 <!-- Galería Carrusel con Slide / Puntitos -->
                 <div class="product-gallery-wrapper" style="position: relative; width: 100%;">
-                    <div class="product-main-image-box" style="position: relative; border-radius: 16px; overflow: hidden; background: #fafafa; border: 1px solid #eee; height: 420px; display: flex; align-items: center; justify-content: center;">
+                    <div class="product-main-image-box" style="position: relative; border-radius: 16px; overflow: hidden; background: #fafafa; border: 1px solid #eee; height: 420px; display: flex; align-items: center; justify-content: center; cursor: zoom-in;" onclick="abrirZoom()" title="Haz clic para ampliar la foto">
                         {% for img_item in imagenes %}
                             <img src="{{ img_item.url_1200 }}" alt="{{ producto.nombre }}" class="gallery-slide-img {% if forloop.first %}active{% endif %}" id="slide-img-{{ forloop.counter0 }}" {% if not forloop.first %}loading="lazy"{% endif %} style="max-height: 400px; width: 100%; object-fit: contain; display: {% if forloop.first %}block{% else %}none{% endif %}; transition: opacity 0.3s ease-in-out;">
                         {% endfor %}
 
+                        <!-- Botón flotante para ampliar imagen -->
+                        <button type="button" class="btn-zoom-trigger" onclick="event.stopPropagation(); abrirZoom();" title="Ampliar fotografía">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i> <span>Ampliar</span>
+                        </button>
+
                         <!-- Flechas de navegación -->
-                        <button type="button" class="gallery-arrow arrow-left" onclick="cambiarSlide(-1)" aria-label="Imagen anterior">❮</button>
-                        <button type="button" class="gallery-arrow arrow-right" onclick="cambiarSlide(1)" aria-label="Siguiente imagen">❯</button>
+                        <button type="button" class="gallery-arrow arrow-left" onclick="event.stopPropagation(); cambiarSlide(-1)" aria-label="Imagen anterior">❮</button>
+                        <button type="button" class="gallery-arrow arrow-right" onclick="event.stopPropagation(); cambiarSlide(1)" aria-label="Siguiente imagen">❯</button>
 
                         <!-- Badges de Stock -->
                         {% if not producto.disponible %}
@@ -147,137 +152,387 @@
                     </div>
                 </div>
 
-                <style>
-                    .gallery-arrow {
-                        position: absolute;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        background: rgba(255, 255, 255, 0.85);
-                        border: 1px solid rgba(0, 0, 0, 0.08);
-                        color: #222;
-                        font-size: 1.1rem;
-                        font-weight: bold;
-                        width: 38px;
-                        height: 38px;
-                        border-radius: 50%;
-                        cursor: pointer;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-                        transition: all 0.2s ease;
-                        z-index: 4;
-                    }
-                    .gallery-arrow:hover {
-                        background: #ffffff;
-                        transform: translateY(-50%) scale(1.1);
-                        color: #002093;
-                    }
-                    .arrow-left { left: 12px; }
-                    .arrow-right { right: 12px; }
-
-                    .gallery-dot {
-                        width: 10px;
-                        height: 10px;
-                        border-radius: 50%;
-                        background: #cbd5e1;
-                        border: none;
-                        padding: 0;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    }
-                    .gallery-dot.active {
-                        background: #002093;
-                        width: 26px;
-                        border-radius: 12px;
-                    }
-
-                    .gallery-thumb-item {
-                        width: 58px;
-                        height: 58px;
-                        border-radius: 10px;
-                        overflow: hidden;
-                        border: 2px solid #e2e8f0;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                        background: #fafafa;
-                        flex-shrink: 0;
-                    }
-                    .gallery-thumb-item img {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    }
-                    .gallery-thumb-item.active,
-                    .gallery-thumb-item:hover {
-                        border-color: #002093;
-                        transform: scale(1.05);
-                        box-shadow: 0 3px 8px rgba(252, 163, 17, 0.25);
-                    }
-                </style>
-
-                <script>
-                    (function() {
-                        var currentSlide = 0;
-                        var totalSlides = {{ imagenes|length }};
-
-                        window.irASlide = function(index) {
-                            if (index < 0) index = totalSlides - 1;
-                            if (index >= totalSlides) index = 0;
-                            currentSlide = index;
-
-                            for (var i = 0; i < totalSlides; i++) {
-                                var img = document.getElementById('slide-img-' + i);
-                                var dot = document.getElementById('dot-' + i);
-                                var thumb = document.getElementById('thumb-' + i);
-
-                                if (img) img.style.display = (i === currentSlide) ? 'block' : 'none';
-                                if (dot) dot.classList.toggle('active', i === currentSlide);
-                                if (thumb) thumb.classList.toggle('active', i === currentSlide);
-                            }
-                        };
-
-                        window.cambiarSlide = function(direction) {
-                            irASlide(currentSlide + direction);
-                        };
-
-                        // Deslizar con Touch (Swipe) en celulares
-                        var mainBox = document.querySelector('.product-main-image-box');
-                        if (mainBox) {
-                            var touchStartX = 0;
-                            var touchEndX = 0;
-
-                            mainBox.addEventListener('touchstart', function(e) {
-                                touchStartX = e.changedTouches[0].screenX;
-                            }, {passive: true});
-
-                            mainBox.addEventListener('touchend', function(e) {
-                                touchEndX = e.changedTouches[0].screenX;
-                                if (touchStartX - touchEndX > 40) {
-                                    cambiarSlide(1); // Swipe Izquierda
-                                } else if (touchEndX - touchStartX > 40) {
-                                    cambiarSlide(-1); // Swipe Derecha
-                                }
-                            }, {passive: true});
-                        }
-                    })();
-                </script>
             {% else %}
                 <!-- Vista única (1 sola imagen) -->
-                <div style="position: relative; border-radius: 16px; overflow: hidden; background: #fafafa; border: 1px solid #eee;">
+                <div class="product-main-image-box" style="position: relative; border-radius: 16px; overflow: hidden; background: #fafafa; border: 1px solid #eee; {% if producto.imagen %}cursor: zoom-in;{% endif %}" {% if producto.imagen %}onclick="abrirZoom(0)" title="Haz clic para ampliar la foto"{% endif %}>
                     {% if producto.imagen %}
-                        <img src="{{ producto.get_imagen_url_1200 }}" alt="{{ producto.nombre }}" style="width: 100%; max-height: 480px; object-fit: contain; display: block; transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                        <img id="single-product-img" src="{{ producto.get_imagen_url_1200 }}" alt="{{ producto.nombre }}" style="width: 100%; max-height: 480px; object-fit: contain; display: block; transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        <!-- Botón flotante para ampliar imagen -->
+                        <button type="button" class="btn-zoom-trigger" onclick="event.stopPropagation(); abrirZoom(0);" title="Ampliar fotografía">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i> <span>Ampliar</span>
+                        </button>
                     {% else %}
                         <div style="height: 350px; display: flex; align-items: center; justify-content: center; color: #aaa;">Sin Imagen</div>
                     {% endif %}
 
                     {% if not producto.disponible %}
-                        <span style="position: absolute; top: 15px; right: 15px; background: #e74c3c; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">Agotado</span>
+                        <span style="position: absolute; top: 15px; right: 15px; background: #e74c3c; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 5;">Agotado</span>
                     {% elif producto.stock <= 3 and producto.stock > 0 %}
-                        <span style="position: absolute; top: 15px; right: 15px; background: #002093; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">¡Solo {{ producto.stock }} disponible{% if producto.stock > 1 %}s{% endif %}!</span>
+                        <span style="position: absolute; top: 15px; right: 15px; background: #002093; color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 5;">¡Solo {{ producto.stock }} disponible{% if producto.stock > 1 %}s{% endif %}!</span>
                     {% endif %}
                 </div>
             {% endif %}
+
+            <style>
+                .gallery-arrow {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: rgba(255, 255, 255, 0.85);
+                    border: 1px solid rgba(0, 0, 0, 0.08);
+                    color: #222;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+                    transition: all 0.2s ease;
+                    z-index: 4;
+                }
+                .gallery-arrow:hover {
+                    background: #ffffff;
+                    transform: translateY(-50%) scale(1.1);
+                    color: #002093;
+                }
+                .arrow-left { left: 12px; }
+                .arrow-right { right: 12px; }
+
+                .gallery-dot {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: #cbd5e1;
+                    border: none;
+                    padding: 0;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                .gallery-dot.active {
+                    background: #002093;
+                    width: 26px;
+                    border-radius: 12px;
+                }
+
+                .gallery-thumb-item {
+                    width: 58px;
+                    height: 58px;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    border: 2px solid #e2e8f0;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    background: #fafafa;
+                    flex-shrink: 0;
+                }
+                .gallery-thumb-item img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                .gallery-thumb-item.active,
+                .gallery-thumb-item:hover {
+                    border-color: #002093;
+                    transform: scale(1.05);
+                    box-shadow: 0 3px 8px rgba(252, 163, 17, 0.25);
+                }
+
+                /* Botón Flotante para Ampliar */
+                .btn-zoom-trigger {
+                    position: absolute;
+                    bottom: 14px;
+                    right: 14px;
+                    background: rgba(255, 255, 255, 0.94);
+                    backdrop-filter: blur(8px);
+                    -webkit-backdrop-filter: blur(8px);
+                    border: 1px solid rgba(0, 32, 147, 0.12);
+                    color: #002093;
+                    font-size: 0.82rem;
+                    font-weight: 700;
+                    padding: 6px 14px;
+                    border-radius: 30px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    cursor: pointer;
+                    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+                    transition: all 0.25s ease;
+                    z-index: 5;
+                }
+                .btn-zoom-trigger:hover {
+                    background: #002093;
+                    color: #ffffff;
+                    transform: scale(1.05);
+                    box-shadow: 0 6px 18px rgba(0, 32, 147, 0.25);
+                }
+                .btn-zoom-trigger i {
+                    color: #FCBE00;
+                    font-size: 0.88rem;
+                }
+
+                /* MODAL LIGHTBOX DE ZOOM */
+                .zoom-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    z-index: 999999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.25s ease, visibility 0.25s ease;
+                }
+                .zoom-modal.active {
+                    opacity: 1;
+                    visibility: visible;
+                }
+                .zoom-modal-backdrop {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(10, 15, 30, 0.90);
+                    backdrop-filter: blur(10px);
+                    -webkit-backdrop-filter: blur(10px);
+                }
+                .zoom-modal-content {
+                    position: relative;
+                    z-index: 2;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    max-width: 94vw;
+                    max-height: 94vh;
+                }
+                .zoom-image-wrapper {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    max-height: 82vh;
+                    max-width: 90vw;
+                    overflow: hidden;
+                    border-radius: 16px;
+                    background: #ffffff;
+                    box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.75);
+                    padding: 10px;
+                }
+                .zoom-modal-img {
+                    max-height: 80vh;
+                    max-width: 88vw;
+                    object-fit: contain;
+                    border-radius: 12px;
+                    cursor: zoom-in;
+                    transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+                    user-select: none;
+                }
+                .zoom-modal-img.zoomed-in {
+                    transform: scale(1.65);
+                    cursor: zoom-out;
+                }
+                .zoom-close-btn {
+                    position: absolute;
+                    top: -46px;
+                    right: 0;
+                    background: rgba(255, 255, 255, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: white;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    z-index: 10;
+                }
+                .zoom-close-btn:hover {
+                    background: #e11d48;
+                    border-color: #e11d48;
+                    transform: rotate(90deg) scale(1.1);
+                }
+                .zoom-nav-btn {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: rgba(255, 255, 255, 0.25);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+                    color: #ffffff;
+                    width: 46px;
+                    height: 46px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.3rem;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    z-index: 10;
+                }
+                .zoom-nav-btn:hover {
+                    background: #002093;
+                    border-color: #002093;
+                    color: #FCBE00;
+                    transform: translateY(-50%) scale(1.12);
+                }
+                .zoom-prev { left: -60px; }
+                .zoom-next { right: -60px; }
+                @media (max-width: 768px) {
+                    .zoom-prev { left: 8px; }
+                    .zoom-next { right: 8px; }
+                    .zoom-close-btn { top: -42px; right: 4px; }
+                }
+                .zoom-modal-caption {
+                    margin-top: 14px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    color: #e2e8f0;
+                    font-size: 0.92rem;
+                    font-weight: 600;
+                }
+                .zoom-counter-pill {
+                    background: rgba(255, 255, 255, 0.15);
+                    padding: 2px 10px;
+                    border-radius: 12px;
+                    font-size: 0.8rem;
+                    color: #FCBE00;
+                }
+            </style>
+
+            <script>
+                (function() {
+                    var currentSlide = 0;
+                    var totalSlides = {{ imagenes|length|default:1 }};
+                    var imagenesArray = [
+                        {% for img_item in imagenes %}
+                            "{{ img_item.url_1200 }}"{% if not forloop.last %},{% endif %}
+                        {% empty %}
+                            {% if producto.imagen %}"{{ producto.get_imagen_url_1200 }}"{% endif %}
+                        {% endfor %}
+                    ];
+
+                    window.irASlide = function(index) {
+                        if (index < 0) index = totalSlides - 1;
+                        if (index >= totalSlides) index = 0;
+                        currentSlide = index;
+
+                        for (var i = 0; i < totalSlides; i++) {
+                            var img = document.getElementById('slide-img-' + i);
+                            var dot = document.getElementById('dot-' + i);
+                            var thumb = document.getElementById('thumb-' + i);
+
+                            if (img) img.style.display = (i === currentSlide) ? 'block' : 'none';
+                            if (dot) dot.classList.toggle('active', i === currentSlide);
+                            if (thumb) thumb.classList.toggle('active', i === currentSlide);
+                        }
+                    };
+
+                    window.cambiarSlide = function(direction) {
+                        irASlide(currentSlide + direction);
+                    };
+
+                    // Deslizar con Touch (Swipe) en celulares
+                    var mainBox = document.querySelector('.product-main-image-box');
+                    if (mainBox) {
+                        var touchStartX = 0;
+                        var touchEndX = 0;
+
+                        mainBox.addEventListener('touchstart', function(e) {
+                            touchStartX = e.changedTouches[0].screenX;
+                        }, {passive: true});
+
+                        mainBox.addEventListener('touchend', function(e) {
+                            touchEndX = e.changedTouches[0].screenX;
+                            if (touchStartX - touchEndX > 40) {
+                                cambiarSlide(1);
+                            } else if (touchEndX - touchStartX > 40) {
+                                cambiarSlide(-1);
+                            }
+                        }, {passive: true});
+                    }
+
+                    // --- FUNCIONES DE ZOOM LIGHTBOX ---
+                    window.abrirZoom = function(index) {
+                        var modal = document.getElementById('image-zoom-modal');
+                        var zoomImg = document.getElementById('zoom-modal-img');
+                        var counter = document.getElementById('zoom-counter');
+                        if (!modal || !zoomImg) return;
+
+                        if (typeof index === 'number') {
+                            currentSlide = index;
+                        }
+
+                        if (imagenesArray && imagenesArray.length > 0) {
+                            zoomImg.src = imagenesArray[currentSlide];
+                            if (counter) counter.innerText = (currentSlide + 1) + ' / ' + imagenesArray.length;
+                        } else {
+                            var singleImg = document.getElementById('single-product-img');
+                            if (singleImg) zoomImg.src = singleImg.src;
+                        }
+
+                        zoomImg.classList.remove('zoomed-in');
+                        modal.classList.add('active');
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    };
+
+                    window.cerrarZoom = function(e) {
+                        if (e && e.target && e.target.closest && e.target.closest('.zoom-modal-content') && !e.target.closest('.zoom-close-btn')) {
+                            return;
+                        }
+                        var modal = document.getElementById('image-zoom-modal');
+                        if (modal) {
+                            modal.classList.remove('active');
+                            setTimeout(function() {
+                                modal.style.display = 'none';
+                            }, 220);
+                        }
+                        document.body.style.overflow = '';
+                    };
+
+                    window.toggleZoomLevel = function() {
+                        var zoomImg = document.getElementById('zoom-modal-img');
+                        if (zoomImg) {
+                            zoomImg.classList.toggle('zoomed-in');
+                        }
+                    };
+
+                    window.cambiarZoomSlide = function(direction) {
+                        cambiarSlide(direction);
+                        var zoomImg = document.getElementById('zoom-modal-img');
+                        var counter = document.getElementById('zoom-counter');
+                        if (zoomImg && imagenesArray && imagenesArray.length > 0) {
+                            zoomImg.src = imagenesArray[currentSlide];
+                            zoomImg.classList.remove('zoomed-in');
+                            if (counter) counter.innerText = (currentSlide + 1) + ' / ' + imagenesArray.length;
+                        }
+                    };
+
+                    document.addEventListener('keydown', function(e) {
+                        var modal = document.getElementById('image-zoom-modal');
+                        if (modal && modal.classList.contains('active')) {
+                            if (e.key === 'Escape') {
+                                cerrarZoom();
+                            } else if (e.key === 'ArrowLeft') {
+                                cambiarZoomSlide(-1);
+                            } else if (e.key === 'ArrowRight') {
+                                cambiarZoomSlide(1);
+                            }
+                        }
+                    });
+                })();
+            </script>
             {% endwith %}
         </div>
 
@@ -320,15 +575,15 @@
                     {% endif %}
                 </div>
 
-                {% if producto.tiene_ficha_especie %}
-                <!-- Ficha de Especie / Dato Curioso Educativo -->
-                <div class="ficha-especie-card" style="background: linear-gradient(135deg, #f4fbf7 0%, #fffaf5 100%); border: 1px solid #d2e9dc; border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.06);">
+                {% if producto.tiene_ficha_especie or producto.especie_nombre_comun or producto.especie_habitat %}
+                <!-- Especificación Técnica Extendida -->
+                <div class="ficha-especie-card" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0, 32, 147, 0.04);">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-                        <span style="background: #27ae60; color: white; font-size: 0.78rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-file-contract"></i> Especificaciones del Modelo
+                        <span style="background: #002093; color: white; font-size: 0.78rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-microchip" style="color: #FCBE00;"></i> Especificaciones del Modelo
                         </span>
                         {% if producto.especie_estado_conservacion %}
-                        <span style="background: #eef7f2; color: #1e7e44; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; border: 1px solid #c2e5d0;">
+                        <span style="background: #eef2ff; color: #002093; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; border: 1px solid #c7d2fe;">
                             <i class="fa-solid fa-shield-halved"></i> {{ producto.especie_estado_conservacion }}
                         </span>
                         {% endif %}
@@ -337,13 +592,13 @@
                     {% if producto.especie_nombre_comun or producto.especie_nombre_cientifico %}
                     <div style="margin-bottom: 10px;">
                         {% if producto.especie_nombre_comun %}
-                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800; color: #2c3e50; margin: 0 0 2px 0;">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 800; color: #1e293b; margin: 0 0 2px 0;">
                             {{ producto.especie_nombre_comun }}
                         </h3>
                         {% endif %}
                         {% if producto.especie_nombre_cientifico %}
                         <span style="font-size: 0.92rem; color: #64748b; font-style: italic; font-weight: 600;">
-                            {{ producto.especie_nombre_cientifico }}
+                            SKU Técnico: {{ producto.especie_nombre_cientifico }}
                         </span>
                         {% endif %}
                     </div>
@@ -351,15 +606,15 @@
 
                     {% if producto.especie_habitat %}
                     <div style="font-size: 0.88rem; color: #475569; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-solid fa-location-dot" style="color: #002093;"></i>
-                        <strong>Hábitat:</strong> {{ producto.especie_habitat }}
+                        <i class="fa-solid fa-industry" style="color: #002093;"></i>
+                        <strong>Campo de Aplicación / Industria:</strong> {{ producto.especie_habitat }}
                     </div>
                     {% endif %}
 
                     {% if producto.especie_dato_curioso %}
                     <div style="background: #ffffff; border-radius: 12px; padding: 12px 14px; border: 1px solid #e2e8f0; font-size: 0.92rem; color: #334155; line-height: 1.6;">
                         <span style="font-weight: 700; color: #002093; display: block; margin-bottom: 4px; font-size: 0.85rem;">
-                            <i class="fa-solid fa-lightbulb" style="color: #FCBE00;"></i> Especificación Destacada
+                            <i class="fa-solid fa-lightbulb" style="color: #FCBE00;"></i> Ficha Técnica / Destacados
                         </span>
                         {{ producto.especie_dato_curioso|linebreaksbr }}
                     </div>
@@ -547,5 +802,42 @@
         }
     }
 </script>
+
+<!-- ==========================================
+     MODAL LIGHTBOX PARA AMPLIAR FOTO DE PRODUCTO
+========================================== -->
+<div id="image-zoom-modal" class="zoom-modal" onclick="cerrarZoom(event)" style="display: none;">
+    <div class="zoom-modal-backdrop"></div>
+    <div class="zoom-modal-content" onclick="event.stopPropagation();">
+        <button type="button" class="zoom-close-btn" onclick="cerrarZoom()" aria-label="Cerrar ampliación" title="Cerrar (Esc)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="zoom-image-wrapper">
+            <img id="zoom-modal-img" class="zoom-modal-img" src="" alt="{{ producto.nombre }}" onclick="toggleZoomLevel()" title="Haz clic para alternar aumento máximo">
+        </div>
+
+        {% with imagenes=producto.todas_las_imagenes %}
+        {% if imagenes|length > 1 %}
+        <button type="button" class="zoom-nav-btn zoom-prev" onclick="cambiarZoomSlide(-1)" aria-label="Imagen anterior" title="Anterior (←)">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button type="button" class="zoom-nav-btn zoom-next" onclick="cambiarZoomSlide(1)" aria-label="Siguiente imagen" title="Siguiente (→)">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        {% endif %}
+
+        <div class="zoom-modal-caption">
+            <span class="zoom-product-title">{{ producto.nombre }}</span>
+            {% if imagenes|length > 1 %}
+            <span id="zoom-counter" class="zoom-counter-pill">1 / {{ imagenes|length }}</span>
+            {% endif %}
+            <span style="font-size: 0.78rem; opacity: 0.8; margin-left: 6px;">
+                <i class="fa-solid fa-magnifying-glass"></i> Clic en la foto para zoom 100%
+            </span>
+        </div>
+        {% endwith %}
+    </div>
+</div>
 
 {% endblock %}

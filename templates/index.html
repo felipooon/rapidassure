@@ -180,17 +180,7 @@
             {% if c.imagen %}
               <img src="{{ c.get_imagen_url_300 }}" alt="{{ c.nombre }}" loading="lazy">
             {% else %}
-              {% if "pos" in c.slug or "smart" in c.slug %}
-                <i class="fa-solid fa-cash-register"></i>
-              {% elif "audio" in c.slug or "sonido" in c.slug %}
-                <i class="fa-solid fa-headphones"></i>
-              {% elif "gadgets" in c.slug or "perifericos" in c.slug %}
-                <i class="fa-solid fa-microchip"></i>
-              {% elif "proteccion" in c.slug or "garantias" in c.slug %}
-                <i class="fa-solid fa-shield-halved"></i>
-              {% else %}
-                <i class="fa-solid fa-boxes-stacked"></i>
-              {% endif %}
+              <i class="fa-solid {{ c.icono_fontawesome }}"></i>
             {% endif %}
           </div>
           <span class="category-name">{{ c.nombre }}</span>
