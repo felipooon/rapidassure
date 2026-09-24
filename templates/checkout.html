@@ -200,13 +200,32 @@
                         </label>
                     </div>
 
-                    <button type="submit" id="btn-mercadopago" style="width: 100%; background: linear-gradient(135deg, #009EE3, #0085C0); color: white; border: none; padding: 16px 20px; border-radius: 14px; font-weight: 800; font-size: 1.1rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 158, 227, 0.35); display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                        Pagar con Mercado Pago
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/>
-                            <path d="M2 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                        </svg>
-                    </button>
+                    <!-- Botón de Pago Transbank Webpay Plus -->
+                    <div style="margin-top: 10px;">
+                        <button type="submit" id="btn-webpay" style="width: 100%; background: linear-gradient(135deg, #e11d48, #be123c); color: white; border: none; padding: 18px 24px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 8px 25px rgba(225, 29, 72, 0.35); display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(225, 29, 72, 0.45)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(225, 29, 72, 0.35)';">
+                            <i class="fa-solid fa-credit-card" style="font-size: 1.3rem;"></i>
+                            <span>Pagar con Webpay Plus</span>
+                            <i class="fa-solid fa-chevron-right" style="font-size: 0.9rem; margin-left: 4px;"></i>
+                        </button>
+
+                        <!-- Medios de Pago aceptados y Sellos de Confianza -->
+                        <div style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;">
+                                <span style="font-size: 0.76rem; font-weight: 800; color: #002093; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Montserrat', sans-serif;">
+                                    <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i> Transbank Webpay Plus
+                                </span>
+                                <span style="color: #cbd5e1;">|</span>
+                                <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Débito (Redcompra)</span>
+                                <span style="color: #cbd5e1;">•</span>
+                                <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Crédito</span>
+                                <span style="color: #cbd5e1;">•</span>
+                                <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Prepago</span>
+                            </div>
+                            <div style="font-size: 0.78rem; color: #64748b; line-height: 1.4;">
+                                Transacción 100% protegida y encriptada por Transbank.
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </form>

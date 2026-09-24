@@ -427,7 +427,8 @@ class TipoEntregaCheckoutTests(TestCase):
             'terminos_aceptados': 'on'
         })
         
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'webpay_redirect.html')
         pedido = Pedido.objects.last()
         self.assertIsNotNone(pedido)
         self.assertEqual(pedido.tipo_entrega, 'RETIRO')
@@ -507,6 +508,166 @@ class ControladorOfertasTests(TestCase):
         self.assertIn('80.000', content)
         self.assertIn('100.000', content)
         self.assertIn('-20% OFF', content)
+
+
+class WebpayPlusIntegrationTests(TestCase):
+    def setUp(self):
+        from unittest.mock import patch, MagicMock
+        self.categoria = Categoria.objects.create(nombre="Hardware POS")
+        self.producto = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Impresora Térmica 80mm",
+            precio=65000,
+            stock=10,
+            disponible=True
+        )
+
+    def test_iniciar_pago_webpay_en_checkout(self):
+        """Al procesar el pedido con Webpay, debe llamar a Transaction.create y mostrar la plantilla de redirección."""
+        from unittest.mock import patch
+        
+        # Simular sesión con carrito
+        session = self.client.session
+        session['carrito'] = {
+            str(self.producto.id): {
+                'producto_id': self.producto.id,
+                'nombre': self.producto.nombre,
+                'precio': '65000',
+                'cantidad': 1,
+                'imagen': ''
+            }
+        }
+        session.save()
+
+        with patch('tienda.views.checkout_pagos.Transaction.create') as mock_create:
+            mock_create.return_value = {
+                'token': 'mock-token-webpay-123456',
+                'url': 'https://webpay3gint.transbank.cl/webpayserver/initTransaction'
+            }
+
+            response = self.client.post('/checkout/', {
+                'nombre_completo': 'Carlos Valdés',
+                'rut': '12.345.678-5',
+                'email': 'carlos@example.com',
+                'telefono': '987654321',
+                'tipo_entrega': 'ENVIO',
+                'direccion': 'Av Providencia 1234',
+                'ciudad': 'Santiago',
+                'terminos_aceptados': 'on'
+            })
+
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, 'webpay_redirect.html')
+            self.assertIn('mock-token-webpay-123456', response.content.decode('utf-8'))
+            self.assertTrue(mock_create.called)
+
+            # Verificar que el pedido se creó con token y metodo_pago WEBPAY
+            pedido = Pedido.objects.latest('id')
+            self.assertEqual(pedido.id_transaccion, 'mock-token-webpay-123456')
+            self.assertEqual(pedido.metodo_pago, 'WEBPAY')
+            self.assertFalse(pedido.pagado)
+
+    def test_retorno_webpay_exitoso_confirma_pedido_y_descuenta_stock(self):
+        """Cuando Webpay retorna token_ws aprobado, el pedido se marca pagado y descuenta stock."""
+        from unittest.mock import patch
+
+        pedido = Pedido.objects.create(
+            nombre_completo='Fernanda Lagos',
+            rut='15.345.678-9',
+            email='fernanda@example.com',
+            telefono='912345678',
+            tipo_entrega='RETIRO',
+            direccion='San Diego 174',
+            ciudad='Santiago',
+            id_transaccion='token-aprobado-777',
+            metodo_pago='WEBPAY'
+        )
+        ItemPedido.objects.create(
+            pedido=pedido,
+            producto=self.producto,
+            precio=65000,
+            cantidad=2
+        )
+
+        with patch('tienda.views.checkout_pagos.Transaction.commit') as mock_commit:
+            mock_commit.return_value = {
+                'response_code': 0,
+                'status': 'AUTHORIZED',
+                'buy_order': f'ORD-{pedido.codigo_orden}',
+                'session_id': f'PEDIDO-{pedido.id}',
+                'amount': 130000,
+                'authorization_code': '123456',
+                'payment_type_code': 'VD',
+                'card_detail': {'card_number': '6623'},
+                'installments_number': 0
+            }
+
+            response = self.client.post('/webpay/retorno/', {'token_ws': 'token-aprobado-777'})
+            self.assertRedirects(response, f'/pedido-confirmado/{pedido.id}/')
+
+            pedido.refresh_from_db()
+            self.assertTrue(pedido.pagado)
+            self.assertEqual(pedido.codigo_autorizacion, '123456')
+            self.assertEqual(pedido.tipo_pago, 'Redcompra (Débito)')
+            self.assertEqual(pedido.tarjeta_ultimos_digitos, '6623')
+
+            self.producto.refresh_from_db()
+            self.assertEqual(self.producto.stock, 8)
+
+    def test_retorno_webpay_rechazado(self):
+        """Cuando Webpay retorna response_code != 0, el pedido no se marca como pagado."""
+        from unittest.mock import patch
+
+        pedido = Pedido.objects.create(
+            nombre_completo='Pedro Soto',
+            rut='12.345.678-5',
+            email='pedro@example.com',
+            telefono='911223344',
+            tipo_entrega='ENVIO',
+            direccion='Alameda 100',
+            ciudad='Santiago',
+            id_transaccion='token-rechazado-999',
+            metodo_pago='WEBPAY'
+        )
+
+        with patch('tienda.views.checkout_pagos.Transaction.commit') as mock_commit:
+            mock_commit.return_value = {
+                'response_code': -1,
+                'status': 'FAILED',
+                'buy_order': f'ORD-{pedido.codigo_orden}',
+                'session_id': f'PEDIDO-{pedido.id}',
+                'amount': 65000
+            }
+
+            response = self.client.post('/webpay/retorno/', {'token_ws': 'token-rechazado-999'})
+            self.assertRedirects(response, '/?cart=open')
+
+            pedido.refresh_from_db()
+            self.assertFalse(pedido.pagado)
+
+    def test_retorno_webpay_cancelado_por_usuario(self):
+        """Cuando el cliente cancela en Webpay (TBK_TOKEN), se redirige y no se marca como pagado."""
+        pedido = Pedido.objects.create(
+            nombre_completo='Lucia Diaz',
+            rut='16.789.012-3',
+            email='lucia@example.com',
+            telefono='955667788',
+            tipo_entrega='RETIRO',
+            direccion='San Diego 174',
+            ciudad='Santiago',
+            id_transaccion='token-anulado-000',
+            metodo_pago='WEBPAY'
+        )
+
+        response = self.client.post('/webpay/retorno/', {
+            'TBK_TOKEN': 'token-anulado-000',
+            'TBK_ORDEN_COMPRA': f'ORD-{pedido.codigo_orden}'
+        })
+        self.assertRedirects(response, '/?cart=open')
+
+        pedido.refresh_from_db()
+        self.assertFalse(pedido.pagado)
+
 
 
 

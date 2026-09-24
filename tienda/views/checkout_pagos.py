@@ -9,9 +9,47 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.db import transaction
 
+from transbank.webpay.webpay_plus.transaction import Transaction
+from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
+from transbank.common.integration_api_keys import IntegrationApiKeys
+
 from ..models import Producto, Pedido, ItemPedido, Cupon, LogProducto, LogPedido
 from ..carrito import Carrito
 from ..deseos import Deseos
+
+
+def get_webpay_transaction():
+    """
+    Retorna una instancia de Transaction configurada para Producción o Integración (pruebas)
+    según las credenciales en settings.
+    """
+    commerce_code = getattr(settings, 'TRANSBANK_COMMERCE_CODE', '') or ''
+    api_key = getattr(settings, 'TRANSBANK_API_KEY', '') or ''
+    env = getattr(settings, 'TRANSBANK_ENVIRONMENT', 'INTEGRATION').upper()
+
+    if env == 'PRODUCTION' and commerce_code and api_key:
+        return Transaction.build_for_production(commerce_code, api_key)
+    else:
+        code = commerce_code or IntegrationCommerceCodes.WEBPAY_PLUS
+        key = api_key or IntegrationApiKeys.WEBPAY
+        return Transaction.build_for_integration(code, key)
+
+
+def descifrar_tipo_pago_webpay(codigo_tipo):
+    """
+    Convierte el código de tipo de pago de Transbank Webpay Plus a texto legible.
+    """
+    tipos = {
+        'VD': 'Redcompra (Débito)',
+        'VN': 'Tarjeta de Crédito (1 pago)',
+        'VC': 'Crédito en Cuotas',
+        'SI': '3 Cuotas sin Interés',
+        'S2': '2 Cuotas sin Interés',
+        'NC': 'Cuotas sin Interés',
+        'VP': 'Tarjeta Prepago',
+    }
+    return tipos.get(codigo_tipo, codigo_tipo or 'Webpay Plus')
+
 
 
 def toggle_deseos(request, producto_id):
@@ -293,7 +331,8 @@ def procesar_pedido(request):
             requiere_factura=requiere_factura,
             razon_social=razon_social,
             rut_empresa=rut_empresa,
-            giro_comercial=giro_comercial
+            giro_comercial=giro_comercial,
+            metodo_pago='WEBPAY'
         )
         
         if cupon_obj:
@@ -355,70 +394,40 @@ https://rapidassure.cl/panel/
             except Exception as e:
                 print(f"Error silencioso al enviar alerta de pedido: {e}")
 
-        if not settings.MP_ACCESS_TOKEN:
-            messages.info(request, "Entorno local: MERCADOPAGO_ACCESS_TOKEN no configurado en .env. Pedido registrado correctamente.")
-            return redirect('pedido_confirmado', pedido_id=pedido.id)
-
+        # Iniciar transacción con Transbank Webpay Plus
         try:
-            sdk = mercadopago.SDK(settings.MP_ACCESS_TOKEN)
+            tx = get_webpay_transaction()
+            buy_order = f"ORD-{pedido.codigo_orden}"
+            session_id = f"PEDIDO-{pedido.id}"
+            monto_transbank = max(1, int(total_final))
 
-            items_mp = []
-            for item in carrito:
-                items_mp.append({
-                    "title": item['producto_real'].nombre,
-                    "quantity": int(item['cantidad']),
-                    "unit_price": int(item['precio']),
-                    "currency_id": "CLP"
-                })
+            return_url = request.build_absolute_uri('/webpay/retorno/')
+            if not settings.DEBUG and return_url.startswith('http://'):
+                return_url = return_url.replace('http://', 'https://', 1)
 
-            if descuento_aplicado > 0 and cupon_obj:
-                items_mp.append({
-                    "title": f"Descuento Cupón ({cupon_obj.codigo})",
-                    "quantity": 1,
-                    "unit_price": -int(descuento_aplicado),
-                    "currency_id": "CLP"
-                })
+            tbk_response = tx.create(
+                buy_order=buy_order,
+                session_id=session_id,
+                amount=monto_transbank,
+                return_url=return_url
+            )
 
-            url_exito = f"https://rapidassure.cl/pedido-confirmado/{pedido.id}/"
-            url_fallo = "https://rapidassure.cl/?cart=open"
-            url_webhook = "https://rapidassure.cl/webhook/mercadopago/"
+            token_ws = tbk_response.get('token')
+            url_tbk = tbk_response.get('url')
 
-            preference_data = {
-                "items": items_mp,
-                "payer": {
-                    "name": pedido.nombre_completo,
-                    "email": pedido.email,
-                },
-                "back_urls": {
-                    "success": url_exito,
-                    "failure": url_fallo,
-                    "pending": url_exito,
-                },
-                "auto_return": "approved",
-                "external_reference": str(pedido.id),
-                "notification_url": url_webhook,
-            }
+            if not token_ws or not url_tbk:
+                raise ValueError(f"Respuesta sin token o url de Transbank: {tbk_response}")
 
-            preference_response = sdk.preference().create(preference_data)
+            # Guardamos el token provisionalmente en el pedido
+            pedido.id_transaccion = token_ws
+            pedido.save(update_fields=['id_transaccion'])
 
-            print("\n=== RESPUESTA DE MERCADO PAGO ===")
-            print(preference_response)
-            print("=================================\n")
+            return render(request, 'webpay_redirect.html', {
+                'url': url_tbk,
+                'token': token_ws,
+                'pedido': pedido
+            })
 
-            if "init_point" not in preference_response.get("response", {}):
-                LogPedido.objects.create(
-                    pedido_id=pedido.id,
-                    codigo_orden=pedido.codigo_orden,
-                    cliente_nombre=pedido.nombre_completo,
-                    cliente_email=pedido.email,
-                    accion='ERROR',
-                    detalles=f"Respuesta de MercadoPago sin init_point: {preference_response}"
-                )
-                messages.error(request, "Hubo un problema al contactar a la pasarela de pago. Por favor intenta de nuevo.")
-                return redirect('ver_carrito')
-            
-            init_point = preference_response["response"]["init_point"]
-            return redirect(init_point)
         except Exception as e:
             LogPedido.objects.create(
                 pedido_id=pedido.id,
@@ -426,11 +435,214 @@ https://rapidassure.cl/panel/
                 cliente_nombre=pedido.nombre_completo,
                 cliente_email=pedido.email,
                 accion='ERROR',
-                detalles=f"Excepción al conectar con Mercado Pago: {e}"
+                detalles=f"Excepción al conectar con Webpay Plus: {e}"
             )
-            print(f"Error al conectar con Mercado Pago: {e}")
-            messages.error(request, f"Error con la pasarela de pago: {e}")
+            print(f"Error al conectar con Webpay Plus: {e}")
+            messages.error(request, f"Hubo un inconveniente al conectar con Transbank Webpay Plus: {e}. Por favor intenta nuevamente.")
+            return redirect('ver_carrito')
+
+    return render(request, 'checkout.html', {
+        'carrito': carrito,
+        'cupon': cupon_obj,
+        'descuento': descuento_aplicado,
+        'total_final': total_final
+    })
+
+
+@csrf_exempt
+def webpay_retorno(request):
+    """
+    Vista receptora del retorno de Transbank Webpay Plus (POST o GET).
+    Maneja aprobación, rechazo y anulación por el usuario (TBK_TOKEN).
+    """
+    token_ws = request.POST.get('token_ws') or request.GET.get('token_ws')
+    tbk_token = request.POST.get('TBK_TOKEN') or request.GET.get('TBK_TOKEN')
+    tbk_orden = request.POST.get('TBK_ORDEN_COMPRA') or request.GET.get('TBK_ORDEN_COMPRA')
+
+    # Caso 1: El cliente anuló la compra en la pantalla de Transbank Webpay Plus
+    if tbk_token and not token_ws:
+        pedido = None
+        if tbk_orden:
+            try:
+                cod_str = tbk_orden.replace('ORD-', '')
+                pedido_id = int(cod_str) - 1100
+                pedido = Pedido.objects.filter(id=pedido_id).first()
+            except (ValueError, TypeError):
+                pass
+
+        if not pedido and tbk_token:
+            pedido = Pedido.objects.filter(id_transaccion=tbk_token).first()
+
+        if pedido:
+            LogPedido.objects.create(
+                pedido_id=pedido.id,
+                codigo_orden=pedido.codigo_orden,
+                cliente_nombre=pedido.nombre_completo,
+                cliente_email=pedido.email,
+                accion='CANCELADO',
+                detalles="El cliente anuló voluntariamente el pago en el portal de Webpay Plus."
+            )
+        messages.info(request, "Has cancelado el proceso de pago en Webpay Plus. Tus productos continúan en tu carrito de compras.")
+        return redirect('/?cart=open')
+
+    # Caso 2: Falta de token
+    if not token_ws:
+        messages.error(request, "No se recibió el comprobante de transacción de Webpay Plus.")
+        return redirect('/?cart=open')
+
+    # Caso 3: Verificar si el pedido ya fue pagado previamente para no duplicar commit
+    pedido = Pedido.objects.filter(id_transaccion=token_ws).first()
+    if pedido and pedido.pagado:
+        request.session['pedido_autorizado'] = str(pedido.id)
+        return redirect('pedido_confirmado', pedido_id=pedido.id)
+
+    # Caso 4: Confirmación con commit(token_ws)
+    tx = get_webpay_transaction()
+
+    try:
+        commit_res = tx.commit(token=token_ws)
+    except Exception as e:
+        print(f"Error al ejecutar commit en Webpay: {e}")
+        if pedido:
+            LogPedido.objects.create(
+                pedido_id=pedido.id,
+                codigo_orden=pedido.codigo_orden,
+                cliente_nombre=pedido.nombre_completo,
+                cliente_email=pedido.email,
+                accion='ERROR',
+                detalles=f"Error en commit Webpay Plus: {e}"
+            )
+        messages.error(request, f"Ocurrió un error al procesar la confirmación con Transbank: {e}")
+        return redirect('/?cart=open')
+
+    response_code = commit_res.get('response_code')
+    status = commit_res.get('status')
+    buy_order = commit_res.get('buy_order', '')
+    session_id = commit_res.get('session_id', '')
+
+    # Encontramos el pedido correspondiente si no se encontró antes por token
+    if not pedido:
+        if buy_order and buy_order.startswith('ORD-'):
+            try:
+                cod_str = buy_order.replace('ORD-', '')
+                pedido_id = int(cod_str) - 1100
+                pedido = Pedido.objects.filter(id=pedido_id).first()
+            except (ValueError, TypeError):
+                pass
+        if not pedido and session_id and session_id.startswith('PEDIDO-'):
+            try:
+                p_id = int(session_id.replace('PEDIDO-', ''))
+                pedido = Pedido.objects.filter(id=p_id).first()
+            except (ValueError, TypeError):
+                pass
+
+    if not pedido:
+        messages.error(request, "No se encontró el pedido asociado a la transacción de Webpay.")
+        return redirect('index')
+
+    card_detail = commit_res.get('card_detail', {})
+    tarjeta_ultimos = card_detail.get('card_number', '') if isinstance(card_detail, dict) else ''
+    tipo_pago = descifrar_tipo_pago_webpay(commit_res.get('payment_type_code'))
+    auth_code = str(commit_res.get('authorization_code', ''))
+    cuotas = int(commit_res.get('installments_number') or 0)
+
+    # Verificamos si fue aprobada (response_code == 0 y status == 'AUTHORIZED')
+    if response_code == 0 and status == 'AUTHORIZED':
+        pago_procesado = False
+        with transaction.atomic():
+            pedido_lock = Pedido.objects.select_for_update().filter(id=pedido.id).first()
+            if pedido_lock and not pedido_lock.pagado:
+                pedido_lock.confirmar_pago()
+                pedido_lock.metodo_pago = 'WEBPAY'
+                pedido_lock.id_transaccion = token_ws
+                pedido_lock.codigo_autorizacion = auth_code
+                pedido_lock.tipo_pago = tipo_pago
+                pedido_lock.tarjeta_ultimos_digitos = tarjeta_ultimos
+                pedido_lock.cuotas = cuotas
+                pedido_lock.save()
+                pedido = pedido_lock
+                pago_procesado = True
+
+        if pago_procesado:
+            LogPedido.objects.create(
+                pedido_id=pedido.id,
+                codigo_orden=pedido.codigo_orden,
+                cliente_nombre=pedido.nombre_completo,
+                cliente_email=pedido.email,
+                accion='PAGO_OK',
+                detalles=(
+                    f"Pago APROBADO por Webpay Plus | "
+                    f"Cód. Aut.: {auth_code} | "
+                    f"Monto: ${int(commit_res.get('amount', 0))} | "
+                    f"Tipo: {tipo_pago} | "
+                    f"Tarjeta: **** **** **** {tarjeta_ultimos} | "
+                    f"Cuotas: {cuotas}"
+                )
+            )
+
+            # Limpiamos el carrito del usuario
+            carrito = Carrito(request)
+            carrito.limpiar()
+
+            # Autorizamos la vista de pedido confirmado
+            request.session['pedido_autorizado'] = str(pedido.id)
+
+            # Enviamos el correo de confirmación de pago al cliente
+            asunto = f'¡Pago Confirmado! Pedido #{pedido.codigo_orden} - Rapidassure Retail'
+            mensaje = f'''¡Hola {pedido.nombre_completo}!
+
+Confirmamos que hemos recibido exitosamente el pago de tu pedido #{pedido.codigo_orden} a través de Transbank Webpay Plus.
+
+COMPROBANTE DE PAGO WEBPAY:
+----------------------------------------
+Orden de Compra: #{pedido.codigo_orden}
+Código de Autorización: {auth_code}
+Medio de Pago: {tipo_pago}
+Tarjeta: **** **** **** {tarjeta_ultimos}
+Total Pagado: ${pedido.get_total_final()}
+----------------------------------------
+
+DATOS DE ENTREGA:
+Tipo: {pedido.get_tipo_entrega_display()}
+Dirección: {pedido.direccion}, {pedido.ciudad}
+
+Estamos preparando tus productos de inmediato. En cuanto sean despachados te contactaremos por WhatsApp (+56{pedido.telefono}).
+
+¡Muchas gracias por tu compra en Rapidassure Retail!
+https://rapidassure.cl
+'''
+            try:
+                send_mail(
+                    asunto,
+                    mensaje,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [pedido.email],
+                    fail_silently=True,
+                )
+            except Exception as mail_err:
+                print(f"Error al enviar correo de pago Webpay: {mail_err}")
+
             return redirect('pedido_confirmado', pedido_id=pedido.id)
+        else:
+            request.session['pedido_autorizado'] = str(pedido.id)
+            return redirect('pedido_confirmado', pedido_id=pedido.id)
+
+    else:
+        # Transacción rechazada por el banco emisor o Webpay
+        LogPedido.objects.create(
+            pedido_id=pedido.id,
+            codigo_orden=pedido.codigo_orden,
+            cliente_nombre=pedido.nombre_completo,
+            cliente_email=pedido.email,
+            accion='RECHAZADO',
+            detalles=f"Transacción rechazada por Webpay Plus | Response Code: {response_code} | Status: {status}"
+        )
+        messages.error(
+            request, 
+            "Tu pago fue rechazado por el banco emisor o Webpay. Por favor verifica tus fondos o intenta con otra tarjeta."
+        )
+        return redirect('/?cart=open')
+
 
     return render(request, 'checkout.html', {
         'carrito': carrito,

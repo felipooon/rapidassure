@@ -342,6 +342,11 @@ class Pedido(models.Model):
     actualizado = models.DateTimeField(auto_now=True)
     pagado = models.BooleanField(default=False)
     id_transaccion = models.CharField(max_length=100, blank=True, null=True, help_text="ID de MercadoPago o Webpay")
+    metodo_pago = models.CharField(max_length=30, default='WEBPAY', help_text="Pasarela de pago utilizada")
+    codigo_autorizacion = models.CharField(max_length=50, blank=True, null=True, help_text="Código de autorización Transbank Webpay")
+    tipo_pago = models.CharField(max_length=50, blank=True, null=True, help_text="Tipo de pago Webpay (Débito, Crédito, etc.)")
+    tarjeta_ultimos_digitos = models.CharField(max_length=10, blank=True, null=True, help_text="Últimos 4 dígitos de la tarjeta")
+    cuotas = models.IntegerField(default=0, help_text="Cantidad de cuotas si aplica")
     token_resena = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, null=True, blank=True)
 
     def get_enlace_resena(self):

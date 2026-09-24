@@ -29,6 +29,7 @@ from .checkout_pagos import (
     mover_deseos_a_carrito,
     procesar_pedido,
     pedido_confirmado,
+    webpay_retorno,
     webhook_mercadopago,
 )
 

@@ -190,6 +190,15 @@ function ejecutarCopiaPedidoModal() {
                         <span style="color: #002093; font-weight: bold;"><i class="fa-solid fa-clock"></i> Pendiente</span>
                     {% endif %}
                 </p>
+                <p style="margin: 5px 0;"><strong>Medio de Pago:</strong> 
+                    <span style="font-weight: 700; color: #002093;">{{ pedido.metodo_pago }} ({{ pedido.tipo_pago|default:"Transbank Webpay" }})</span>
+                </p>
+                {% if pedido.codigo_autorizacion %}
+                <p style="margin: 5px 0;"><strong>Cód. Autorización:</strong> <code style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 800; color: #000E1F;">{{ pedido.codigo_autorizacion }}</code></p>
+                {% endif %}
+                {% if pedido.tarjeta_ultimos_digitos %}
+                <p style="margin: 5px 0;"><strong>Tarjeta:</strong> **** **** **** {{ pedido.tarjeta_ultimos_digitos }}</p>
+                {% endif %}
             </div>
         </div>
 
