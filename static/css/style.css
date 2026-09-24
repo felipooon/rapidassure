@@ -1126,26 +1126,49 @@ section:nth-of-type(4) {
 }
 
 /* Layout general */
-.panel-body {
+body.panel-body {
   margin: 0;
+  padding: 0;
+  height: auto !important;
+  min-height: 100vh;
+  background-color: #f4f6f8 !important;
+  display: flex;
+  flex-direction: column;
 }
 
 .panel-layout {
   display: flex;
+  flex: 1;
   min-height: 100vh;
+  width: 100%;
+  background-color: #f4f6f8;
+  position: relative;
+}
 
-  background: #f4f6f8;
+.panel-layout .panel-nav {
+  position: fixed;
+  left: 0;
+}
+
+.panel-layout .panel-main {
+  margin-left: 250px;
+  width: calc(100% - 250px);
 }
 
 /* CONTENIDO */
 .panel-main {
   flex: 1;
+  min-height: 100vh;
   padding: 40px; /* 👈 aquí está la separación real */
+  box-sizing: border-box;
+  background-color: #f4f6f8;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)),
+    linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.75)),
     url("../img/Fondo_corporativo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
 }
 
 .stats-grid {

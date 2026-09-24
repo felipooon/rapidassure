@@ -3,6 +3,7 @@ import re
 import threading
 import mercadopago
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -510,7 +511,9 @@ def webpay_retorno(request):
     pedido = Pedido.objects.filter(id_transaccion=token_ws).first()
     if pedido and pedido.pagado:
         request.session['pedido_autorizado'] = str(pedido.id)
-        return redirect('pedido_confirmado', pedido_id=pedido.id)
+        carrito = Carrito(request)
+        carrito.limpiar()
+        return redirect(f"{reverse('pedido_confirmado', kwargs={'pedido_id': pedido.id})}?token={token_ws}")
 
     # Caso 4: Confirmación con commit(token_ws)
     tx = get_webpay_transaction()
@@ -635,10 +638,12 @@ https://rapidassure.cl
                     daemon=True
                 ).start()
 
-            return redirect('pedido_confirmado', pedido_id=pedido.id)
+            return redirect(f"{reverse('pedido_confirmado', kwargs={'pedido_id': pedido.id})}?token={token_ws}")
         else:
             request.session['pedido_autorizado'] = str(pedido.id)
-            return redirect('pedido_confirmado', pedido_id=pedido.id)
+            carrito = Carrito(request)
+            carrito.limpiar()
+            return redirect(f"{reverse('pedido_confirmado', kwargs={'pedido_id': pedido.id})}?token={token_ws}")
 
     else:
         # Transacción rechazada por el banco emisor o Webpay
@@ -666,14 +671,30 @@ https://rapidassure.cl
 
 
 def pedido_confirmado(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    token_url = request.GET.get('token')
     pedido_autorizado = request.session.get('pedido_autorizado')
-    if str(pedido_autorizado) != str(pedido_id):
+
+    es_autorizado = False
+    if str(pedido_autorizado) == str(pedido.id):
+        es_autorizado = True
+    elif token_url and pedido.id_transaccion == token_url and pedido.pagado:
+        es_autorizado = True
+        request.session['pedido_autorizado'] = str(pedido.id)
+
+    if not es_autorizado:
         return redirect('index')
 
-    pedido = get_object_or_404(Pedido, id=pedido_id)
     carrito = Carrito(request)
     carrito.limpiar()
-    return render(request, 'pedido_confirmado.html', {'pedido': pedido})
+    if 'cupon_codigo' in request.session:
+        try:
+            del request.session['cupon_codigo']
+        except KeyError:
+            pass
+    request.session.modified = True
+
+    return render(request, 'pedido_confirmado.html', {'pedido': pedido, 'carrito': carrito})
 
 
 @csrf_exempt

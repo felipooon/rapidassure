@@ -183,6 +183,20 @@ class CarritoTests(TestCase):
             
         self.assertTrue(sesion_valida)
 
+    def test_limpiar_carrito_vacia_memoria_y_sesion(self):
+        """limpiar() debe vaciar el diccionario en memoria y el diccionario de sesión."""
+        request = self._get_request_con_sesion()
+        carrito = Carrito(request)
+        carrito.agregar(self.producto, 2)
+        self.assertEqual(len(carrito), 2)
+        self.assertGreater(carrito.get_total(), 0)
+
+        carrito.limpiar()
+        self.assertEqual(len(carrito), 0)
+        self.assertEqual(carrito.get_total(), 0)
+        self.assertEqual(carrito.carrito, {})
+        self.assertEqual(request.session.get('carrito'), {})
+
 class PedidoModelTests(TestCase):
     def setUp(self):
         self.categoria = Categoria.objects.create(nombre="Categoría Test")
@@ -603,7 +617,7 @@ class WebpayPlusIntegrationTests(TestCase):
             }
 
             response = self.client.post('/webpay/retorno/', {'token_ws': 'token-aprobado-777'})
-            self.assertRedirects(response, f'/pedido-confirmado/{pedido.id}/')
+            self.assertRedirects(response, f'/pedido-confirmado/{pedido.id}/?token=token-aprobado-777')
 
             pedido.refresh_from_db()
             self.assertTrue(pedido.pagado)

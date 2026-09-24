@@ -97,6 +97,8 @@ class Carrito:
         """
         Vacía el carrito completo (ideal para después de un pago exitoso).
         """
+        if hasattr(self, 'carrito') and isinstance(self.carrito, dict):
+            self.carrito.clear()
         self.session['carrito'] = {}
         self.guardar()
 

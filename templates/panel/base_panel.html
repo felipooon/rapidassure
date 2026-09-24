@@ -8,8 +8,30 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.1">
     <link rel="icon" href="{% static 'img/Icono.png' %}">
+    <style>
+      html, body.panel-body {
+        height: auto !important;
+        min-height: 100vh !important;
+        background-color: #f4f6f8 !important;
+      }
+      .panel-layout {
+        min-height: 100vh !important;
+        background-color: #f4f6f8 !important;
+      }
+      .panel-main {
+        min-height: 100vh !important;
+        background-color: #f4f6f8 !important;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.75)),
+          url("{% static 'img/Fondo_corporativo.jpg' %}") !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center top !important;
+        background-attachment: fixed !important;
+      }
+    </style>
 </head>
 
 <body class="panel-body">
