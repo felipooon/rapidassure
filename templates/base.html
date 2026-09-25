@@ -102,8 +102,7 @@
                         </div>
                         <div class="cart-text-info">
                             <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
-                            <strong class="cart-header-total" style="font-size: 0.95rem; color: #3230C2;">${{
-                                carrito.get_total|default:0 }}</strong>
+                            <strong class="cart-header-total" style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total|default:0 }}</strong>
                         </div>
                     </div>
                 </div>
@@ -182,9 +181,7 @@
                     <li>
                         <a href="{% url 'ver_deseos' %}">
                             <i class="fa-solid fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
-                            <span class="badge-deseos-count"
-                                style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{
-                                deseos|length|default:0 }}</span>
+                            <span class="badge-deseos-count" style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{ deseos|length|default:0 }}</span>
                         </a>
                     </li>
                 </ul>
@@ -233,9 +230,7 @@
                     <a href="{% url 'ver_deseos' %}">
                         <span class="nav-icon"><i class="fa-solid fa-heart" style="color: #FCBE00;"></i></span> Lista de
                         Deseos
-                        <span class="badge-deseos-count"
-                            style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{
-                            deseos|length|default:0 }}</span>
+                        <span class="badge-deseos-count" style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{ deseos|length|default:0 }}</span>
                     </a>
                 </li>
             </ul>
