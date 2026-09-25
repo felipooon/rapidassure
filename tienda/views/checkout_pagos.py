@@ -78,6 +78,15 @@ def toggle_deseos(request, producto_id):
     deseos = Deseos(request)
     producto = get_object_or_404(Producto, id=producto_id)
     agregado = deseos.toggle(producto)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1':
+        return JsonResponse({
+            'success': True,
+            'agregado': agregado,
+            'total_deseos': len(deseos),
+            'producto_id': producto_id,
+            'nombre': producto.nombre,
+        })
     
     if agregado:
         messages.success(request, f'¡{producto.nombre} agregado a tu Lista de Deseos!')

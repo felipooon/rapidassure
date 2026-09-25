@@ -37,6 +37,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="icon" href="{% static 'img/Icono.png' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<script>
+    // Restaurar inmediatamente el scroll si hay una posición previa guardada para esta ruta
+    (function() {
+        try {
+            var savedPath = sessionStorage.getItem('rapidasure_scroll_path');
+            var savedPos = sessionStorage.getItem('rapidasure_scroll_pos');
+            if (savedPos !== null && savedPath === window.location.pathname) {
+                if ('scrollRestoration' in history) {
+                    history.scrollRestoration = 'manual';
+                }
+            }
+        } catch(e) {}
+    })();
+</script>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -152,9 +167,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <li>
                     <a href="{% url 'ver_deseos' %}">
                         <i class="fa-solid fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
-                        {% if deseos|length > 0 %}
-                            <span style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px;">{{ deseos|length }}</span>
-                        {% endif %}
+                        <span class="badge-deseos-count" style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{ deseos|length|default:0 }}</span>
                     </a>
                 </li>
             </ul>
@@ -194,9 +207,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <li>
                 <a href="{% url 'ver_deseos' %}">
                     <span class="nav-icon"><i class="fa-solid fa-heart" style="color: #FCBE00;"></i></span> Lista de Deseos
-                    {% if deseos|length > 0 %}
-                        <span style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px;">{{ deseos|length }}</span>
-                    {% endif %}
+                    <span class="badge-deseos-count" style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{ deseos|length|default:0 }}</span>
                 </a>
             </li>
         </ul>
@@ -284,7 +295,7 @@ document.addEventListener("DOMContentLoaded", function() {
       <!-- Columna 1: Marca & Descripción -->
       <div>
         <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; color: #000E1F; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
-          Rapidassure Retail
+          RAPIDASSURE RETAIL
         </h3>
         <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6; margin: 0 0 15px 0;">
           Soluciones integrales de tecnología inteligente para retail, cajas Smart POS y protección antirrobo.
@@ -333,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <!-- Fila Inferior (Sub-footer): Copyright & Firma de Desarrollo -->
     <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: #64748b;">
       <div>
-        &copy; {% now "Y" %} Rapidassure Retail. Todos los derechos reservados.
+        &copy; {% now "Y" %} RAPIDASSURE RETAIL. Todos los derechos reservados.
       </div>
 
       <div style="display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: #94a3b8; font-weight: 400;">
@@ -644,9 +655,150 @@ document.querySelectorAll("#mobile-drawer a").forEach(link => {
         if (floatBtn) floatBtn.classList.remove('oculto');
     }
 
+    // ========================================================
+    // PRESERVACIÓN Y RESTAURACIÓN DE SCROLL
+    // ========================================================
+    function restaurarScrollGuardado() {
+        try {
+            var savedPath = sessionStorage.getItem('rapidasure_scroll_path');
+            var savedPos = sessionStorage.getItem('rapidasure_scroll_pos');
+            if (savedPos !== null && savedPath === window.location.pathname) {
+                var targetY = parseInt(savedPos, 10);
+                if (!isNaN(targetY)) {
+                    window.scrollTo(0, targetY);
+                    document.documentElement.scrollTop = targetY;
+                    document.body.scrollTop = targetY;
+                }
+            }
+        } catch(e) {}
+    }
+
+    restaurarScrollGuardado();
+    window.addEventListener('DOMContentLoaded', restaurarScrollGuardado);
+    window.addEventListener('load', function() {
+        restaurarScrollGuardado();
+        setTimeout(function() {
+            try {
+                sessionStorage.removeItem('rapidasure_scroll_pos');
+                sessionStorage.removeItem('rapidasure_scroll_path');
+            } catch(e) {}
+        }, 500);
+    });
+
+    // Guardar posición de scroll antes de recargas por carrito o lista de deseos
+    document.addEventListener('click', function(e) {
+        var link = e.target.closest('a');
+        if (!link) return;
+        var href = link.getAttribute('href') || '';
+        if (href.includes('deseos/toggle') || 
+            href.includes('carrito/agregar') || 
+            href.includes('carrito/restar') || 
+            href.includes('carrito/quitar') ||
+            href.includes('deseos/mover-a-carrito')) {
+            try {
+                sessionStorage.setItem('rapidasure_scroll_pos', window.scrollY || window.pageYOffset || document.documentElement.scrollTop);
+                sessionStorage.setItem('rapidasure_scroll_path', window.location.pathname);
+            } catch(e) {}
+        }
+    }, true);
+
+    document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (!form) return;
+        var action = form.getAttribute('action') || form.action || '';
+        if (action.includes('carrito/agregar') || action.includes('deseos/toggle')) {
+            try {
+                sessionStorage.setItem('rapidasure_scroll_pos', window.scrollY || window.pageYOffset || document.documentElement.scrollTop);
+                sessionStorage.setItem('rapidasure_scroll_path', window.location.pathname);
+            } catch(e) {}
+        }
+    }, true);
+
+    // ========================================================
+    // TOGGLE DESEOS ASÍNCRONO (SIN RECARGA NI SALTO DE PÁGINA)
+    // ========================================================
+    function updateWishlistBadges(count) {
+        document.querySelectorAll('.badge-deseos-count').forEach(function(badge) {
+            if (count > 0) {
+                badge.textContent = count;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        var wishlistBtn = e.target.closest('a[href*="/deseos/toggle/"]');
+        if (!wishlistBtn) return;
+
+        // Si estamos en la página de lista de deseos (/deseos/), dejamos que se recargue con scroll preservado
+        if (window.location.pathname.startsWith('/deseos/')) {
+            return;
+        }
+
+        e.preventDefault();
+        var url = wishlistBtn.href;
+
+        // Actualización visual inmediata (optimista)
+        var isFilled = wishlistBtn.querySelector('.fa-solid.fa-heart') !== null || wishlistBtn.classList.contains('active');
+        var icons = wishlistBtn.querySelectorAll('i');
+
+        if (isFilled) {
+            wishlistBtn.classList.remove('active');
+            wishlistBtn.title = "Guardar en favoritos";
+            icons.forEach(function(icon) {
+                icon.className = 'fa-regular fa-heart';
+                icon.style.color = '#94a3b8';
+            });
+            if (wishlistBtn.textContent.includes('Favoritos')) {
+                wishlistBtn.innerHTML = '<i class="fa-regular fa-heart"></i> Guardar';
+                wishlistBtn.style.background = '#ffffff';
+                wishlistBtn.style.color = '#64748b';
+                wishlistBtn.style.borderColor = '#cbd5e1';
+            }
+        } else {
+            wishlistBtn.classList.add('active');
+            wishlistBtn.title = "Quitar de favoritos";
+            icons.forEach(function(icon) {
+                icon.className = 'fa-solid fa-heart';
+                icon.style.color = '#e11d48';
+            });
+            if (wishlistBtn.textContent.includes('Guardar')) {
+                wishlistBtn.innerHTML = '<i class="fa-solid fa-heart" style="color: #e11d48;"></i> En Favoritos';
+                wishlistBtn.style.background = '#fff1f2';
+                wishlistBtn.style.color = '#e11d48';
+                wishlistBtn.style.borderColor = '#fecdd3';
+            }
+        }
+
+        // Micro-animación pop
+        wishlistBtn.style.transform = 'scale(1.2)';
+        setTimeout(function() { wishlistBtn.style.transform = ''; }, 200);
+
+        // Envío asíncrono
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data && data.success) {
+                updateWishlistBadges(data.total_deseos);
+            }
+        })
+        .catch(function() {
+            // Fallback a navegación tradicional si falla la red
+            window.location.href = url;
+        });
+    });
+
     // Truco: Si la URL dice que el carrito debe estar abierto, lo abrimos automáticamente
     if (window.location.search.includes('cart=open')) {
         abrirCarrito();
+        // Restaurar posición de scroll con cart abierto
+        restaurarScrollGuardado();
         // Limpiamos la URL para que no se quede pegado si el usuario recarga
         window.history.replaceState({}, document.title, window.location.pathname);
     }
