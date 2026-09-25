@@ -545,9 +545,26 @@
                 </span>
 
                 <!-- Titulo -->
-                <h1 style="margin: 0 0 15px 0; font-family: 'Outfit', sans-serif; font-size: 2rem; color: #222; line-height: 1.2;">
+                <h1 style="margin: 0 0 10px 0; font-family: 'Outfit', sans-serif; font-size: 2rem; color: #222; line-height: 1.2;">
                     {{ producto.nombre }}
                 </h1>
+
+                {% if config_sitio.mostrar_resenas %}
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                    <div style="color: #f59e0b; font-size: 0.95rem; letter-spacing: 1px;">
+                        {% for i in "12345"|make_list %}
+                            {% if forloop.counter <= producto.promedio_calificacion %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                    </div>
+                    <a href="#seccion-resenas" style="font-size: 0.85rem; font-weight: 600; color: #64748b; text-decoration: none;">
+                        {% if producto.total_resenas > 0 %}
+                            {{ producto.promedio_calificacion }} ({{ producto.total_resenas }} reseña{{ producto.total_resenas|pluralize:"s" }})
+                        {% else %}
+                            Sin reseñas aún
+                        {% endif %}
+                    </a>
+                </div>
+                {% endif %}
 
                 <!-- Precio -->
                 <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
@@ -728,10 +745,9 @@
 
     </div>
 
-    {% comment %}
     {% if config_sitio.mostrar_resenas %}
-    <!-- SECCIÓN DE RESEÑAS Y CALIFICACIONES (DESHABILITADA TEMPORALMENTE EN PRODUCTO DETAIL) -->
-    <div class="resenas-card">
+    <!-- SECCIÓN DE RESEÑAS Y CALIFICACIONES -->
+    <div id="seccion-resenas" class="resenas-card">
         
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px;">
             <div>
@@ -795,7 +811,6 @@
 
     </div>
     {% endif %}
-    {% endcomment %}
 
 </div>
 </div>

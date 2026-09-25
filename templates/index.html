@@ -362,6 +362,81 @@
 
 
 
+{% if config_sitio.mostrar_resenas and resenas %}
+<!-- ==========================================
+     SECCIÓN DE RESEÑAS Y OPINIONES VERIFICADAS
+========================================== -->
+<section id="resenas-destacadas" style="padding: 4.5rem 1rem 4rem; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-top: 1px solid #e2e8f0; position: relative; z-index: 2;">
+  <div style="max-width: 1200px; margin: 0 auto; width: 100%;">
+    
+    <div style="text-align: center; margin-bottom: 2.8rem;">
+      <span style="display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.82rem; font-weight: 800; padding: 5px 16px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+        <i class="fa-solid fa-star"></i> Testimonios Verificados
+      </span>
+      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0; letter-spacing: -0.5px;">
+        Experiencias de Clientes Reales
+      </h2>
+      <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
+        Conoce cómo nuestro equipamiento tecnológico y soluciones de soporte potencian negocios y cadenas comerciales a diario.
+      </p>
+    </div>
+
+    <!-- Grid de Reseñas -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+      {% for r in resenas %}
+        <div style="background: white; border-radius: 18px; padding: 26px 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0, 32, 147, 0.08)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.04)';">
+          <div>
+            <!-- Calificación y Badge -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+              <div style="color: #f59e0b; font-size: 1.05rem; letter-spacing: 2px;">
+                {% for i in "12345"|make_list %}
+                  {% if forloop.counter <= r.calificacion %}★{% else %}☆{% endif %}
+                {% endfor %}
+              </div>
+              {% if r.comprador_verificado %}
+                <span style="background: #e6f4ea; color: #137333; font-weight: 800; font-size: 0.72rem; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #b7e1cd;">
+                  <i class="fa-solid fa-circle-check"></i> Verificado
+                </span>
+              {% endif %}
+            </div>
+
+            <!-- Comentario -->
+            <p style="font-family: 'Open Sans', sans-serif; color: #334155; font-size: 0.95rem; line-height: 1.6; margin: 0 0 18px 0; font-style: italic;">
+              “{{ r.comentario }}”
+            </p>
+          </div>
+
+          <!-- Autor y Producto vinculado -->
+          <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: auto;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #002093, #3230C2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0, 32, 147, 0.25);">
+                {{ r.nombre_cliente|slice:":1"|upper }}
+              </div>
+              <div style="overflow: hidden;">
+                <div style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: #0f172a; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  {{ r.nombre_cliente }}
+                </div>
+                <div style="font-size: 0.76rem; color: #94a3b8;">
+                  {{ r.fecha|date:"d \d\e F, Y" }}
+                </div>
+              </div>
+            </div>
+
+            {% if r.producto %}
+              <a href="{{ r.producto.get_absolute_url }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: #002093; text-decoration: none; background: #eef2ff; padding: 5px 12px; border-radius: 8px; max-width: 100%; box-sizing: border-box; transition: background 0.2s ease;" onmouseover="this.style.background='#e0e7ff'" onmouseout="this.style.background='#eef2ff'">
+                <i class="fa-solid fa-tag" style="color: #6366f1; font-size: 0.7rem;"></i>
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ r.producto.nombre }}</span>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endif %}
+
 <!-- ==========================================
      SECCIÓN NOSOTROS (3 PILARES Y SELLO)
 ========================================== -->

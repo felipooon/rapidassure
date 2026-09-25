@@ -96,7 +96,8 @@ def producto_detail(request, slug=None, id=None):
             if producto:
                 if producto.slug and producto.slug != slug:
                     return redirect(producto.get_absolute_url(), permanent=True)
-                return render(request, "producto_detail.html", {"producto": producto})
+                resenas = producto.resenas.filter(aprobado=True)
+                return render(request, "producto_detail.html", {"producto": producto, "resenas": resenas, "resena_form": ResenaForm()})
         producto = get_object_or_404(Producto, slug=slug)
     elif id:
         producto = get_object_or_404(Producto, id=id)
@@ -130,8 +131,11 @@ def producto_detail_by_id(request, id):
     metrica_prod, created = MetricaProducto.objects.get_or_create(producto=producto, fecha=hoy)
     MetricaProducto.objects.filter(id=metrica_prod.id).update(vistas=models.F('vistas') + 1)
 
+    resenas = producto.resenas.filter(aprobado=True)
     return render(request, "producto_detail.html", {
-        "producto": producto
+        "producto": producto,
+        "resenas": resenas,
+        "resena_form": ResenaForm()
     })
 
 
