@@ -1,0 +1,74 @@
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0;">
+        <span style="margin: 0; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; color: #FCBE00;">Carro de compras</span>
+        <button onclick="cerrarCarrito()" style="border: none; background: none; font-size: 1.2rem; cursor: pointer; color: #FCBE00;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <div style="padding: 20px; overflow-y: auto; flex-grow: 1;">
+        {% if not carrito or carrito.get_total == 0 %}
+            <p style="text-align: center; color: #888; margin-top: 50px;"><i class="fa-solid fa-cart-flatbed" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>Tu carrito está vacío.</p>
+        {% else %}
+            {% for item in carrito %}
+                <div style="display: flex; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; align-items: center;">
+                    
+                    <div style="width: 65px; height: 65px; border-radius: 10px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                        {% if item.producto_real and item.producto_real.imagen %}
+                            <img src="{{ item.producto_real.get_imagen_url_600 }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% elif item.imagen %}
+                            <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                        {% else %}
+                            <i class="fa-solid fa-box-open" style="color: #cbd5e1; font-size: 1.5rem;"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <div style="flex-grow: 1; min-width: 0;">
+                        <h4 style="margin: 0 0 4px 0; font-size: 0.9rem; font-weight: 700; color: #3230C2; font-family: 'Montserrat', sans-serif; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.nombre }}</h4>
+                        
+                        <div style="font-weight: 800; color: #FCBE00; font-size: 0.95rem; margin-bottom: 6px;">${{ item.precio_total }}</div>
+
+                        <!-- Controles de Cantidad (- 1 +) -->
+                        <div style="display: inline-flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px 6px;">
+                            <a href="{% url 'restar_del_carrito' item.producto_id %}" style="text-decoration: none; color: #475569; font-weight: 800; font-size: 0.9rem; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#3230C2'" onmouseout="this.style.color='#475569'">-</a>
+                            <span style="font-weight: 700; font-size: 0.85rem; min-width: 16px; text-align: center; color: #0f172a;">{{ item.cantidad }}</span>
+                            <a href="{% url 'agregar_al_carrito' item.producto_id %}" style="text-decoration: none; color: #475569; font-weight: 800; font-size: 0.9rem; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#3230C2'" onmouseout="this.style.color='#475569'">+</a>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'quitar_del_carrito' item.producto_id %}" style="color: #FCBE00; text-decoration: none; font-size: 1rem; padding: 4px; transition: transform 0.2s, color 0.2s;" onmouseover="this.style.color='#dc3545'; this.style.transform='scale(1.15)'" onmouseout="this.style.color='#FCBE00'; this.style.transform='scale(1)'" title="Quitar del carrito">
+                        <i class="fa-solid fa-xmark"></i>
+                    </a>
+                    
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div style="padding: 20px; border-top: 1px solid #f1f5f9; background: #ffffff; flex-shrink: 0;">
+        <h3 style="display: flex; justify-content: space-between; margin: 0 0 16px 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700;">
+            <span style="color: #FCBE00;">Subtotal:</span>
+            <span style="color: #3230C2; font-weight: 800; font-size: 1.15rem;">${{ carrito.get_total }}</span>
+        </h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
+            <button type="button" onclick="cerrarCarrito()" style="display: block; width: 100%; text-align: center; background: #FCBE00; color: #000E1F; border: none; padding: 12px 0; border-radius: 8px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; cursor: pointer; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#e6ac00'" onmouseout="this.style.background='#FCBE00'">
+                Seguir comprando
+            </button>
+            <a href="{% url 'procesar_pedido' %}" style="display: block; text-align: center; background: #3230C2; color: #ffffff; border: none; padding: 12px 0; border-radius: 8px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#2524a1'" onmouseout="this.style.background='#3230C2'">
+                Finalizar compra
+            </a>
+        </div>
+
+        <!-- Barra de Progreso de Envío Gratuito -->
+        <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
+            <div style="height: 6px; width: 100%; background: #e2e8f0; border-radius: 6px; overflow: hidden; margin-bottom: 10px;">
+                <div style="height: 100%; width: {{ carrito.get_porcentaje_envio_gratis }}%; background: #3230C2; border-radius: 6px; transition: width 0.4s ease;"></div>
+            </div>
+            <div style="font-size: 0.82rem; font-family: 'Open Sans', sans-serif; display: flex; align-items: center; gap: 8px; color: #64748b;">
+                <i class="fa-solid fa-truck-fast" style="color: #64748b; font-size: 0.9rem;"></i>
+                {% if carrito.get_total >= 19990 %}
+                    <span>¡Felicitaciones! Tienes <strong style="color: #FCBE00;">Envío Gratuito en RM</strong>.</span>
+                {% else %}
+                    <span>Te faltan <strong style="color: #FCBE00;">${{ carrito.get_falta_envio_gratis }}</strong> para el envío gratuito en RM.</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>

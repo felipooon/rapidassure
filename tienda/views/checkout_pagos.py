@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.db import transaction
 
 from transbank.webpay.webpay_plus.transaction import Transaction
@@ -106,19 +107,37 @@ def mover_deseos_a_carrito(request, producto_id):
     deseos = Deseos(request)
     carrito = Carrito(request)
     producto = get_object_or_404(Producto, id=producto_id)
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
 
     if producto.hay_stock():
         carrito.agregar(producto, 1)
         deseos.eliminar(producto)
-        messages.success(request, f'¡{producto.nombre} movido al carrito de compras!')
+        msg = f'¡{producto.nombre} movido al carrito de compras!'
+        success = True
     else:
-        messages.error(request, f'Lo sentimos, {producto.nombre} está agotado por ahora.')
+        msg = f'Lo sentimos, {producto.nombre} está agotado por ahora.'
+        success = False
 
-    url_anterior = request.META.get('HTTP_REFERER', '/deseos/')
-    if '?' in url_anterior:
-        return redirect(url_anterior + '&cart=open')
+    if is_ajax:
+        cart_html = render_to_string('includes/cart_drawer_content.html', {'carrito': carrito}, request=request)
+        total_raw = carrito.get_total()
+        return JsonResponse({
+            'success': success,
+            'message': msg,
+            'message_type': 'success' if success else 'error',
+            'total_items': len(carrito),
+            'total_deseos': len(deseos),
+            'total_precio': f"{total_raw:,}".replace(',', '.'),
+            'total_raw': total_raw,
+            'cart_html': cart_html,
+        })
+
+    if success:
+        messages.success(request, msg)
     else:
-        return redirect(url_anterior + '?cart=open')
+        messages.error(request, msg)
+
+    return _cart_redirect(request, '/deseos/')
 
 
 
@@ -194,39 +213,75 @@ def quitar_cupon(request):
     return redirect('procesar_pedido')
 
 
+def _cart_json_response(request, carrito, success=True, message=None, message_type='info'):
+    cart_html = render_to_string('includes/cart_drawer_content.html', {'carrito': carrito}, request=request)
+    total_raw = carrito.get_total()
+    return JsonResponse({
+        'success': success,
+        'message': message,
+        'message_type': message_type,
+        'total_items': len(carrito),
+        'total_precio': f"{total_raw:,}".replace(',', '.'),
+        'total_raw': total_raw,
+        'cart_html': cart_html,
+    })
+
+
+def _cart_redirect(request, default_url='/'):
+    url_anterior = request.POST.get('next') or request.GET.get('next') or request.META.get('HTTP_REFERER') or default_url
+    if 'cart=open' not in url_anterior:
+        sep = '&' if '?' in url_anterior else '?'
+        return redirect(url_anterior + sep + 'cart=open')
+    return redirect(url_anterior)
+
+
 def agregar_al_carrito(request, producto_id):
     carrito = Carrito(request)
     producto = get_object_or_404(Producto, id=producto_id)
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
 
     try:
-        cantidad = int(request.POST.get('cantidad', 1))
+        val = request.POST.get('cantidad') if request.method == 'POST' else request.GET.get('cantidad')
+        cantidad = int(val) if val is not None else 1
         if cantidad <= 0:
+            if is_ajax:
+                return _cart_json_response(request, carrito, success=False, message="La cantidad debe ser un número positivo.", message_type='error')
             messages.error(request, "La cantidad debe ser un número positivo.")
             return redirect(request.META.get('HTTP_REFERER', '/'))
     except ValueError:
+        if is_ajax:
+            return _cart_json_response(request, carrito, success=False, message="Cantidad no válida.", message_type='error')
         messages.error(request, "Cantidad no válida.")
         return redirect(request.META.get('HTTP_REFERER', '/'))
-    
-    cantidad = int(request.POST.get('cantidad', 1) if request.method == 'POST' else 1)
 
     if producto.hay_stock():
         agregado_exitosamente = carrito.agregar(producto, cantidad)
         if agregado_exitosamente:
-            messages.success(request, f'¡{producto.nombre} agregado a tu carrito!')
+            msg = f'¡{producto.nombre} agregado a tu carrito!'
+            msg_type = 'success'
         else:
-            messages.warning(request, f'¡Límite alcanzado! Solo nos quedan {producto.stock} unidades de {producto.nombre} y ya están en tu carrito.')
+            msg = f'¡Límite alcanzado! Solo nos quedan {producto.stock} unidades de {producto.nombre} y ya están en tu carrito.'
+            msg_type = 'warning'
     else:
-        messages.error(request, f'Lo sentimos, {producto.nombre} está agotado por ahora.')
-        
-    url_anterior = request.META.get('HTTP_REFERER', '/')
-    if '?' in url_anterior:
-        return redirect(url_anterior + '&cart=open')
+        agregado_exitosamente = False
+        msg = f'Lo sentimos, {producto.nombre} está agotado por ahora.'
+        msg_type = 'error'
+
+    if is_ajax:
+        return _cart_json_response(request, carrito, success=agregado_exitosamente, message=msg, message_type=msg_type)
+
+    if msg_type == 'success':
+        messages.success(request, msg)
+    elif msg_type == 'warning':
+        messages.warning(request, msg)
     else:
-        return redirect(url_anterior + '?cart=open')
+        messages.error(request, msg)
+
+    return _cart_redirect(request)
 
 
 def ver_carrito(request):
-    return redirect('/?cart=open')
+    return _cart_redirect(request)
 
 
 def restar_del_carrito(request, producto_id):
@@ -236,11 +291,12 @@ def restar_del_carrito(request, producto_id):
         carrito.restar(producto)
     else:
         carrito.eliminar(producto_id)
-    url_anterior = request.META.get('HTTP_REFERER', '/')
-    if '?' in url_anterior:
-        return redirect(url_anterior + '&cart=open')
-    else:
-        return redirect(url_anterior + '?cart=open')
+
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
+    if is_ajax:
+        return _cart_json_response(request, carrito, success=True)
+
+    return _cart_redirect(request)
 
 
 def quitar_del_carrito(request, producto_id):
@@ -250,17 +306,20 @@ def quitar_del_carrito(request, producto_id):
         carrito.eliminar(producto)
     else:
         carrito.eliminar(producto_id)
-    url_anterior = request.META.get('HTTP_REFERER', '/')
-    if '?' in url_anterior:
-        return redirect(url_anterior + '&cart=open')
-    else:
-        return redirect(url_anterior + '?cart=open')
+
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1'
+    if is_ajax:
+        return _cart_json_response(request, carrito, success=True)
+
+    return _cart_redirect(request)
 
 
 def limpiar_carrito(request):
     carrito = Carrito(request)
     carrito.limpiar()
-    return redirect('ver_carrito')
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest' or request.GET.get('ajax') == '1':
+        return _cart_json_response(request, carrito, success=True)
+    return _cart_redirect(request)
 
 
 def procesar_pedido(request):

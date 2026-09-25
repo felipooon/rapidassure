@@ -4,55 +4,66 @@
 
 <head>
     <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-N7WNM6XN');</script>
-<!-- End Google Tag Manager -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="{% block meta_desc %}Rapidassure Retail: Líderes en equipamiento, soluciones tecnológicas y protección integral para el sector retail.{% endblock %}">
-<meta property="og:site_name" content="Rapidassure Retail">
-<meta property="og:title" content="{% block og_title %}Rapidassure Retail{% endblock %}">
-<meta property="og:description" content="{% block og_desc %}Soluciones y protección integral para el retail.{% endblock %}">
-<meta property="og:image" content="{% block og_image %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
-<meta property="og:image:secure_url" content="{% block og_image_secure %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
-<meta property="og:image:type" content="{% block og_image_type %}image/png{% endblock %}">
-<meta property="og:image:width" content="{% block og_image_width %}600{% endblock %}">
-<meta property="og:image:height" content="{% block og_image_height %}300{% endblock %}">
-<meta property="og:url" content="{{ request.build_absolute_uri }}">
-<meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-N7WNM6XN');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="{% block meta_desc %}Rapidassure Retail: Líderes en equipamiento, soluciones tecnológicas y protección integral para el sector retail.{% endblock %}">
+    <meta property="og:site_name" content="Rapidassure Retail">
+    <meta property="og:title" content="{% block og_title %}Rapidassure Retail{% endblock %}">
+    <meta property="og:description"
+        content="{% block og_desc %}Soluciones y protección integral para el retail.{% endblock %}">
+    <meta property="og:image"
+        content="{% block og_image %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
+    <meta property="og:image:secure_url"
+        content="{% block og_image_secure %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
+    <meta property="og:image:type" content="{% block og_image_type %}image/png{% endblock %}">
+    <meta property="og:image:width" content="{% block og_image_width %}600{% endblock %}">
+    <meta property="og:image:height" content="{% block og_image_height %}300{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
 
-<!-- Twitter Card Meta Tags -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{% block twitter_title %}Rapidassure Retail{% endblock %}">
-<meta name="twitter:description" content="{% block twitter_desc %}Soluciones y protección integral para el retail.{% endblock %}">
-<meta name="twitter:image" content="{% block twitter_image %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Rapidassure Retail{% endblock %}">
+    <meta name="twitter:description"
+        content="{% block twitter_desc %}Soluciones y protección integral para el retail.{% endblock %}">
+    <meta name="twitter:image"
+        content="{% block twitter_image %}https://www.rapidassure.cl{% static 'img/Logo_Horizontal.png' %}{% endblock %}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
 
-<title>{% block title %}Rapidassure Retail{% endblock %}</title>
+    <title>{% block title %}Rapidassure Retail{% endblock %}</title>
 
-<link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now 'U' %}">
-<link rel="icon" href="{% static 'img/Icono.png' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now 'U' %}">
+    <link rel="icon" href="{% static 'img/Icono.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<script>
-    // Restaurar inmediatamente el scroll si hay una posición previa guardada para esta ruta
-    (function() {
-        try {
-            var savedPath = sessionStorage.getItem('rapidasure_scroll_path');
-            var savedPos = sessionStorage.getItem('rapidasure_scroll_pos');
-            if (savedPos !== null && savedPath === window.location.pathname) {
-                if ('scrollRestoration' in history) {
-                    history.scrollRestoration = 'manual';
+    <script>
+        // Restaurar inmediatamente el scroll si hay una posición previa guardada para esta ruta
+        (function () {
+            try {
+                var savedPath = sessionStorage.getItem('rapidasure_scroll_path');
+                var savedPos = sessionStorage.getItem('rapidasure_scroll_pos');
+                if (savedPos !== null && savedPath === window.location.pathname) {
+                    if ('scrollRestoration' in history) {
+                        history.scrollRestoration = 'manual';
+                    }
                 }
-            }
-        } catch(e) {}
-    })();
-</script>
+            } catch (e) { }
+        })();
+    </script>
 
-<script type="application/ld+json">
+    <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -67,768 +78,916 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N7WNM6XN"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-<header class="header-site-rapidassure">
-    <!-- 2. MAIN HEADER ROW (Logo, Buscador integrado, Carrito Widget) -->
-    <div class="main-header-row">
-        <div class="main-header-container">
-            
-            <!-- Fila Superior Móvil / Elementos Superiores -->
-            <div class="header-top-row">
-                <a href="/" class="header-logo-link">
-                    <img src="{% static 'img/Logo_Horizontal.png' %}" alt="Rapidassure Retail Logo" class="header-logo-img">
-                </a>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N7WNM6XN" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <header class="header-site-rapidassure">
+        <!-- 2. MAIN HEADER ROW (Logo, Buscador integrado, Carrito Widget) -->
+        <div class="main-header-row">
+            <div class="main-header-container">
 
-                <!-- Widget del Carrito -->
-                <div class="cart-header-widget" onclick="abrirCarrito()">
-                    <div class="cart-icon-wrapper">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        <span class="cart-bubble-count">{{ carrito|length|default:0 }}</span>
-                    </div>
-                    <div class="cart-text-info">
-                        <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
-                        <strong style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total|default:0 }}</strong>
+                <!-- Fila Superior Móvil / Elementos Superiores -->
+                <div class="header-top-row">
+                    <a href="/" class="header-logo-link">
+                        <img src="{% static 'img/Logo_Horizontal.png' %}" alt="Rapidassure Retail Logo"
+                            class="header-logo-img">
+                    </a>
+
+                    <!-- Widget del Carrito -->
+                    <div class="cart-header-widget" onclick="abrirCarrito()">
+                        <div class="cart-icon-wrapper">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span class="cart-bubble-count">{{ carrito|length|default:0 }}</span>
+                        </div>
+                        <div class="cart-text-info">
+                            <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
+                            <strong class="cart-header-total" style="font-size: 0.95rem; color: #3230C2;">${{
+                                carrito.get_total|default:0 }}</strong>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Fila Inferior Móvil / Buscador y Sandwich -->
-            <div class="header-search-row">
-                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+                <!-- Fila Inferior Móvil / Buscador y Sandwich -->
+                <div class="header-search-row">
+                    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú"><i
+                            class="fa-solid fa-bars"></i></button>
 
-                <!-- Buscador Integrado con Selector de Categorías -->
-                <div class="integrated-search-box">
-                    <div class="search-cat-dropdown" id="custom-cat-dropdown">
-                        <button type="button" class="custom-cat-trigger" id="custom-cat-trigger">
-                            <span>Todas las categorías</span>
-                            <i class="fa-solid fa-chevron-down select-arrow"></i>
-                        </button>
+                    <!-- Buscador Integrado con Selector de Categorías -->
+                    <div class="integrated-search-box">
+                        <div class="search-cat-dropdown" id="custom-cat-dropdown">
+                            <button type="button" class="custom-cat-trigger" id="custom-cat-trigger">
+                                <span>Todas las categorías</span>
+                                <i class="fa-solid fa-chevron-down select-arrow"></i>
+                            </button>
 
-                        <div class="custom-cat-menu" id="custom-cat-menu">
-                            <a href="/#categorias" class="custom-cat-item">
-                                <i class="fa-solid fa-layer-group"></i> Todas las categorías
-                            </a>
-                            {% for cat in categorias_globales %}
+                            <div class="custom-cat-menu" id="custom-cat-menu">
+                                <a href="/#categorias" class="custom-cat-item">
+                                    <i class="fa-solid fa-layer-group"></i> Todas las categorías
+                                </a>
+                                {% for cat in categorias_globales %}
                                 <a href="{% url 'categoria' cat.slug %}" class="custom-cat-item">
                                     <i class="fa-solid {{ cat.icono_fontawesome }}"></i>
                                     {{ cat.nombre }}
                                 </a>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="search-input-box">
-                        <input type="text" id="live-search-input" placeholder="Buscar productos..." autocomplete="off">
-                        <div id="live-search-results" class="live-search-dropdown"></div>
-                    </div>
+                        <div class="search-input-box">
+                            <input type="text" id="live-search-input" placeholder="Buscar productos..."
+                                autocomplete="off">
+                            <div id="live-search-results" class="live-search-dropdown"></div>
+                        </div>
 
-                    <button type="button" class="search-submit-btn" aria-label="Buscar">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </button>
+                        <button type="button" class="search-submit-btn" aria-label="Buscar">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
                 </div>
+
             </div>
-
         </div>
-    </div>
 
-    <!-- 3. BARRA AZUL PRINCIPAL (Botonera amarilla de Categorías + Menú Navegación) -->
-    <nav class="primary-nav-bar">
-        <div class="primary-nav-container">
-            
-            <div class="categories-yellow-wrapper">
-                <button class="btn-categories-yellow" id="btn-categories-yellow">
-                    <i class="fa-solid fa-grip-vertical"></i>
-                    <span>Todas las Categorías</span>
-                    <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
-                </button>
+        <!-- 3. BARRA AZUL PRINCIPAL (Botonera amarilla de Categorías + Menú Navegación) -->
+        <nav class="primary-nav-bar">
+            <div class="primary-nav-container">
 
-                <ul class="yellow-categories-dropdown" id="yellow-categories-dropdown">
-                    {% for cat in categorias_globales %}
+                <div class="categories-yellow-wrapper">
+                    <button class="btn-categories-yellow" id="btn-categories-yellow">
+                        <i class="fa-solid fa-grip-vertical"></i>
+                        <span>Todas las Categorías</span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-left: auto;"></i>
+                    </button>
+
+                    <ul class="yellow-categories-dropdown" id="yellow-categories-dropdown">
+                        {% for cat in categorias_globales %}
                         <li>
                             <a href="{% url 'categoria' cat.slug %}">
                                 <i class="fa-solid {{ cat.icono_fontawesome }}"></i>
                                 {{ cat.nombre }}
                             </a>
                         </li>
-                    {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <ul class="primary-menu-links">
+                    <li><a href="/#inicio">Inicio</a></li>
+                    <li><a href="/#categorias">Categorías</a></li>
+                    <li><a href="/#promociones">Promociones</a></li>
+                    <li><a href="/#destacados">Destacados</a></li>
+                    <li><a href="/#acerca">Nosotros</a></li>
+                    <li><a href="/#contacto">Contacto</a></li>
+                    <li>
+                        <a href="{% url 'ver_deseos' %}">
+                            <i class="fa-solid fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
+                            <span class="badge-deseos-count"
+                                style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{
+                                deseos|length|default:0 }}</span>
+                        </a>
+                    </li>
                 </ul>
+
+            </div>
+        </nav>
+
+        <!-- MENÚ LATERAL MÓVIL (SÓLO MOBILE) -->
+        <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+
+        <div class="mobile-drawer" id="mobile-drawer">
+            <div class="mobile-drawer-header">
+                <div class="mobile-drawer-brand">
+                    <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo"
+                        class="drawer-logo-img" style="height: 36px;">
+                </div>
+                <button id="close-menu" class="close-button" aria-label="Cerrar menú">&times;</button>
             </div>
 
-            <ul class="primary-menu-links">
-                <li><a href="/#inicio">Inicio</a></li>
-                <li><a href="/#categorias">Categorías</a></li>
-                <li><a href="/#promociones">Promociones</a></li>
-                <li><a href="/#destacados">Destacados</a></li>
-                <li><a href="/#acerca">Nosotros</a></li>
-                <li><a href="/#contacto">Contacto</a></li>
+            <ul class="mobile-drawer-nav">
+                <li><a href="/#inicio"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Inicio</a></li>
+                <li>
+                    <a href="/#categorias"><span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span>
+                        Categorías</a>
+                    <ul
+                        style="list-style: none; padding-left: 54px; margin: -4px 0 8px 0; display: flex; flex-direction: column; gap: 4px;">
+                        {% for cat in categorias_globales %}
+                        <li>
+                            <a href="{% url 'categoria' cat.slug %}"
+                                style="padding: 6px 10px; margin: 0; font-size: 0.86rem; background: transparent; border: none; box-shadow: none; color: rgba(255,255,255,0.9);">
+                                • {{ cat.nombre }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li><a href="/#promociones"><span class="nav-icon"><i class="fa-solid fa-bolt"></i></span>
+                        Promociones</a></li>
+                <li><a href="/#destacados"><span class="nav-icon"><i class="fa-solid fa-fire"></i></span> Destacados</a>
+                </li>
+                <li><a href="/#acerca"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Nosotros</a>
+                </li>
+                <li><a href="/#contacto"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span> Contacto</a>
+                </li>
                 <li>
                     <a href="{% url 'ver_deseos' %}">
-                        <i class="fa-solid fa-heart" style="color: #FCBE00;"></i> Lista de Deseos
-                        <span class="badge-deseos-count" style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{ deseos|length|default:0 }}</span>
+                        <span class="nav-icon"><i class="fa-solid fa-heart" style="color: #FCBE00;"></i></span> Lista de
+                        Deseos
+                        <span class="badge-deseos-count"
+                            style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{
+                            deseos|length|default:0 }}</span>
                     </a>
                 </li>
             </ul>
 
-        </div>
-    </nav>
-
-    <!-- MENÚ LATERAL MÓVIL (SÓLO MOBILE) -->
-    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
-
-    <div class="mobile-drawer" id="mobile-drawer">
-        <div class="mobile-drawer-header">
-            <div class="mobile-drawer-brand">
-                <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure Retail Logo" class="drawer-logo-img" style="height: 36px;">
-            </div>
-            <button id="close-menu" class="close-button" aria-label="Cerrar menú">&times;</button>
-        </div>
-
-        <ul class="mobile-drawer-nav">
-            <li><a href="/#inicio"><span class="nav-icon"><i class="fa-solid fa-house"></i></span> Inicio</a></li>
-            <li>
-                <a href="/#categorias"><span class="nav-icon"><i class="fa-solid fa-layer-group"></i></span> Categorías</a>
-                <ul style="list-style: none; padding-left: 54px; margin: -4px 0 8px 0; display: flex; flex-direction: column; gap: 4px;">
-                    {% for cat in categorias_globales %}
-                        <li>
-                            <a href="{% url 'categoria' cat.slug %}" style="padding: 6px 10px; margin: 0; font-size: 0.86rem; background: transparent; border: none; box-shadow: none; color: rgba(255,255,255,0.9);">
-                                • {{ cat.nombre }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-            <li><a href="/#promociones"><span class="nav-icon"><i class="fa-solid fa-bolt"></i></span> Promociones</a></li>
-            <li><a href="/#destacados"><span class="nav-icon"><i class="fa-solid fa-fire"></i></span> Destacados</a></li>
-            <li><a href="/#acerca"><span class="nav-icon"><i class="fa-solid fa-building"></i></span> Nosotros</a></li>
-            <li><a href="/#contacto"><span class="nav-icon"><i class="fa-solid fa-envelope"></i></span> Contacto</a></li>
-            <li>
-                <a href="{% url 'ver_deseos' %}">
-                    <span class="nav-icon"><i class="fa-solid fa-heart" style="color: #FCBE00;"></i></span> Lista de Deseos
-                    <span class="badge-deseos-count" style="background: #FCBE00; color: #000E1F; font-size: 0.72rem; padding: 2px 7px; border-radius: 10px; font-weight: 800; margin-left: 4px; display: {% if deseos|length > 0 %}inline-block{% else %}none{% endif %};">{{ deseos|length|default:0 }}</span>
-                </a>
-            </li>
-        </ul>
-
-        <div class="mobile-drawer-footer">
-            <p style="color: #FCBE00; font-weight: 600;">Rapidassure Retail — Innovación y Protección</p>
-            <div class="drawer-social-links">
-                <a href="https://wa.me/56929789628" target="_blank" class="social-btn whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="mailto:contacto@rapidassure.cl" class="social-btn instagram-btn" style="background: #002093;"><i class="fa-solid fa-envelope"></i> Email</a>
-            </div>
-        </div>
-    </div>
-</header>
-
-{% if messages %}
-<div id="toast-container" style="position: fixed; top: 90px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; max-width: 400px; width: calc(100% - 40px); pointer-events: none;">
-  {% for message in messages %}
-    <div class="toast-item" style="pointer-events: auto; padding: 12px 18px; border-radius: 12px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 0.95rem; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.4s ease; animation: toastSlideIn 0.3s ease forwards; {% if message.tags == 'success' %}background-color: #e8f8f5; color: #116b47; border: 1px solid #a3e4d7;{% elif message.tags == 'warning' %}background-color: #fff9e6; color: #975a16; border: 1px solid #ffe082;{% elif message.tags == 'info' %}background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8;{% else %}background-color: #fdf2f2; color: #9b2c2c; border: 1px solid #f8b4b4;{% endif %}">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        {% if message.tags == 'success' %}
-          <i class="fa-solid fa-circle-check" style="font-size: 1.1rem;"></i>
-        {% elif message.tags == 'error' %}
-          <i class="fa-solid fa-circle-xmark" style="font-size: 1.1rem;"></i>
-        {% elif message.tags == 'warning' %}
-          <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem;"></i>
-        {% else %}
-          <i class="fa-solid fa-circle-info" style="font-size: 1.1rem;"></i>
-        {% endif %}
-        <span>{{ message }}</span>
-      </div>
-      <button type="button" onclick="dismissToast(this.parentElement);" style="background: none; border: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: inherit; opacity: 0.6; padding: 0 2px;">&times;</button>
-    </div>
-  {% endfor %}
-</div>
-
-<style>
-@keyframes toastSlideIn {
-  from { opacity: 0; transform: translateY(-15px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-.toast-fadeOut {
-  opacity: 0 !important;
-  transform: translateX(30px) !important;
-}
-@media (max-width: 600px) {
-  #toast-container {
-    top: 75px;
-    right: 15px;
-    left: 15px;
-    width: auto;
-  }
-}
-</style>
-
-<script>
-function dismissToast(el) {
-  if (!el) return;
-  el.classList.add('toast-fadeOut');
-  setTimeout(function() {
-    if (el.parentNode) el.remove();
-  }, 400);
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  const toasts = document.querySelectorAll('#toast-container .toast-item');
-  toasts.forEach(function(toast, index) {
-    setTimeout(function() {
-      dismissToast(toast);
-    }, 3500 + (index * 500));
-  });
-});
-</script>
-{% endif %}
-<main>
-{% block content %}
-{% endblock %}
-</main>
-
-<footer class="footer-section" style="background-color: #fdfaf6; color: #4a4a4a; border-top: 3px solid #002093; padding: 3.5rem 1rem 1.5rem 1rem; font-family: 'Nunito', sans-serif;">
-  <div style="max-width: 1100px; margin: 0 auto;">
-    
-    <!-- Fila Superior: Marca, Enlaces Rápidos y Redes -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; margin-bottom: 2.5rem; text-align: left;">
-      
-      <!-- Columna 1: Marca & Descripción -->
-      <div>
-        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; color: #000E1F; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
-          RAPIDASSURE RETAIL
-        </h3>
-        <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6; margin: 0 0 15px 0;">
-          Soluciones integrales de tecnología inteligente para retail, cajas Smart POS y protección antirrobo.
-        </p>
-        <div style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.85rem; font-weight: 600;">
-          <i class="fa-solid fa-location-dot" style="color: #FCBE00;"></i> Santiago y Regiones, Chile
-        </div>
-      </div>
-
-      <!-- Columna 2: Enlaces Rápidos (Navegación) -->
-      <div>
-        <h4 style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;">
-          Navegación
-        </h4>
-        <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
-          <li><a href="{% url 'index' %}" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Inicio</a></li>
-          <li><a href="{% url 'index' %}#catalogo" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Catálogo de Productos</a></li>
-          <li><a href="{% url 'terminos' %}" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Términos y Condiciones</a></li>
-          <li><a href="{% url 'index' %}#contacto" style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;" onmouseover="this.style.color='#002093'" onmouseout="this.style.color='#64748b'">Atención al Cliente</a></li>
-        </ul>
-      </div>
-
-      <!-- Columna 3: Redes & Canales -->
-      <div>
-        <h4 style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;">
-          Contacto Corporativo
-        </h4>
-        <p style="color: #64748b; font-size: 0.88rem; line-height: 1.5; margin: 0 0 12px 0;">
-          Contáctanos directamente para asesoría en equipamiento y proyectos corporativos:
-        </p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="https://wa.me/56930027170" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #25D366; color: white; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.2);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-          </a>
-          <a href="mailto:contacto@rapidassure.cl" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #002093; color: white; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.2);" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-            <i class="fa-solid fa-envelope"></i> Email
-          </a>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Separador sutil -->
-    <div style="border-top: 1px solid #e2e8f0; margin-bottom: 1.5rem;"></div>
-
-    <!-- Fila Inferior (Sub-footer): Copyright & Firma de Desarrollo -->
-    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: #64748b;">
-      <div>
-        &copy; {% now "Y" %} RAPIDASSURE RETAIL. Todos los derechos reservados.
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: #94a3b8; font-weight: 400;">
-        <i class="fa-solid fa-shield-halved" style="color: #FCBE00; opacity: 0.9; font-size: 0.75rem;"></i> Tecnología & Seguridad Retail
-      </div>
-    </div>
-
-  </div>
-</footer>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-const toggle = document.getElementById("menu-toggle");
-const drawer = document.getElementById("mobile-drawer");
-const close = document.getElementById("close-menu");
-const overlay = document.getElementById("mobile-menu-overlay");
-
-function abrirMenuMovil() {
-    if (drawer) drawer.classList.add("show");
-    if (overlay) overlay.classList.add("show");
-}
-
-function cerrarMenuMovil() {
-    if (drawer) drawer.classList.remove("show");
-    if (overlay) overlay.classList.remove("show");
-}
-
-if (toggle) toggle.addEventListener("click", abrirMenuMovil);
-if (close) close.addEventListener("click", cerrarMenuMovil);
-if (overlay) overlay.addEventListener("click", cerrarMenuMovil);
-
-document.querySelectorAll("#mobile-drawer a").forEach(link => {
-    link.addEventListener("click", cerrarMenuMovil);
-});
-
-  // Ocultar logo en móvil al hacer scroll down manteniendo fija la barra de búsqueda
-  let lastScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-  let isLogoHidden = false;
-  const siteHeader = document.querySelector(".header-site-rapidassure");
-
-  function onScrollHeader() {
-    const currentScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-    
-    // Solo aplicar en vista móvil/tablet (ancho <= 768px)
-    if (window.innerWidth <= 768 && siteHeader) {
-      if (currentScrollY <= 25) {
-        // En el tope de la página: mostrar logo siempre
-        if (isLogoHidden) {
-          siteHeader.classList.remove("logo-hidden");
-          isLogoHidden = false;
-        }
-      } else if (currentScrollY > lastScrollY + 8 && currentScrollY > 45) {
-        // Scroll hacia abajo con intención: ocultar logo
-        if (!isLogoHidden) {
-          siteHeader.classList.add("logo-hidden");
-          isLogoHidden = true;
-        }
-      } else if (currentScrollY < lastScrollY - 12) {
-        // Scroll hacia arriba con intención: mostrar logo
-        if (isLogoHidden) {
-          siteHeader.classList.remove("logo-hidden");
-          isLogoHidden = false;
-        }
-      }
-    } else if (siteHeader && isLogoHidden) {
-      siteHeader.classList.remove("logo-hidden");
-      isLogoHidden = false;
-    }
-    
-    lastScrollY = Math.max(0, currentScrollY);
-  }
-
-  window.addEventListener("scroll", onScrollHeader, { passive: true });
-
-});
-</script>
-
-<style>
-    /* Soporte dinámico para colapso de logo en scroll móvil */
-    @media (max-width: 768px) {
-        .header-top-row {
-            display: flex !important;
-            width: 100%;
-            align-items: center;
-            justify-content: center !important;
-            max-height: 55px;
-            opacity: 1;
-            overflow: hidden !important;
-            transform: translateY(0);
-            transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s ease, margin 0.3s ease;
-        }
-        .header-site-rapidassure.logo-hidden .header-top-row {
-            max-height: 0 !important;
-            height: 0 !important;
-            opacity: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            overflow: hidden !important;
-            transform: translateY(-10px) !important;
-            pointer-events: none !important;
-            visibility: hidden !important;
-        }
-        .header-site-rapidassure.logo-hidden .header-logo-img {
-            height: 0 !important;
-            opacity: 0 !important;
-        }
-        .header-site-rapidassure.logo-hidden .main-header-container {
-            gap: 0 !important;
-        }
-        .header-site-rapidassure.logo-hidden .main-header-row {
-            padding-top: 3px !important;
-            padding-bottom: 4px !important;
-        }
-    }
-
-    /* Buscador en Vivo Responsivo */
-    .search-container {
-        position: relative;
-        width: 200px;
-        margin: 0 10px;
-        flex-shrink: 1;
-    }
-    .search-container input {
-        width: 100%;
-        padding: 7px 12px 7px 32px;
-        border-radius: 20px;
-        border: 1px solid rgba(0,0,0,0.1);
-        background: rgba(255,255,255,0.95);
-        font-size: 0.85rem;
-        font-family: 'Inter', sans-serif;
-        outline: none;
-        box-sizing: border-radius;
-        box-sizing: border-box;
-    }
-    .search-container i {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #888;
-        font-size: 0.8rem;
-    }
-    .live-search-dropdown {
-        display: none;
-        position: absolute;
-        top: 110%;
-        right: 0;
-        width: 280px;
-        max-width: 85vw;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        overflow: hidden;
-        z-index: 1100;
-        border: 1px solid #eee;
-    }
-
-    @media (max-width: 768px) {
-        .search-container {
-            width: 130px;
-            margin: 0 5px;
-        }
-        .search-container input {
-            padding: 5px 8px 5px 26px !important;
-            font-size: 0.78rem !important;
-        }
-        .search-container i {
-            left: 7px !important;
-            font-size: 0.72rem !important;
-        }
-        .live-search-dropdown {
-            width: 250px;
-            right: -10px;
-        }
-    }
-
-    /* El fondo oscuro que tapa la tienda */
-    .overlay-carrito {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-        background: rgba(0,0,0,0.5); z-index: 1040;
-        opacity: 0; pointer-events: none; transition: opacity 0.3s;
-    }
-    .overlay-carrito.abierto { opacity: 1; pointer-events: auto; }
-
-    /* La caja blanca del panel */
-    .sidebar-carrito {
-        position: fixed; top: 0; right: -400px; /* Escondido a la derecha */
-        width: 100%; max-width: 400px; 
-        height: 100vh; /* Fallback para navegadores muy antiguos */
-        height: 100dvh; /* SOLUCIÓN MOBILE: Se adapta dinámicamente a la pantalla real */
-        background: rgba(255, 255, 255, 0.65);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
-        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0.4s; z-index: 1050; 
-        display: flex; flex-direction: column;
-        visibility: hidden;
-        pointer-events: none;
-    }
-    .sidebar-carrito.abierto { right: 0; visibility: visible; pointer-events: auto; /* Aparece */ }
-
-</style>
-
-<div id="overlay-carrito" class="overlay-carrito" onclick="cerrarCarrito()"></div>
-
-<div id="sidebar-carrito" class="sidebar-carrito">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #f1f5f9; flex-shrink: 0;">
-        <span style="margin: 0; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; color: #FCBE00;">Carro de compras</span>
-        <button onclick="cerrarCarrito()" style="border: none; background: none; font-size: 1.2rem; cursor: pointer; color: #FCBE00;"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    
-    <div style="padding: 20px; overflow-y: auto; flex-grow: 1;">
-        {% if not carrito or carrito.get_total == 0 %}
-            <p style="text-align: center; color: #888; margin-top: 50px;"><i class="fa-solid fa-cart-flatbed" style="font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>Tu carrito está vacío.</p>
-        {% else %}
-            {% for item in carrito %}
-                <div style="display: flex; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9; align-items: center;">
-                    
-                    <div style="width: 65px; height: 65px; border-radius: 10px; overflow: hidden; background: #f8fafc; border: 1px solid #e2e8f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-                        {% if item.producto_real and item.producto_real.imagen %}
-                            <img src="{{ item.producto_real.get_imagen_url_600 }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
-                        {% elif item.imagen %}
-                            <img src="{{ item.imagen }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
-                        {% else %}
-                            <i class="fa-solid fa-box-open" style="color: #cbd5e1; font-size: 1.5rem;"></i>
-                        {% endif %}
-                    </div>
-                    
-                    <div style="flex-grow: 1; min-width: 0;">
-                        <h4 style="margin: 0 0 4px 0; font-size: 0.9rem; font-weight: 700; color: #3230C2; font-family: 'Montserrat', sans-serif; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ item.nombre }}</h4>
-                        
-                        <div style="font-weight: 800; color: #FCBE00; font-size: 0.95rem; margin-bottom: 6px;">${{ item.precio_total }}</div>
-
-                        <!-- Controles de Cantidad (- 1 +) -->
-                        <div style="display: inline-flex; align-items: center; gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px 6px;">
-                            <a href="{% url 'restar_del_carrito' item.producto_id %}" style="text-decoration: none; color: #475569; font-weight: 800; font-size: 0.9rem; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#3230C2'" onmouseout="this.style.color='#475569'">-</a>
-                            <span style="font-weight: 700; font-size: 0.85rem; min-width: 16px; text-align: center; color: #0f172a;">{{ item.cantidad }}</span>
-                            <a href="{% url 'agregar_al_carrito' item.producto_id %}" style="text-decoration: none; color: #475569; font-weight: 800; font-size: 0.9rem; padding: 0 4px; transition: color 0.2s;" onmouseover="this.style.color='#3230C2'" onmouseout="this.style.color='#475569'">+</a>
-                        </div>
-                    </div>
-
-                    <a href="{% url 'quitar_del_carrito' item.producto_id %}" style="color: #FCBE00; text-decoration: none; font-size: 1rem; padding: 4px; transition: transform 0.2s, color 0.2s;" onmouseover="this.style.color='#dc3545'; this.style.transform='scale(1.15)'" onmouseout="this.style.color='#FCBE00'; this.style.transform='scale(1)'" title="Quitar del carrito">
-                        <i class="fa-solid fa-xmark"></i>
-                    </a>
-                    
+            <div class="mobile-drawer-footer">
+                <p style="color: #FCBE00; font-weight: 600;">Rapidassure Retail — Innovación y Protección</p>
+                <div class="drawer-social-links">
+                    <a href="https://wa.me/56929789628" target="_blank" class="social-btn whatsapp-btn"><i
+                            class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="mailto:contacto@rapidassure.cl" class="social-btn instagram-btn"
+                        style="background: #002093;"><i class="fa-solid fa-envelope"></i> Email</a>
                 </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    <div style="padding: 20px; border-top: 1px solid #f1f5f9; background: #ffffff; flex-shrink: 0;">
-        <h3 style="display: flex; justify-content: space-between; margin: 0 0 16px 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700;">
-            <span style="color: #FCBE00;">Subtotal:</span>
-            <span style="color: #3230C2; font-weight: 800; font-size: 1.15rem;">${{ carrito.get_total }}</span>
-        </h3>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;">
-            <a href="{% url 'ver_carrito' %}" style="display: block; text-align: center; background: #FCBE00; color: #000E1F; border: none; padding: 12px 0; border-radius: 8px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#e6ac00'" onmouseout="this.style.background='#FCBE00'">
-                Ver carrito
-            </a>
-            <a href="{% url 'procesar_pedido' %}" style="display: block; text-align: center; background: #3230C2; color: #ffffff; border: none; padding: 12px 0; border-radius: 8px; font-weight: 800; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='#2524a1'" onmouseout="this.style.background='#3230C2'">
-                Finalizar compra
-            </a>
-        </div>
-
-        <!-- Barra de Progreso de Envío Gratuito -->
-        <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
-            <div style="height: 6px; width: 100%; background: #e2e8f0; border-radius: 6px; overflow: hidden; margin-bottom: 10px;">
-                <div style="height: 100%; width: {{ carrito.get_porcentaje_envio_gratis }}%; background: #3230C2; border-radius: 6px; transition: width 0.4s ease;"></div>
             </div>
-            <div style="font-size: 0.82rem; font-family: 'Open Sans', sans-serif; display: flex; align-items: center; gap: 8px; color: #64748b;">
-                <i class="fa-solid fa-truck-fast" style="color: #64748b; font-size: 0.9rem;"></i>
-                {% if carrito.get_total >= 19990 %}
-                    <span>¡Felicitaciones! Tienes <strong style="color: #FCBE00;">Envío Gratuito en RM</strong>.</span>
+        </div>
+    </header>
+
+    {% if messages %}
+    <div id="toast-container"
+        style="position: fixed; top: 90px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; max-width: 400px; width: calc(100% - 40px); pointer-events: none;">
+        {% for message in messages %}
+        <div class="toast-item"
+            style="pointer-events: auto; padding: 12px 18px; border-radius: 12px; font-weight: 500; font-family: 'Inter', sans-serif; font-size: 0.95rem; box-shadow: 0 8px 24px rgba(0,0,0,0.12); display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.4s ease; animation: toastSlideIn 0.3s ease forwards; {% if message.tags == 'success' %}background-color: #e8f8f5; color: #116b47; border: 1px solid #a3e4d7;{% elif message.tags == 'warning' %}background-color: #fff9e6; color: #975a16; border: 1px solid #ffe082;{% elif message.tags == 'info' %}background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8;{% else %}background-color: #fdf2f2; color: #9b2c2c; border: 1px solid #f8b4b4;{% endif %}">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                {% if message.tags == 'success' %}
+                <i class="fa-solid fa-circle-check" style="font-size: 1.1rem;"></i>
+                {% elif message.tags == 'error' %}
+                <i class="fa-solid fa-circle-xmark" style="font-size: 1.1rem;"></i>
+                {% elif message.tags == 'warning' %}
+                <i class="fa-solid fa-triangle-exclamation" style="font-size: 1.1rem;"></i>
                 {% else %}
-                    <span>Te faltan <strong style="color: #FCBE00;">${{ carrito.get_falta_envio_gratis }}</strong> para el envío gratuito en RM.</span>
+                <i class="fa-solid fa-circle-info" style="font-size: 1.1rem;"></i>
                 {% endif %}
+                <span>{{ message }}</span>
             </div>
+            <button type="button" onclick="dismissToast(this.parentElement);"
+                style="background: none; border: none; font-size: 1.3rem; line-height: 1; cursor: pointer; color: inherit; opacity: 0.6; padding: 0 2px;">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <style>
+        @keyframes toastSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .toast-fadeOut {
+            opacity: 0 !important;
+            transform: translateX(30px) !important;
+        }
+
+        @media (max-width: 600px) {
+            #toast-container {
+                top: 75px;
+                right: 15px;
+                left: 15px;
+                width: auto;
+            }
+        }
+    </style>
+
+    <script>
+        function dismissToast(el) {
+            if (!el) return;
+            el.classList.add('toast-fadeOut');
+            setTimeout(function () {
+                if (el.parentNode) el.remove();
+            }, 400);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const toasts = document.querySelectorAll('#toast-container .toast-item');
+            toasts.forEach(function (toast, index) {
+                setTimeout(function () {
+                    dismissToast(toast);
+                }, 3500 + (index * 500));
+            });
+        });
+    </script>
+    {% endif %}
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer-section"
+        style="background-color: #fdfaf6; color: #4a4a4a; border-top: 3px solid #002093; padding: 3.5rem 1rem 1.5rem 1rem; font-family: 'Nunito', sans-serif;">
+        <div style="max-width: 1100px; margin: 0 auto;">
+
+            <!-- Fila Superior: Marca, Enlaces Rápidos y Redes -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 30px; margin-bottom: 2.5rem; text-align: left;">
+
+                <!-- Columna 1: Marca & Descripción -->
+                <div>
+                    <h3
+                        style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 700; color: #000E1F; margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px;">
+                        RAPIDASSURE RETAIL
+                    </h3>
+                    <p style="color: #64748b; font-size: 0.9rem; line-height: 1.6; margin: 0 0 15px 0;">
+                        Soluciones integrales de tecnología inteligente para retail, cajas Smart POS y protección
+                        antirrobo.
+                    </p>
+                    <div
+                        style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 0.85rem; font-weight: 600;">
+                        <i class="fa-solid fa-location-dot" style="color: #FCBE00;"></i> Santiago y Regiones, Chile
+                    </div>
+                </div>
+
+                <!-- Columna 2: Enlaces Rápidos (Navegación) -->
+                <div>
+                    <h4
+                        style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Navegación
+                    </h4>
+                    <ul
+                        style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px;">
+                        <li><a href="{% url 'index' %}"
+                                style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;"
+                                onmouseover="this.style.color='#002093'"
+                                onmouseout="this.style.color='#64748b'">Inicio</a></li>
+                        <li><a href="{% url 'index' %}#catalogo"
+                                style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;"
+                                onmouseover="this.style.color='#002093'"
+                                onmouseout="this.style.color='#64748b'">Catálogo de Productos</a></li>
+                        <li><a href="{% url 'terminos' %}"
+                                style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;"
+                                onmouseover="this.style.color='#002093'"
+                                onmouseout="this.style.color='#64748b'">Términos y Condiciones</a></li>
+                        <li><a href="{% url 'index' %}#contacto"
+                                style="color: #64748b; text-decoration: none; font-weight: 600; transition: color 0.2s;"
+                                onmouseover="this.style.color='#002093'"
+                                onmouseout="this.style.color='#64748b'">Atención al Cliente</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Redes & Canales -->
+                <div>
+                    <h4
+                        style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 14px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Contacto Corporativo
+                    </h4>
+                    <p style="color: #64748b; font-size: 0.88rem; line-height: 1.5; margin: 0 0 12px 0;">
+                        Contáctanos directamente para asesoría en equipamiento y proyectos corporativos:
+                    </p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="https://wa.me/56930027170" target="_blank" rel="noopener noreferrer"
+                            style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #25D366; color: white; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.2);"
+                            onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </a>
+                        <a href="mailto:contacto@rapidassure.cl"
+                            style="display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #002093; color: white; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.2);"
+                            onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                            <i class="fa-solid fa-envelope"></i> Email
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Separador sutil -->
+            <div style="border-top: 1px solid #e2e8f0; margin-bottom: 1.5rem;"></div>
+
+            <!-- Fila Inferior (Sub-footer): Copyright & Firma de Desarrollo -->
+            <div
+                style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: #64748b;">
+                <div>
+                    &copy; {% now "Y" %} RAPIDASSURE RETAIL. Todos los derechos reservados.
+                </div>
+
+                <div
+                    style="display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: #94a3b8; font-weight: 400;">
+                    <i class="fa-solid fa-code" style="color: #FCBE00; opacity: 0.9; font-size: 0.75rem;"></i>
+                    Desarrollado por Felipe & Matías
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const toggle = document.getElementById("menu-toggle");
+            const drawer = document.getElementById("mobile-drawer");
+            const close = document.getElementById("close-menu");
+            const overlay = document.getElementById("mobile-menu-overlay");
+
+            function abrirMenuMovil() {
+                if (drawer) drawer.classList.add("show");
+                if (overlay) overlay.classList.add("show");
+            }
+
+            function cerrarMenuMovil() {
+                if (drawer) drawer.classList.remove("show");
+                if (overlay) overlay.classList.remove("show");
+            }
+
+            if (toggle) toggle.addEventListener("click", abrirMenuMovil);
+            if (close) close.addEventListener("click", cerrarMenuMovil);
+            if (overlay) overlay.addEventListener("click", cerrarMenuMovil);
+
+            document.querySelectorAll("#mobile-drawer a").forEach(link => {
+                link.addEventListener("click", cerrarMenuMovil);
+            });
+
+            // Ocultar logo en móvil al hacer scroll down manteniendo fija la barra de búsqueda
+            let lastScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            let isLogoHidden = false;
+            const siteHeader = document.querySelector(".header-site-rapidassure");
+
+            function onScrollHeader() {
+                const currentScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+                // Solo aplicar en vista móvil/tablet (ancho <= 768px)
+                if (window.innerWidth <= 768 && siteHeader) {
+                    if (currentScrollY <= 25) {
+                        // En el tope de la página: mostrar logo siempre
+                        if (isLogoHidden) {
+                            siteHeader.classList.remove("logo-hidden");
+                            isLogoHidden = false;
+                        }
+                    } else if (currentScrollY > lastScrollY + 8 && currentScrollY > 45) {
+                        // Scroll hacia abajo con intención: ocultar logo
+                        if (!isLogoHidden) {
+                            siteHeader.classList.add("logo-hidden");
+                            isLogoHidden = true;
+                        }
+                    } else if (currentScrollY < lastScrollY - 12) {
+                        // Scroll hacia arriba con intención: mostrar logo
+                        if (isLogoHidden) {
+                            siteHeader.classList.remove("logo-hidden");
+                            isLogoHidden = false;
+                        }
+                    }
+                } else if (siteHeader && isLogoHidden) {
+                    siteHeader.classList.remove("logo-hidden");
+                    isLogoHidden = false;
+                }
+
+                lastScrollY = Math.max(0, currentScrollY);
+            }
+
+            window.addEventListener("scroll", onScrollHeader, { passive: true });
+
+        });
+    </script>
+
+    <style>
+        /* Soporte dinámico para colapso de logo en scroll móvil */
+        @media (max-width: 768px) {
+            .header-top-row {
+                display: flex !important;
+                width: 100%;
+                align-items: center;
+                justify-content: center !important;
+                max-height: 55px;
+                opacity: 1;
+                overflow: hidden !important;
+                transform: translateY(0);
+                transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, transform 0.3s ease, margin 0.3s ease;
+            }
+
+            .header-site-rapidassure.logo-hidden .header-top-row {
+                max-height: 0 !important;
+                height: 0 !important;
+                opacity: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                transform: translateY(-10px) !important;
+                pointer-events: none !important;
+                visibility: hidden !important;
+            }
+
+            .header-site-rapidassure.logo-hidden .header-logo-img {
+                height: 0 !important;
+                opacity: 0 !important;
+            }
+
+            .header-site-rapidassure.logo-hidden .main-header-container {
+                gap: 0 !important;
+            }
+
+            .header-site-rapidassure.logo-hidden .main-header-row {
+                padding-top: 3px !important;
+                padding-bottom: 4px !important;
+            }
+        }
+
+        /* Buscador en Vivo Responsivo */
+        .search-container {
+            position: relative;
+            width: 200px;
+            margin: 0 10px;
+            flex-shrink: 1;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 7px 12px 7px 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            box-sizing: border-radius;
+            box-sizing: border-box;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .live-search-dropdown {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            width: 280px;
+            max-width: 85vw;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            z-index: 1100;
+            border: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .search-container {
+                width: 130px;
+                margin: 0 5px;
+            }
+
+            .search-container input {
+                padding: 5px 8px 5px 26px !important;
+                font-size: 0.78rem !important;
+            }
+
+            .search-container i {
+                left: 7px !important;
+                font-size: 0.72rem !important;
+            }
+
+            .live-search-dropdown {
+                width: 250px;
+                right: -10px;
+            }
+        }
+
+        /* El fondo oscuro que tapa la tienda */
+        .overlay-carrito {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .overlay-carrito.abierto {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* La caja blanca del panel */
+        .sidebar-carrito {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            /* Escondido a la derecha */
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            /* Fallback para navegadores muy antiguos */
+            height: 100dvh;
+            /* SOLUCIÓN MOBILE: Se adapta dinámicamente a la pantalla real */
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0.4s;
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .sidebar-carrito.abierto {
+            right: 0;
+            visibility: visible;
+            pointer-events: auto;
+            /* Aparece */
+        }
+    </style>
+
+    <div id="overlay-carrito" class="overlay-carrito" onclick="cerrarCarrito()"></div>
+
+    <div id="sidebar-carrito" class="sidebar-carrito">
+        {% include 'includes/cart_drawer_content.html' %}
+    </div>
+
+    <!-- BOTÓN FLOTANTE DEL CARRITO EN MÓVIL (SÓLO MOBILE CUANDO SE USA) -->
+    <div class="floating-mobile-cart-btn {% if carrito|length > 0 %}active{% endif %}" id="floating-mobile-cart-btn"
+        onclick="abrirCarrito()" title="Ver mi carrito">
+        <div class="floating-cart-icon-box">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="floating-cart-bubble">{{ carrito|length|default:0 }}</span>
+        </div>
+        <div class="floating-cart-info">
+            <span class="floating-cart-tag">Tu carrito:</span>
+            <strong class="floating-cart-price">${{ carrito.get_total|default:0 }}</strong>
         </div>
     </div>
-</div>
 
-<!-- BOTÓN FLOTANTE DEL CARRITO EN MÓVIL (SÓLO MOBILE CUANDO SE USA) -->
-<div class="floating-mobile-cart-btn {% if carrito|length > 0 %}active{% endif %}" id="floating-mobile-cart-btn" onclick="abrirCarrito()" title="Ver mi carrito">
-    <div class="floating-cart-icon-box">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span class="floating-cart-bubble">{{ carrito|length|default:0 }}</span>
-    </div>
-    <div class="floating-cart-info">
-        <span class="floating-cart-tag">Tu carrito:</span>
-        <strong class="floating-cart-price">${{ carrito.get_total|default:0 }}</strong>
-    </div>
-</div>
+    <script>
+        function abrirCarrito() {
+            document.getElementById('sidebar-carrito').classList.add('abierto');
+            document.getElementById('overlay-carrito').classList.add('abierto');
+            const floatBtn = document.getElementById('floating-mobile-cart-btn');
+            if (floatBtn) floatBtn.classList.add('oculto');
+        }
+        function cerrarCarrito() {
+            document.getElementById('sidebar-carrito').classList.remove('abierto');
+            document.getElementById('overlay-carrito').classList.remove('abierto');
+            const floatBtn = document.getElementById('floating-mobile-cart-btn');
+            if (floatBtn) floatBtn.classList.remove('oculto');
+        }
 
-<script>
-    function abrirCarrito() {
-        document.getElementById('sidebar-carrito').classList.add('abierto');
-        document.getElementById('overlay-carrito').classList.add('abierto');
-        const floatBtn = document.getElementById('floating-mobile-cart-btn');
-        if (floatBtn) floatBtn.classList.add('oculto');
-    }
-    function cerrarCarrito() {
-        document.getElementById('sidebar-carrito').classList.remove('abierto');
-        document.getElementById('overlay-carrito').classList.remove('abierto');
-        const floatBtn = document.getElementById('floating-mobile-cart-btn');
-        if (floatBtn) floatBtn.classList.remove('oculto');
-    }
-
-    // ========================================================
-    // PRESERVACIÓN Y RESTAURACIÓN DE SCROLL
-    // ========================================================
-    function restaurarScrollGuardado() {
-        try {
-            var savedPath = sessionStorage.getItem('rapidasure_scroll_path');
-            var savedPos = sessionStorage.getItem('rapidasure_scroll_pos');
-            if (savedPos !== null && savedPath === window.location.pathname) {
-                var targetY = parseInt(savedPos, 10);
-                if (!isNaN(targetY)) {
-                    window.scrollTo(0, targetY);
-                    document.documentElement.scrollTop = targetY;
-                    document.body.scrollTop = targetY;
+        // ========================================================
+        // PRESERVACIÓN Y RESTAURACIÓN DE SCROLL
+        // ========================================================
+        function restaurarScrollGuardado() {
+            try {
+                var savedPath = sessionStorage.getItem('rapidasure_scroll_path');
+                var savedPos = sessionStorage.getItem('rapidasure_scroll_pos');
+                if (savedPos !== null && savedPath === window.location.pathname) {
+                    var targetY = parseInt(savedPos, 10);
+                    if (!isNaN(targetY)) {
+                        window.scrollTo(0, targetY);
+                        document.documentElement.scrollTop = targetY;
+                        document.body.scrollTop = targetY;
+                    }
                 }
-            }
-        } catch(e) {}
-    }
+            } catch (e) { }
+        }
 
-    restaurarScrollGuardado();
-    window.addEventListener('DOMContentLoaded', restaurarScrollGuardado);
-    window.addEventListener('load', function() {
         restaurarScrollGuardado();
-        setTimeout(function() {
-            try {
-                sessionStorage.removeItem('rapidasure_scroll_pos');
-                sessionStorage.removeItem('rapidasure_scroll_path');
-            } catch(e) {}
-        }, 500);
-    });
-
-    // Guardar posición de scroll antes de recargas por carrito o lista de deseos
-    document.addEventListener('click', function(e) {
-        var link = e.target.closest('a');
-        if (!link) return;
-        var href = link.getAttribute('href') || '';
-        if (href.includes('deseos/toggle') || 
-            href.includes('carrito/agregar') || 
-            href.includes('carrito/restar') || 
-            href.includes('carrito/quitar') ||
-            href.includes('deseos/mover-a-carrito')) {
-            try {
-                sessionStorage.setItem('rapidasure_scroll_pos', window.scrollY || window.pageYOffset || document.documentElement.scrollTop);
-                sessionStorage.setItem('rapidasure_scroll_path', window.location.pathname);
-            } catch(e) {}
-        }
-    }, true);
-
-    document.addEventListener('submit', function(e) {
-        var form = e.target;
-        if (!form) return;
-        var action = form.getAttribute('action') || form.action || '';
-        if (action.includes('carrito/agregar') || action.includes('deseos/toggle')) {
-            try {
-                sessionStorage.setItem('rapidasure_scroll_pos', window.scrollY || window.pageYOffset || document.documentElement.scrollTop);
-                sessionStorage.setItem('rapidasure_scroll_path', window.location.pathname);
-            } catch(e) {}
-        }
-    }, true);
-
-    // ========================================================
-    // TOGGLE DESEOS ASÍNCRONO (SIN RECARGA NI SALTO DE PÁGINA)
-    // ========================================================
-    function updateWishlistBadges(count) {
-        document.querySelectorAll('.badge-deseos-count').forEach(function(badge) {
-            if (count > 0) {
-                badge.textContent = count;
-                badge.style.display = 'inline-block';
-            } else {
-                badge.style.display = 'none';
-            }
+        window.addEventListener('DOMContentLoaded', restaurarScrollGuardado);
+        window.addEventListener('load', function () {
+            restaurarScrollGuardado();
+            setTimeout(function () {
+                try {
+                    sessionStorage.removeItem('rapidasure_scroll_pos');
+                    sessionStorage.removeItem('rapidasure_scroll_path');
+                } catch (e) { }
+            }, 500);
         });
-    }
 
-    document.addEventListener('click', function(e) {
-        var wishlistBtn = e.target.closest('a[href*="/deseos/toggle/"]');
-        if (!wishlistBtn) return;
+        // Guardar posición de scroll antes de recargas por carrito o lista de deseos
+        document.addEventListener('click', function (e) {
+            var link = e.target.closest('a');
+            if (!link) return;
+            var href = link.getAttribute('href') || '';
+            if (href.includes('deseos/toggle') ||
+                href.includes('carrito/agregar') ||
+                href.includes('carrito/restar') ||
+                href.includes('carrito/quitar') ||
+                href.includes('deseos/mover-a-carrito')) {
+                try {
+                    sessionStorage.setItem('rapidasure_scroll_pos', window.scrollY || window.pageYOffset || document.documentElement.scrollTop);
+                    sessionStorage.setItem('rapidasure_scroll_path', window.location.pathname);
+                } catch (e) { }
+            }
+        }, true);
 
-        // Si estamos en la página de lista de deseos (/deseos/), dejamos que se recargue con scroll preservado
-        if (window.location.pathname.startsWith('/deseos/')) {
-            return;
+        document.addEventListener('submit', function (e) {
+            var form = e.target;
+            if (!form) return;
+            var action = form.getAttribute('action') || form.action || '';
+            if (action.includes('carrito/agregar') || action.includes('deseos/toggle')) {
+                try {
+                    sessionStorage.setItem('rapidasure_scroll_pos', window.scrollY || window.pageYOffset || document.documentElement.scrollTop);
+                    sessionStorage.setItem('rapidasure_scroll_path', window.location.pathname);
+                } catch (e) { }
+            }
+        }, true);
+
+        // ========================================================
+        // TOGGLE DESEOS ASÍNCRONO (SIN RECARGA NI SALTO DE PÁGINA)
+        // ========================================================
+        function updateWishlistBadges(count) {
+            document.querySelectorAll('.badge-deseos-count').forEach(function (badge) {
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
         }
 
-        e.preventDefault();
-        var url = wishlistBtn.href;
+        document.addEventListener('click', function (e) {
+            var wishlistBtn = e.target.closest('a[href*="/deseos/toggle/"]');
+            if (!wishlistBtn) return;
 
-        // Actualización visual inmediata (optimista)
-        var isFilled = wishlistBtn.querySelector('.fa-solid.fa-heart') !== null || wishlistBtn.classList.contains('active');
-        var icons = wishlistBtn.querySelectorAll('i');
-
-        if (isFilled) {
-            wishlistBtn.classList.remove('active');
-            wishlistBtn.title = "Guardar en favoritos";
-            icons.forEach(function(icon) {
-                icon.className = 'fa-regular fa-heart';
-                icon.style.color = '#94a3b8';
-            });
-            if (wishlistBtn.textContent.includes('Favoritos')) {
-                wishlistBtn.innerHTML = '<i class="fa-regular fa-heart"></i> Guardar';
-                wishlistBtn.style.background = '#ffffff';
-                wishlistBtn.style.color = '#64748b';
-                wishlistBtn.style.borderColor = '#cbd5e1';
-            }
-        } else {
-            wishlistBtn.classList.add('active');
-            wishlistBtn.title = "Quitar de favoritos";
-            icons.forEach(function(icon) {
-                icon.className = 'fa-solid fa-heart';
-                icon.style.color = '#e11d48';
-            });
-            if (wishlistBtn.textContent.includes('Guardar')) {
-                wishlistBtn.innerHTML = '<i class="fa-solid fa-heart" style="color: #e11d48;"></i> En Favoritos';
-                wishlistBtn.style.background = '#fff1f2';
-                wishlistBtn.style.color = '#e11d48';
-                wishlistBtn.style.borderColor = '#fecdd3';
-            }
-        }
-
-        // Micro-animación pop
-        wishlistBtn.style.transform = 'scale(1.2)';
-        setTimeout(function() { wishlistBtn.style.transform = ''; }, 200);
-
-        // Envío asíncrono
-        fetch(url, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-            if (data && data.success) {
-                updateWishlistBadges(data.total_deseos);
-            }
-        })
-        .catch(function() {
-            // Fallback a navegación tradicional si falla la red
-            window.location.href = url;
-        });
-    });
-
-    // Truco: Si la URL dice que el carrito debe estar abierto, lo abrimos automáticamente
-    if (window.location.search.includes('cart=open')) {
-        abrirCarrito();
-        // Restaurar posición de scroll con cart abierto
-        restaurarScrollGuardado();
-        // Limpiamos la URL para que no se quede pegado si el usuario recarga
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    // Buscador con Autocompletado en Tiempo Real
-    const searchInput = document.getElementById('live-search-input');
-    const searchResults = document.getElementById('live-search-results');
-    let searchTimeout = null;
-
-    if (searchInput && searchResults) {
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.trim();
-            clearTimeout(searchTimeout);
-
-            if (query.length < 2) {
-                searchResults.style.display = 'none';
-                searchResults.innerHTML = '';
+            // Si estamos en la página de lista de deseos (/deseos/), dejamos que se recargue con scroll preservado
+            if (window.location.pathname.startsWith('/deseos/')) {
                 return;
             }
 
-            searchTimeout = setTimeout(() => {
-                fetch(`/api/buscar-productos/?q=${encodeURIComponent(query)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (!data.productos || data.productos.length === 0) {
-                            searchResults.innerHTML = '<div style="padding: 12px; text-align: center; color: #888; font-size: 0.85rem;">Sin resultados</div>';
-                        } else {
-                            let html = '';
-                            data.productos.forEach(p => {
-                                html += `
+            e.preventDefault();
+            var url = wishlistBtn.href;
+
+            // Actualización visual inmediata (optimista)
+            var isFilled = wishlistBtn.querySelector('.fa-solid.fa-heart') !== null || wishlistBtn.classList.contains('active');
+            var icons = wishlistBtn.querySelectorAll('i');
+
+            if (isFilled) {
+                wishlistBtn.classList.remove('active');
+                wishlistBtn.title = "Guardar en favoritos";
+                icons.forEach(function (icon) {
+                    icon.className = 'fa-regular fa-heart';
+                    icon.style.color = '#94a3b8';
+                });
+                if (wishlistBtn.textContent.includes('Favoritos')) {
+                    wishlistBtn.innerHTML = '<i class="fa-regular fa-heart"></i> Guardar';
+                    wishlistBtn.style.background = '#ffffff';
+                    wishlistBtn.style.color = '#64748b';
+                    wishlistBtn.style.borderColor = '#cbd5e1';
+                }
+            } else {
+                wishlistBtn.classList.add('active');
+                wishlistBtn.title = "Quitar de favoritos";
+                icons.forEach(function (icon) {
+                    icon.className = 'fa-solid fa-heart';
+                    icon.style.color = '#e11d48';
+                });
+                if (wishlistBtn.textContent.includes('Guardar')) {
+                    wishlistBtn.innerHTML = '<i class="fa-solid fa-heart" style="color: #e11d48;"></i> En Favoritos';
+                    wishlistBtn.style.background = '#fff1f2';
+                    wishlistBtn.style.color = '#e11d48';
+                    wishlistBtn.style.borderColor = '#fecdd3';
+                }
+            }
+
+            // Micro-animación pop
+            wishlistBtn.style.transform = 'scale(1.2)';
+            setTimeout(function () { wishlistBtn.style.transform = ''; }, 200);
+
+            // Envío asíncrono
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data && data.success) {
+                        updateWishlistBadges(data.total_deseos);
+                    }
+                })
+                .catch(function () {
+                    // Fallback a navegación tradicional si falla la red
+                    window.location.href = url;
+                });
+        });
+
+        // ========================================================
+        // CARRITO DE COMPRAS ASÍNCRONO (SIN RECARGA NI SALTO DE PÁGINA)
+        // ========================================================
+        function actualizarCarritoUI(data) {
+            if (!data) return;
+
+            // 1. Reemplazar contenido del drawer
+            if (data.cart_html) {
+                const sidebar = document.getElementById('sidebar-carrito');
+                if (sidebar) {
+                    sidebar.innerHTML = data.cart_html;
+                }
+            }
+
+            const totalItems = data.total_items !== undefined ? data.total_items : 0;
+            const totalMonto = data.total_raw !== undefined ? data.total_raw : (data.total_precio || 0);
+
+            // 2. Actualizar contadores del carrito
+            document.querySelectorAll('.cart-bubble-count, .floating-cart-bubble').forEach(function (el) {
+                el.textContent = totalItems;
+            });
+
+            // 3. Actualizar textos de monto total
+            document.querySelectorAll('.cart-header-total, .cart-text-info strong, .floating-cart-price').forEach(function (el) {
+                el.textContent = '$' + totalMonto;
+            });
+
+            // 4. Mostrar u ocultar botón flotante de carrito móvil
+            const floatBtn = document.getElementById('floating-mobile-cart-btn');
+            if (floatBtn) {
+                if (totalItems > 0) {
+                    floatBtn.classList.add('active');
+                } else {
+                    floatBtn.classList.remove('active');
+                }
+            }
+
+            // 5. Si viene total_deseos (por ejemplo al mover desde deseos)
+            if (data.total_deseos !== undefined && typeof updateWishlistBadges === 'function') {
+                updateWishlistBadges(data.total_deseos);
+            }
+
+            // 6. Abrir drawer de carrito de inmediato sin mover scroll
+            abrirCarrito();
+        }
+
+        // Interceptar clicks de agregar, restar, quitar del carrito y mover de deseos a carrito
+        document.addEventListener('click', function (e) {
+            const cartLink = e.target.closest('a[href*="/carrito/agregar/"], a[href*="/carrito/restar/"], a[href*="/carrito/quitar/"], a[href*="/deseos/mover-a-carrito/"]');
+            if (!cartLink) return;
+
+            e.preventDefault();
+            const url = cartLink.href;
+
+            // Micro-animación en el botón presionado
+            cartLink.style.opacity = '0.6';
+            cartLink.style.pointerEvents = 'none';
+
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('Error al procesar el carrito');
+                    return res.json();
+                })
+                .then(function (data) {
+                    actualizarCarritoUI(data);
+                    if (url.includes('/deseos/mover-a-carrito/')) {
+                        const itemCard = cartLink.closest('.deseos-card') || cartLink.closest('[data-deseos-item]');
+                        if (itemCard) itemCard.remove();
+                    }
+                })
+                .catch(function (err) {
+                    console.error('Error AJAX carrito:', err);
+                    window.location.href = url;
+                })
+                .finally(function () {
+                    cartLink.style.opacity = '';
+                    cartLink.style.pointerEvents = '';
+                });
+        });
+
+        // Interceptar envíos de formulario de carrito (por ejemplo en producto_detail.html)
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+            const action = form.getAttribute('action') || form.action || '';
+            if (!action.includes('/carrito/agregar/')) return;
+
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            let originalBtnHtml = '';
+            if (submitBtn) {
+                originalBtnHtml = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Agregando...';
+                submitBtn.disabled = true;
+            }
+
+            const formData = new FormData(form);
+
+            fetch(action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('Error al agregar al carrito');
+                    return res.json();
+                })
+                .then(function (data) {
+                    actualizarCarritoUI(data);
+                })
+                .catch(function (err) {
+                    console.error('Error AJAX formulario carrito:', err);
+                    form.submit();
+                })
+                .finally(function () {
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalBtnHtml;
+                        submitBtn.disabled = false;
+                    }
+                });
+        });
+
+        // Truco: Si la URL dice que el carrito debe estar abierto, lo abrimos automáticamente
+        if (window.location.search.includes('cart=open')) {
+            abrirCarrito();
+            // Restaurar posición de scroll con cart abierto
+            restaurarScrollGuardado();
+            // Limpiamos la URL para que no se quede pegado si el usuario recarga
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Buscador con Autocompletado en Tiempo Real
+        const searchInput = document.getElementById('live-search-input');
+        const searchResults = document.getElementById('live-search-results');
+        let searchTimeout = null;
+
+        if (searchInput && searchResults) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.trim();
+                clearTimeout(searchTimeout);
+
+                if (query.length < 2) {
+                    searchResults.style.display = 'none';
+                    searchResults.innerHTML = '';
+                    return;
+                }
+
+                searchTimeout = setTimeout(() => {
+                    fetch(`/api/buscar-productos/?q=${encodeURIComponent(query)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (!data.productos || data.productos.length === 0) {
+                                searchResults.innerHTML = '<div style="padding: 12px; text-align: center; color: #888; font-size: 0.85rem;">Sin resultados</div>';
+                            } else {
+                                let html = '';
+                                data.productos.forEach(p => {
+                                    html += `
                                     <a href="${p.url}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-decoration: none; border-bottom: 1px solid #f5f5f5; color: #333; transition: background 0.2s;" onmouseover="this.style.background='#fff9f0'" onmouseout="this.style.background='white'">
                                         ${p.imagen ? `<img src="${p.imagen}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">` : ''}
                                         <div style="flex-grow: 1;">
@@ -839,87 +998,88 @@ document.querySelectorAll("#mobile-drawer a").forEach(link => {
                                         </div>
                                     </a>
                                 `;
-                            });
-                            searchResults.innerHTML = html;
-                        }
-                        searchResults.style.display = 'block';
-                    })
-                    .catch(() => {
-                        searchResults.style.display = 'none';
-                    });
-            }, 250);
-        });
+                                });
+                                searchResults.innerHTML = html;
+                            }
+                            searchResults.style.display = 'block';
+                        })
+                        .catch(() => {
+                            searchResults.style.display = 'none';
+                        });
+                }, 250);
+            });
 
-        document.addEventListener('click', (e) => {
-            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.style.display = 'none';
-            }
-        });
-    }
-
-    // Categorías en la Barra Azul
-    const btnCatYellow = document.getElementById('btn-categories-yellow');
-    const dropdownCatYellow = document.getElementById('yellow-categories-dropdown');
-    if (btnCatYellow && dropdownCatYellow) {
-        btnCatYellow.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdownCatYellow.classList.toggle('active');
-        });
-        document.addEventListener('click', () => {
-            dropdownCatYellow.classList.remove('active');
-        });
-    }
-
-    // Scroll Suave para Secciones de la Navbar
-    document.querySelectorAll('a[href*="#"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (!href) return;
-
-            const hashIndex = href.indexOf('#');
-            if (hashIndex === -1) return;
-            const hash = href.substring(hashIndex);
-
-            if (!hash || hash === '#') return;
-
-            const targetElement = document.querySelector(hash);
-            const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
-
-            if (targetElement && (isHomePage || href.startsWith('#'))) {
-                e.preventDefault();
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-
-                // Si viene del menú móvil, cerrar la gaveta
-                const mobileDrawer = document.getElementById('mobile-drawer');
-                const mobileOverlay = document.getElementById('mobile-menu-overlay');
-                if (mobileDrawer && mobileDrawer.classList.contains('active')) {
-                    mobileDrawer.classList.remove('active');
-                    if (mobileOverlay) mobileOverlay.classList.remove('active');
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
                 }
-            }
-        });
-    });
+            });
+        }
 
-    // Desplegable de Categorías Personalizado en el Buscador
-    const catTrigger = document.getElementById('custom-cat-trigger');
-    const catDropdown = document.getElementById('custom-cat-dropdown');
+        // Categorías en la Barra Azul
+        const btnCatYellow = document.getElementById('btn-categories-yellow');
+        const dropdownCatYellow = document.getElementById('yellow-categories-dropdown');
+        if (btnCatYellow && dropdownCatYellow) {
+            btnCatYellow.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownCatYellow.classList.toggle('active');
+            });
+            document.addEventListener('click', () => {
+                dropdownCatYellow.classList.remove('active');
+            });
+        }
 
-    if (catTrigger && catDropdown) {
-        catTrigger.addEventListener('click', function(e) {
-            e.stopPropagation();
-            catDropdown.classList.toggle('active');
+        // Scroll Suave para Secciones de la Navbar
+        document.querySelectorAll('a[href*="#"]').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href) return;
+
+                const hashIndex = href.indexOf('#');
+                if (hashIndex === -1) return;
+                const hash = href.substring(hashIndex);
+
+                if (!hash || hash === '#') return;
+
+                const targetElement = document.querySelector(hash);
+                const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+
+                if (targetElement && (isHomePage || href.startsWith('#'))) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+
+                    // Si viene del menú móvil, cerrar la gaveta
+                    const mobileDrawer = document.getElementById('mobile-drawer');
+                    const mobileOverlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileDrawer && mobileDrawer.classList.contains('active')) {
+                        mobileDrawer.classList.remove('active');
+                        if (mobileOverlay) mobileOverlay.classList.remove('active');
+                    }
+                }
+            });
         });
 
-        document.addEventListener('click', function(e) {
-            if (!catDropdown.contains(e.target)) {
-                catDropdown.classList.remove('active');
-            }
-        });
-    }
-</script>
+        // Desplegable de Categorías Personalizado en el Buscador
+        const catTrigger = document.getElementById('custom-cat-trigger');
+        const catDropdown = document.getElementById('custom-cat-dropdown');
+
+        if (catTrigger && catDropdown) {
+            catTrigger.addEventListener('click', function (e) {
+                e.stopPropagation();
+                catDropdown.classList.toggle('active');
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!catDropdown.contains(e.target)) {
+                    catDropdown.classList.remove('active');
+                }
+            });
+        }
+    </script>
 
 </body>
+
 </html>
