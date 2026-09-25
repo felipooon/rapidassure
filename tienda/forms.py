@@ -123,9 +123,8 @@ class ResenaForm(forms.ModelForm):
 class ConfiguracionSitioForm(forms.ModelForm):
     class Meta:
         model = ConfiguracionSitio
-        fields = ['mostrar_blog', 'mostrar_resenas']
+        fields = ['mostrar_resenas']
         labels = {
-            'mostrar_blog': 'Activar Sección de Blog en la tienda (Navbar y menú)',
             'mostrar_resenas': 'Activar Reseñas y Calificaciones con Estrellas en productos',
         }
 

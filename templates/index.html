@@ -306,6 +306,7 @@
           <div class="card-body">
             <span class="card-category-tag">{{ p.categoria.nombre|default:"Equipamiento Tech" }}</span>
             
+            {% if config_sitio.mostrar_resenas %}
             <div class="card-stars-row">
               {% if p.total_resenas > 0 %}
                 {% for i in "12345"|make_list %}
@@ -322,6 +323,7 @@
                 </span>
               {% endif %}
             </div>
+            {% endif %}
 
             <h3 class="card-title">
               <a href="{{ p.get_absolute_url }}">{{ p.nombre }}</a>
@@ -381,51 +383,61 @@
       </p>
     </div>
 
-    <!-- Grid de Reseñas -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+    <!-- Grid de Reseñas (Tarjetas con tamaño individual acotado y centradas) -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;">
       {% for r in resenas %}
-        <div style="background: white; border-radius: 18px; padding: 26px 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0, 32, 147, 0.08)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.04)';">
+        <div style="width: 100%; max-width: 360px; min-width: 280px; flex: 0 1 360px; background: white; border-radius: 18px; padding: 22px 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0, 32, 147, 0.08)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.04)';">
           <div>
             <!-- Calificación y Badge -->
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
               <div style="color: #f59e0b; font-size: 1.05rem; letter-spacing: 2px;">
                 {% for i in "12345"|make_list %}
                   {% if forloop.counter <= r.calificacion %}★{% else %}☆{% endif %}
                 {% endfor %}
               </div>
               {% if r.comprador_verificado %}
-                <span style="background: #e6f4ea; color: #137333; font-weight: 800; font-size: 0.72rem; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #b7e1cd;">
+                <span style="background: #e6f4ea; color: #137333; font-weight: 800; font-size: 0.72rem; padding: 3px 9px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #b7e1cd;">
                   <i class="fa-solid fa-circle-check"></i> Verificado
                 </span>
               {% endif %}
             </div>
 
             <!-- Comentario -->
-            <p style="font-family: 'Open Sans', sans-serif; color: #334155; font-size: 0.95rem; line-height: 1.6; margin: 0 0 18px 0; font-style: italic;">
+            <p style="font-family: 'Open Sans', sans-serif; color: #334155; font-size: 0.93rem; line-height: 1.6; margin: 0 0 16px 0; font-style: italic;">
               “{{ r.comentario }}”
             </p>
           </div>
 
-          <!-- Autor y Producto vinculado -->
+          <!-- Autor y Producto con Imagen -->
           <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: auto;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
-              <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #002093, #3230C2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0, 32, 147, 0.25);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #002093, #3230C2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.88rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.2);">
                 {{ r.nombre_cliente|slice:":1"|upper }}
               </div>
               <div style="overflow: hidden;">
-                <div style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: #0f172a; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <div style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: #0f172a; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                   {{ r.nombre_cliente }}
                 </div>
-                <div style="font-size: 0.76rem; color: #94a3b8;">
+                <div style="font-size: 0.74rem; color: #94a3b8;">
                   {{ r.fecha|date:"d \d\e F, Y" }}
                 </div>
               </div>
             </div>
 
             {% if r.producto %}
-              <a href="{{ r.producto.get_absolute_url }}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: #002093; text-decoration: none; background: #eef2ff; padding: 5px 12px; border-radius: 8px; max-width: 100%; box-sizing: border-box; transition: background 0.2s ease;" onmouseover="this.style.background='#e0e7ff'" onmouseout="this.style.background='#eef2ff'">
-                <i class="fa-solid fa-tag" style="color: #6366f1; font-size: 0.7rem;"></i>
-                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ r.producto.nombre }}</span>
+              <a href="{{ r.producto.get_absolute_url }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 10px; transition: all 0.2s ease;" onmouseover="this.style.background='#eef2ff'; this.style.borderColor='#c7d2fe';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                {% if r.producto.imagen %}
+                  <img src="{{ r.producto.get_imagen_url_300 }}" alt="{{ r.producto.nombre }}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; background: white; border: 1px solid #e2e8f0; padding: 2px; flex-shrink: 0;">
+                {% else %}
+                  <div style="width: 44px; height: 44px; border-radius: 8px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #94a3b8; flex-shrink: 0; font-size: 1rem;">
+                    <i class="fa-solid fa-box-open"></i>
+                  </div>
+                {% endif %}
+                <div style="overflow: hidden; flex: 1;">
+                  <span style="display: block; font-size: 0.68rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Compró</span>
+                  <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.producto.nombre }}</span>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94a3b8; flex-shrink: 0;"></i>
               </a>
             {% endif %}
           </div>
@@ -702,6 +714,8 @@ function scrollDestacados(amount) {
   }
 }
 
+const MOSTRAR_RESENAS = {% if config_sitio.mostrar_resenas %}true{% else %}false{% endif %};
+
 async function shuffleDestacados() {
   const container = document.getElementById('destacados-container');
   const icon = document.getElementById('shuffle-icon');
@@ -737,6 +751,7 @@ async function shuffleDestacados() {
             </a>
             <div class="card-body">
               <span class="card-category-tag">${p.badge || 'DESTACADO TECH'}</span>
+              ${MOSTRAR_RESENAS ? `
               <div class="card-stars-row">
                 ${p.total_resenas > 0 ? `
                   <i class="fa-solid fa-star"></i>
@@ -747,6 +762,7 @@ async function shuffleDestacados() {
                   </span>
                 `}
               </div>
+              ` : ''}
               <h3 class="card-title">
                 <a href="${p.url}">${p.nombre}</a>
               </h3>
