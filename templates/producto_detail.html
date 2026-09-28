@@ -20,6 +20,7 @@
   "@context": "https://schema.org/",
   "@type": "Product",
   "name": "{{ producto.nombre|escapejs }}",
+  {% if producto.marca %}"brand": { "@type": "Brand", "name": "{{ producto.marca|escapejs }}" },{% endif %}
   "image": "{% if producto.imagen %}{{ producto.get_imagen_url_absoluta }}{% endif %}",
   "description": "{{ producto.descripcion|escapejs }}",
   "offers": {
@@ -539,10 +540,17 @@
         <!-- COLUMNA DERECHA: Información y Compra -->
         <div style="display: flex; flex-direction: column; justify-content: space-between;">
             <div>
-                <!-- Categoria Tag -->
-                <span style="display: inline-block; background: #fff3e0; color: #002093; font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 12px; text-transform: uppercase; margin-bottom: 12px;">
-                    {{ producto.categoria.nombre }}
-                </span>
+                <!-- Categoria & Marca Tags -->
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+                    <span style="display: inline-block; background: #fff3e0; color: #002093; font-size: 0.8rem; font-weight: bold; padding: 4px 12px; border-radius: 12px; text-transform: uppercase;">
+                        {{ producto.categoria.nombre }}
+                    </span>
+                    {% if producto.marca %}
+                    <span style="display: inline-flex; align-items: center; gap: 5px; background: #f1f5f9; color: #334155; font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                        <i class="fa-solid fa-tag" style="color: #64748b; font-size: 0.72rem;"></i> {{ producto.marca }}
+                    </span>
+                    {% endif %}
+                </div>
 
                 <!-- Titulo -->
                 <h1 style="margin: 0 0 10px 0; font-family: 'Outfit', sans-serif; font-size: 2rem; color: #222; line-height: 1.2;">

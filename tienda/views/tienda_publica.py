@@ -70,7 +70,7 @@ def api_buscar_productos(request):
         return JsonResponse({'productos': []})
     
     productos = Producto.objects.filter(
-        models.Q(nombre__icontains=q) | models.Q(descripcion__icontains=q),
+        models.Q(nombre__icontains=q) | models.Q(marca__icontains=q) | models.Q(descripcion__icontains=q),
         disponible=True
     )[:6]
     
@@ -79,6 +79,7 @@ def api_buscar_productos(request):
         data.append({
             'id': p.id,
             'nombre': p.nombre,
+            'marca': p.marca,
             'precio': f"${p.precio_final:,}".replace(',', '.'),
             'precio_original': f"${p.precio:,}".replace(',', '.') if p.tiene_descuento else '',
             'tiene_descuento': p.tiene_descuento,
@@ -180,6 +181,7 @@ def blog_detail(request, slug):
         for palabra in palabras_clave:
             q_obj |= (
                 models.Q(nombre__icontains=palabra) |
+                models.Q(marca__icontains=palabra) |
                 models.Q(descripcion__icontains=palabra) |
                 models.Q(categoria__nombre__icontains=palabra) |
                 models.Q(especie_nombre_comun__icontains=palabra) |

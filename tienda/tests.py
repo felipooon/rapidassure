@@ -47,6 +47,125 @@ class ProductoModelTests(TestCase):
         self.assertEqual(len(producto.todas_las_imagenes), 1)
         self.assertEqual(producto.todas_las_imagenes[0]['id'], img_extra.id)
 
+    def test_producto_con_marca(self):
+        """Un producto puede guardar su marca correctamente."""
+        producto = Producto.objects.create(
+            categoria=self.categoria,
+            marca="Zebra Technologies",
+            nombre="Impresora Térmica ZD220",
+            precio=199990,
+            stock=4,
+            disponible=True
+        )
+        self.assertEqual(producto.marca, "Zebra Technologies")
+
+    def test_producto_form_con_marca(self):
+        """El formulario ProductoForm procesa y guarda el campo marca."""
+        from .forms import ProductoForm
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        imagen_dummy = SimpleUploadedFile(
+            name='test_img.jpg',
+            content=b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b',
+            content_type='image/jpeg'
+        )
+
+        form = ProductoForm(
+            data={
+                'categoria': self.categoria.id,
+                'marca': 'Honeywell',
+                'nombre': 'Lector Láser Voyager 1200g',
+                'precio': '89.990',
+                'stock': 12,
+                'disponible': True,
+                'tiene_ficha_especie': True,
+                'especie_nombre_comun': 'Lector 1D',
+                'especie_habitat': 'Retail y Farmacias',
+                'especie_estado_conservacion': 'Garantía 12 Meses',
+                'especie_dato_curioso': 'Lectura precisa de alta velocidad',
+            },
+            files={'imagen': imagen_dummy}
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        prod = form.save()
+        self.assertEqual(prod.marca, 'Honeywell')
+
+    def test_producto_dimensiones_y_peso_blueexpress(self):
+        """Un producto puede almacenar alto, ancho, largo y peso y calcular volumen y peso volumétrico."""
+        from decimal import Decimal
+        producto = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Caja POS Terminal",
+            precio=250000,
+            stock=10,
+            disponible=True,
+            alto=Decimal('20.00'),
+            ancho=Decimal('30.00'),
+            largo=Decimal('40.00'),
+            peso=Decimal('2.50')
+        )
+        self.assertEqual(producto.alto, Decimal('20.00'))
+        self.assertEqual(producto.ancho, Decimal('30.00'))
+        self.assertEqual(producto.largo, Decimal('40.00'))
+        self.assertEqual(producto.peso, Decimal('2.50'))
+        self.assertEqual(producto.volumen_cm3, 24000.0)
+        # Fórmula: (20 * 30 * 40) / 4000 = 6.00
+        self.assertEqual(producto.peso_volumetrico, 6.0)
+
+    def test_producto_dimensiones_opcionales(self):
+        """Las dimensiones y peso para Blue Express son completamente opcionales."""
+        producto = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Producto Sin Medidas",
+            precio=5000,
+            stock=1,
+            disponible=True
+        )
+        self.assertIsNone(producto.alto)
+        self.assertIsNone(producto.ancho)
+        self.assertIsNone(producto.largo)
+        self.assertIsNone(producto.peso)
+        self.assertIsNone(producto.peso_volumetrico)
+        self.assertIsNone(producto.volumen_cm3)
+
+    def test_producto_form_dimensiones_blueexpress(self):
+        """El formulario ProductoForm permite guardar o dejar vacías las dimensiones."""
+        from .forms import ProductoForm
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from decimal import Decimal
+
+        imagen_dummy = SimpleUploadedFile(
+            name='test_img_dim.jpg',
+            content=b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b',
+            content_type='image/jpeg'
+        )
+
+        form = ProductoForm(
+            data={
+                'categoria': self.categoria.id,
+                'nombre': 'Equipo POS con Medidas',
+                'precio': '150.000',
+                'stock': 5,
+                'disponible': True,
+                'alto': '15.5',
+                'ancho': '25.0',
+                'largo': '35.0',
+                'peso': '1.80',
+                'tiene_ficha_especie': True,
+                'especie_nombre_comun': 'Equipo POS',
+                'especie_habitat': 'Comercio',
+                'especie_estado_conservacion': 'Garantía 1 Año',
+                'especie_dato_curioso': 'Ficha técnica completa',
+            },
+            files={'imagen': imagen_dummy}
+        )
+        self.assertTrue(form.is_valid(), form.errors)
+        prod = form.save()
+        self.assertEqual(prod.alto, Decimal('15.5'))
+        self.assertEqual(prod.ancho, Decimal('25.0'))
+        self.assertEqual(prod.largo, Decimal('35.0'))
+        self.assertEqual(prod.peso, Decimal('1.80'))
+
 
 class CloudinaryUrlTests(TestCase):
     def test_get_cloudinary_url_local(self):
@@ -522,6 +641,39 @@ class ControladorOfertasTests(TestCase):
         self.assertIn('80.000', content)
         self.assertIn('100.000', content)
         self.assertIn('-20% OFF', content)
+
+    def test_producto_form_calcula_porcentaje_desde_monto_descuento(self):
+        """Si en el formulario se ingresa monto_descuento pero no porcentaje, debe calcular el porcentaje automáticamente."""
+        from tienda.forms import ProductoForm
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        gif_bytes = b'GIF89a\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;'
+        imagen_dummy = SimpleUploadedFile("test.gif", gif_bytes, content_type="image/gif")
+        data = {
+            'nombre': 'Lector Barcode QR',
+            'categoria': self.categoria.id,
+            'marca': 'Zebra',
+            'precio': '100.000',
+            'stock': '5',
+            'disponible': 'on',
+            'en_oferta': 'on',
+            'monto_descuento': '25.000',
+            'porcentaje_descuento': '',
+            'especie_nombre_comun': 'Lector QR',
+            'especie_habitat': 'Retail',
+            'especie_estado_conservacion': 'Garantía 12M',
+            'especie_dato_curioso': 'Lectura omnidireccional',
+        }
+        form = ProductoForm(data=data, files={'imagen': imagen_dummy})
+        self.assertTrue(form.is_valid(), form.errors)
+        self.assertEqual(form.cleaned_data['porcentaje_descuento'], 25)
+
+    def test_producto_form_inicializa_monto_descuento_al_editar(self):
+        """Al instanciar ProductoForm con un producto que tiene descuento, monto_descuento debe inicializarse."""
+        from tienda.forms import ProductoForm
+        form = ProductoForm(instance=self.producto_oferta)
+        self.assertEqual(form.initial.get('monto_descuento'), '20.000')
+
 
 
 class WebpayPlusIntegrationTests(TestCase):

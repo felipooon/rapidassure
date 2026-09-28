@@ -91,7 +91,14 @@
           {% endif %}
         </td>
 
-        <td style="padding: 12px; font-weight: 500; color: #2c3e50;">{{ p.nombre }}</td>
+        <td style="padding: 12px; font-weight: 500; color: #2c3e50;">
+            <div>{{ p.nombre }}</div>
+            {% if p.marca %}
+                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #002093; background: #eff6ff; border: 1px solid #bfdbfe; padding: 1px 7px; border-radius: 6px; margin-top: 4px; font-weight: 700;">
+                    <i class="fa-solid fa-tag" style="font-size: 0.65rem;"></i> {{ p.marca }}
+                </span>
+            {% endif %}
+        </td>
         
         <td style="padding: 12px;">
             {% if p.stock == 0 %}

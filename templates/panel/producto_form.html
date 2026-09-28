@@ -8,15 +8,74 @@
         padding: 30px 40px;
         border-radius: 12px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-        max-width: 700px;
+        max-width: 1200px;
         margin: 20px auto;
+    }
+
+    .form-two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        align-items: start;
+    }
+
+    @media (max-width: 992px) {
+        .form-two-columns {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .form-card {
+            padding: 22px 18px;
+        }
+    }
+
+    .panel-card-box {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 8px rgba(0, 14, 31, 0.03);
+        transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .panel-card-box:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 14px rgba(0, 14, 31, 0.06);
     }
 
     .form-header {
         border-bottom: 2px solid #eee;
         padding-bottom: 15px;
         margin-bottom: 25px;
-        color: #333;
+        color: #0f172a;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 0;
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f1f5f9;
+    }
+    .form-section-header i {
+        color: #002093;
+        font-size: 1.15rem;
+    }
+    .form-section-badge {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-left: auto;
     }
 
     .form-group {
@@ -256,204 +315,399 @@ function ejecutarCopiaFormModal() {
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="form-group">
-            <label for="{{ form.categoria.id_for_label }}">Categoría</label>
-            {{ form.categoria }}
-        </div>
-
-        <div class="form-group">
-            <label for="{{ form.nombre.id_for_label }}">Nombre del Producto</label>
-            {{ form.nombre }}
-        </div>
-
-        <div class="form-group">
-            <label for="{{ form.descripcion.id_for_label }}">Descripción detallada</label>
-            {{ form.descripcion }}
-        </div>
-
-        <div class="grid-2">
-            <div class="form-group">
-                <label for="{{ form.precio.id_for_label }}">Precio ($)</label>
-                {{ form.precio }}
-            </div>
-            
-            <div class="form-group">
-                <label for="{{ form.stock.id_for_label }}">Stock (Unidades)</label>
-                <div style="display: flex; align-items: center; gap: 6px;">
-                    <button type="button" onclick="modificarStock(-1)" style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; width: 44px; height: 44px; font-size: 1.1rem; font-weight: 800; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'" title="Disminuir stock">
-                        <i class="fa-solid fa-minus"></i>
-                    </button>
-                    <div style="flex: 1;">
-                        {{ form.stock }}
+        <div class="form-two-columns">
+            <!-- ============================================== -->
+            <!-- COLUMNA IZQUIERDA: INFORMACIÓN Y TÉCNICO       -->
+            <!-- ============================================== -->
+            <div>
+                <!-- TARJETA 1: INFORMACIÓN PRINCIPAL -->
+                <div class="panel-card-box">
+                    <div class="form-section-header">
+                        <i class="fa-solid fa-cube"></i>
+                        <span>Información Principal</span>
+                        <span class="form-section-badge" style="background: #eff6ff; color: #1e40af;">Básico</span>
                     </div>
-                    <button type="button" onclick="modificarStock(1)" style="background: #002093; border: 1px solid #e08b5e; border-radius: 8px; width: 44px; height: 44px; font-size: 1.1rem; font-weight: 800; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;" onmouseover="this.style.background='#e08b5e'" onmouseout="this.style.background='#002093'" title="Aumentar stock">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
+
+                    <!-- Nombre del Producto -->
+                    <div class="form-group">
+                        <label for="{{ form.nombre.id_for_label }}">
+                            Nombre del Producto <span style="color: #e11d48; font-weight: 800;">*</span>
+                        </label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                            <small style="color: #e11d48;">{{ form.nombre.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+
+                    <!-- Categoría y Marca -->
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="{{ form.categoria.id_for_label }}">
+                                Categoría <span style="color: #e11d48; font-weight: 800;">*</span>
+                            </label>
+                            {{ form.categoria }}
+                            {% if form.categoria.errors %}
+                                <small style="color: #e11d48;">{{ form.categoria.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.marca.id_for_label }}">
+                                Marca / Fabricante
+                            </label>
+                            {{ form.marca }}
+                            <datalist id="lista-marcas-sugeridas">
+                                {% for m in marcas_existentes %}
+                                    <option value="{{ m }}">
+                                {% endfor %}
+                            </datalist>
+                            {% if form.marca.errors %}
+                                <small style="color: #e11d48;">{{ form.marca.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Descripción detallada -->
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="{{ form.descripcion.id_for_label }}">Descripción detallada</label>
+                        {{ form.descripcion }}
+                        {% if form.descripcion.errors %}
+                            <small style="color: #e11d48;">{{ form.descripcion.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- TARJETA 2: ESPECIFICACIÓN TÉCNICA EXTENDIDA (CATÁLOGO) -->
+                {{ form.tiene_ficha_especie }}
+                <div class="panel-card-box" id="sec-ficha-especie" style="background: #f8fafc; border: 1.5px solid #cbd5e1; margin-bottom: 0;">
+                    <div class="form-section-header" style="border-bottom: 1px dashed #cbd5e1; margin-bottom: 18px;">
+                        <i class="fa-solid fa-microchip" style="color: #FCBE00;"></i>
+                        <span style="color: #002093;">Especificación Técnica Extendida</span>
+                        <span class="form-section-badge" style="background: #e0e7ff; color: #3730a3;">Catálogo</span>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="{{ form.especie_nombre_comun.id_for_label }}">
+                                {{ form.especie_nombre_comun.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                            </label>
+                            {{ form.especie_nombre_comun }}
+                            {% if form.especie_nombre_comun.errors %}
+                                <small style="color: #e11d48;">{{ form.especie_nombre_comun.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.especie_nombre_cientifico.id_for_label }}">
+                                {{ form.especie_nombre_cientifico.label }}
+                            </label>
+                            {{ form.especie_nombre_cientifico }}
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="{{ form.especie_habitat.id_for_label }}">
+                                {{ form.especie_habitat.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                            </label>
+                            {{ form.especie_habitat }}
+                            {% if form.especie_habitat.errors %}
+                                <small style="color: #e11d48;">{{ form.especie_habitat.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.especie_estado_conservacion.id_for_label }}">
+                                {{ form.especie_estado_conservacion.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                            </label>
+                            {{ form.especie_estado_conservacion }}
+                            {% if form.especie_estado_conservacion.errors %}
+                                <small style="color: #e11d48;">{{ form.especie_estado_conservacion.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="{{ form.especie_dato_curioso.id_for_label }}">
+                            {{ form.especie_dato_curioso.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
+                        </label>
+                        {{ form.especie_dato_curioso }}
+                        {% if form.especie_dato_curioso.errors %}
+                            <small style="color: #e11d48;">{{ form.especie_dato_curioso.errors.0 }}</small>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- SECCIÓN DE CONTROL DE OFERTAS (% OFF) -->
-        <div style="background: #fffdf5; border: 1.5px solid #fef08a; border-radius: 14px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(234, 179, 8, 0.08);">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 38px; height: 38px; border-radius: 10px; background: #fef08a; color: #a16207; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
-                        <i class="fa-solid fa-tags"></i>
+            <!-- ============================================== -->
+            <!-- COLUMNA DERECHA: COMERCIAL, FOTOS Y LOGÍSTICA  -->
+            <!-- ============================================== -->
+            <div>
+                <!-- TARJETA 3: PRECIOS, INVENTARIO Y DISPONIBILIDAD -->
+                <div class="panel-card-box">
+                    <div class="form-section-header">
+                        <i class="fa-solid fa-coins"></i>
+                        <span>Precios, Inventario y Oferta</span>
+                        <span class="form-section-badge" style="background: #fefce8; color: #854d0e;">Comercial</span>
                     </div>
-                    <div>
-                        <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.05rem; font-weight: 800; color: #713f12;">Control de Oferta Promocional</h4>
-                        <span style="font-size: 0.8rem; color: #854d0e;">Aplica un % de descuento sobre el precio regular para mostrarlo tachado en la tienda</span>
-                    </div>
-                </div>
 
-                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: white; padding: 8px 14px; border-radius: 20px; border: 1.5px solid #fde047; font-weight: 700; font-size: 0.9rem; color: #854d0e; user-select: none;">
-                    {{ form.en_oferta }} Activar Oferta
-                </label>
-            </div>
-
-            <div id="seccion-descuento-inputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px;">
-                <div class="form-group" style="margin-bottom: 0;">
-                    <label for="id_porcentaje_descuento" style="color: #713f12; font-weight: 700;">Porcentaje de Descuento (% OFF)</label>
-                    <div style="position: relative;">
-                        {{ form.porcentaje_descuento }}
-                        <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-weight: 800; color: #a16207; pointer-events: none;">%</span>
-                    </div>
-                    {% if form.porcentaje_descuento.errors %}
-                        <div style="color: #ef4444; font-size: 0.82rem; margin-top: 4px;">{{ form.porcentaje_descuento.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <!-- Calculadora / Resumen en vivo -->
-                <div style="background: white; border-radius: 10px; border: 1px solid #fef08a; padding: 12px 16px; display: flex; flex-direction: column; justify-content: center;">
-                    <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: #854d0e; letter-spacing: 0.5px; margin-bottom: 4px;">Resumen del Precio en Tienda:</span>
-                    <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-                        <span id="preview-precio-regular" style="font-size: 0.9rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$0</span>
-                        <span id="preview-precio-oferta" style="font-size: 1.3rem; color: #b45309; font-weight: 800; font-family: 'Montserrat', sans-serif;">$0</span>
-                        <span id="preview-badge-ahorro" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 0.75rem; font-weight: 800; padding: 2px 8px; border-radius: 12px; display: none;">0% OFF</span>
-                    </div>
-                    <span id="preview-monto-ahorro" style="font-size: 0.8rem; color: #16a34a; font-weight: 700; margin-top: 3px;"></span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-group file-upload-box" style="margin-bottom: 25px;">
-            <label style="display:block; margin-bottom: 10px; font-weight: 700; color: #1e293b; font-size: 1.05rem;">
-                <i class="fa-solid fa-camera"></i> Imagen Principal / Portada
-            </label>
-            <p style="font-size: 0.85rem; color: #64748b; margin-top: -5px; margin-bottom: 12px;">
-                Esta es la imagen principal que aparecerá en las tarjetas de la tienda y catálogo.
-            </p>
-
-            {% if form.instance.imagen %}
-                <div style="margin-bottom: 12px; background: white; padding: 8px; border-radius: 8px; display: inline-block; border: 1px solid #e2e8f0;">
-                    <img src="{{ form.instance.imagen.url }}" style="height: 110px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.06);">
-                </div>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">
-                    <em>Selecciona un archivo solo si deseas reemplazar la imagen principal actual.</em>
-                </p>
-            {% endif %}
-
-            <input type="file" name="{{ form.imagen.html_name }}" id="{{ form.imagen.id_for_label }}" accept="image/*" class="custom-file-input">
-        </div>
-
-        <div class="form-group file-upload-box" style="background: #f0fdf4; border: 2px dashed #86efac;">
-            <label style="display:block; margin-bottom: 6px; font-weight: 700; color: #166534; font-size: 1.05rem;">
-                <i class="fa-solid fa-images"></i> Galería de Imágenes Adicionales (Opcional)
-            </label>
-            <p style="font-size: 0.85rem; color: #15803d; margin-bottom: 12px;">
-                Puedes seleccionar <strong>varias imágenes al mismo tiempo</strong> para crear una galería en la página del producto.
-            </p>
-
-            <input type="file" name="imagenes_adicionales" id="id_imagenes_adicionales" multiple accept="image/*" class="custom-file-input">
-
-            {% if editando and form.instance.imagenes_adicionales.all %}
-                <div style="margin-top: 18px; border-top: 1px dashed #bbf7d0; padding-top: 14px; text-align: left;">
-                    <p style="font-weight: 700; color: #166534; font-size: 0.9rem; margin-bottom: 10px;">
-                        Galería actual (marca las casillas para eliminar las imágenes que ya no desees):
-                    </p>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px;">
-                        {% for img_extra in form.instance.imagenes_adicionales.all %}
-                            <div style="position: relative; background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
-                                <img src="{{ img_extra.imagen.url }}" style="width: 100%; height: 90px; object-fit: cover; border-radius: 6px; display: block; margin-bottom: 6px;">
-                                <label style="font-size: 0.8rem; color: #dc2626; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; user-select: none;">
-                                    <input type="checkbox" name="eliminar_imagenes" value="{{ img_extra.id }}"> <i class="fa-solid fa-trash"></i> Borrar
-                                </label>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="{{ form.precio.id_for_label }}">
+                                Precio ($ CLP) <span style="color: #e11d48; font-weight: 800;">*</span>
+                            </label>
+                            {{ form.precio }}
+                            {% if form.precio.errors %}
+                                <small style="color: #e11d48;">{{ form.precio.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.stock.id_for_label }}">Stock (Unidades)</label>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <button type="button" onclick="modificarStock(-1)" style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; width: 44px; height: 44px; font-size: 1.1rem; font-weight: 800; color: #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'" title="Disminuir stock">
+                                    <i class="fa-solid fa-minus"></i>
+                                </button>
+                                <div style="flex: 1;">
+                                    {{ form.stock }}
+                                </div>
+                                <button type="button" onclick="modificarStock(1)" style="background: #002093; border: 1px solid #e08b5e; border-radius: 8px; width: 44px; height: 44px; font-size: 1.1rem; font-weight: 800; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;" onmouseover="this.style.background='#e08b5e'" onmouseout="this.style.background='#002093'" title="Aumentar stock">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
                             </div>
-                        {% endfor %}
+                            {% if form.stock.errors %}
+                                <small style="color: #e11d48;">{{ form.stock.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- CONTROL DE OFERTAS (% OFF Y MONTO DE DESCUENTO) -->
+                    <div style="background: #fffdf5; border: 1.5px solid #fef08a; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 32px; height: 32px; border-radius: 8px; background: #fef08a; color: #a16207; display: flex; align-items: center; justify-content: center; font-size: 1rem;">
+                                    <i class="fa-solid fa-tags"></i>
+                                </div>
+                                <div>
+                                    <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #713f12;">Oferta Promocional</h4>
+                                    <span style="font-size: 0.75rem; color: #854d0e;">Ingresa el % o el monto de descuento (se autocalculan entre sí)</span>
+                                </div>
+                            </div>
+
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; background: white; padding: 6px 12px; border-radius: 20px; border: 1.5px solid #fde047; font-weight: 700; font-size: 0.85rem; color: #854d0e; user-select: none;">
+                                {{ form.en_oferta }} Activar Oferta
+                            </label>
+                        </div>
+
+                        <!-- Grilla de 2 inputs bidireccionales: % Descuento y Monto Descuento -->
+                        <div id="seccion-descuento-inputs" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="id_porcentaje_descuento" style="color: #713f12; font-weight: 700; font-size: 0.85rem;">
+                                    % Descuento (% OFF)
+                                </label>
+                                <div style="position: relative;">
+                                    {{ form.porcentaje_descuento }}
+                                    <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-weight: 800; color: #a16207; pointer-events: none;">%</span>
+                                </div>
+                                {% if form.porcentaje_descuento.errors %}
+                                    <div style="color: #ef4444; font-size: 0.8rem; margin-top: 4px;">{{ form.porcentaje_descuento.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="id_monto_descuento" style="color: #713f12; font-weight: 700; font-size: 0.85rem;">
+                                    Monto Descuento ($ CLP)
+                                </label>
+                                <div style="position: relative;">
+                                    {{ form.monto_descuento }}
+                                    <span style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-weight: 800; color: #a16207; pointer-events: none;">$</span>
+                                </div>
+                                {% if form.monto_descuento.errors %}
+                                    <div style="color: #ef4444; font-size: 0.8rem; margin-top: 4px;">{{ form.monto_descuento.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta de Resumen en Vivo del Precio Final -->
+                        <div style="background: white; border-radius: 10px; border: 1px solid #fef08a; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                            <div>
+                                <span style="font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: #854d0e; display: block; margin-bottom: 2px;">Precio Final en Tienda:</span>
+                                <div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                                    <span id="preview-precio-regular" style="font-size: 0.85rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$0</span>
+                                    <span id="preview-precio-oferta" style="font-size: 1.25rem; color: #b45309; font-weight: 800; font-family: 'Montserrat', sans-serif;">$0</span>
+                                    <span id="preview-badge-ahorro" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; display: none;">0% OFF</span>
+                                </div>
+                            </div>
+                            <span id="preview-monto-ahorro" style="font-size: 0.8rem; color: #16a34a; font-weight: 700;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Disponibilidad para la venta -->
+                    <div class="form-group checkbox-inline" style="margin-bottom: 0;">
+                        {{ form.disponible }}
+                        <label for="{{ form.disponible.id_for_label }}" style="font-size: 0.92rem;">
+                            El producto está disponible para la venta en la tienda
+                        </label>
                     </div>
                 </div>
-            {% endif %}
+
+                <!-- TARJETA 4: FOTOGRAFÍAS DEL PRODUCTO -->
+                <div class="panel-card-box">
+                    <div class="form-section-header">
+                        <i class="fa-solid fa-images"></i>
+                        <span>Fotografías del Producto</span>
+                        <span class="form-section-badge" style="background: #f0fdf4; color: #166534;">Multimedia</span>
+                    </div>
+
+                    <div class="form-group file-upload-box" style="margin-bottom: 16px;">
+                        <label style="display:block; margin-bottom: 6px; font-weight: 700; color: #1e293b; font-size: 0.95rem;">
+                            <i class="fa-solid fa-camera" style="color: #002093;"></i> Imagen Principal / Portada <span style="color: #e11d48; font-weight: 800;">*</span>
+                        </label>
+                        <p style="font-size: 0.8rem; color: #64748b; margin-top: -3px; margin-bottom: 10px;">
+                            Imagen principal mostrada en catálogo y cabecera.
+                        </p>
+
+                        {% if form.instance.imagen %}
+                            <div style="margin-bottom: 10px; background: white; padding: 6px; border-radius: 8px; display: inline-block; border: 1px solid #e2e8f0;">
+                                <img src="{{ form.instance.imagen.url }}" style="height: 90px; object-fit: cover; border-radius: 6px;">
+                            </div>
+                        {% endif %}
+
+                        <input type="file" name="{{ form.imagen.html_name }}" id="{{ form.imagen.id_for_label }}" accept="image/*" class="custom-file-input">
+                        {% if form.imagen.errors %}
+                            <div style="color: #e11d48; font-size: 0.85rem; margin-top: 6px;">{{ form.imagen.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group file-upload-box" style="background: #f0fdf4; border: 2px dashed #86efac; margin-bottom: 0;">
+                        <label style="display:block; margin-bottom: 6px; font-weight: 700; color: #166534; font-size: 0.95rem;">
+                            <i class="fa-solid fa-photo-film"></i> Galería Adicional (Opcional)
+                        </label>
+                        <p style="font-size: 0.8rem; color: #15803d; margin-bottom: 10px;">
+                            Selecciona varias fotos para habilitar galería.
+                        </p>
+
+                        <input type="file" name="imagenes_adicionales" id="id_imagenes_adicionales" multiple accept="image/*" class="custom-file-input">
+
+                        {% if editando and form.instance.imagenes_adicionales.all %}
+                            <div style="margin-top: 14px; border-top: 1px dashed #bbf7d0; padding-top: 10px; text-align: left;">
+                                <p style="font-weight: 700; color: #166534; font-size: 0.82rem; margin-bottom: 8px;">
+                                    Fotos actuales (marca para eliminar):
+                                </p>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); gap: 8px;">
+                                    {% for img_extra in form.instance.imagenes_adicionales.all %}
+                                        <div style="position: relative; background: white; border: 1px solid #cbd5e1; border-radius: 6px; padding: 4px; text-align: center;">
+                                            <img src="{{ img_extra.imagen.url }}" style="width: 100%; height: 70px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 4px;">
+                                            <label style="font-size: 0.72rem; color: #dc2626; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px;">
+                                                <input type="checkbox" name="eliminar_imagenes" value="{{ img_extra.id }}"> Borrar
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- TARJETA 5: LOGÍSTICA Y ENVÍOS (TARJETA AZUL BLUE EXPRESS) -->
+                <div id="sec-envio-blueexpress" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1.5px solid #93c5fd; border-radius: 14px; padding: 22px; margin-bottom: 0; box-shadow: 0 4px 16px rgba(0, 32, 147, 0.06);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; border-bottom: 1px dashed #bfdbfe; padding-bottom: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 36px; height: 36px; border-radius: 8px; background: #002093; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.25);">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 0.98rem; font-weight: 800; color: #002093;">
+                                    Cálculo de Envío — Blue Express
+                                </h4>
+                                <span style="font-size: 0.76rem; color: #1e40af;">
+                                    Dimensiones y peso físico para tarifas de envío
+                                </span>
+                            </div>
+                        </div>
+
+                        <span style="background: #002093; color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fa-solid fa-cube"></i> Blue Express
+                        </span>
+                    </div>
+
+                    <!-- Grilla de 4 campos en 2x2 para acomodarse perfectamente en la columna -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="{{ form.alto.id_for_label }}" style="color: #1e3a8a; font-weight: 700; font-size: 0.85rem;">
+                                Alto (cm)
+                            </label>
+                            <div style="position: relative;">
+                                {{ form.alto }}
+                                <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.8rem; pointer-events: none;">cm</span>
+                            </div>
+                            {% if form.alto.errors %}
+                                <small style="color: #e11d48;">{{ form.alto.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="{{ form.ancho.id_for_label }}" style="color: #1e3a8a; font-weight: 700; font-size: 0.85rem;">
+                                Ancho (cm)
+                            </label>
+                            <div style="position: relative;">
+                                {{ form.ancho }}
+                                <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.8rem; pointer-events: none;">cm</span>
+                            </div>
+                            {% if form.ancho.errors %}
+                                <small style="color: #e11d48;">{{ form.ancho.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="{{ form.largo.id_for_label }}" style="color: #1e3a8a; font-weight: 700; font-size: 0.85rem;">
+                                Largo (cm)
+                            </label>
+                            <div style="position: relative;">
+                                {{ form.largo }}
+                                <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.8rem; pointer-events: none;">cm</span>
+                            </div>
+                            {% if form.largo.errors %}
+                                <small style="color: #e11d48;">{{ form.largo.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="{{ form.peso.id_for_label }}" style="color: #1e3a8a; font-weight: 700; font-size: 0.85rem;">
+                                Peso (kg)
+                            </label>
+                            <div style="position: relative;">
+                                {{ form.peso }}
+                                <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.8rem; pointer-events: none;">kg</span>
+                            </div>
+                            {% if form.peso.errors %}
+                                <small style="color: #e11d48;">{{ form.peso.errors.0 }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Resumen Informativo en Tiempo Real -->
+                    <div id="box-resumen-blueexpress" style="background: white; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 14px; margin-top: 12px; font-size: 0.8rem; color: #334155;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                            <span><i class="fa-solid fa-calculator" style="color: #002093;"></i> Fórmula: <code>(A×A×L)/4.000</code></span>
+                            <div id="preview-blueexpress-calc" style="color: #002093; font-weight: 700;">
+                                Vol: <span id="calc-volumen">--</span> cm³ | Volumétrico: <span id="calc-peso-vol">--</span> kg
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-
-        <div class="form-group checkbox-inline">
-            {{ form.disponible }}
-            <label for="{{ form.disponible.id_for_label }}">
-                El producto está disponible para la venta en la tienda
-            </label>
-        </div>
-
-        {{ form.tiene_ficha_especie }}
-
-        <!-- Campos de la Especificación Técnica Extendida (Obligatoria) -->
-        <div id="sec-ficha-especie" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 14px; padding: 22px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,32,147,0.03);">
-            <div style="margin-bottom: 16px; font-weight: 800; color: #002093; font-size: 1.05rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px;">
-                <span style="display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-microchip" style="color: #FCBE00;"></i> Especificación Técnica Extendida
-                </span>
-                <span style="font-size: 0.78rem; background: #e0e7ff; color: #3730a3; padding: 3px 10px; border-radius: 12px; font-weight: 700;">
-                    Requerido para catálogo
-                </span>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="{{ form.especie_nombre_comun.id_for_label }}">
-                        {{ form.especie_nombre_comun.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
-                    </label>
-                    {{ form.especie_nombre_comun }}
-                    {% if form.especie_nombre_comun.errors %}
-                        <small style="color: #e11d48;">{{ form.especie_nombre_comun.errors.0 }}</small>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.especie_nombre_cientifico.id_for_label }}">
-                        {{ form.especie_nombre_cientifico.label }}
-                    </label>
-                    {{ form.especie_nombre_cientifico }}
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="form-group">
-                    <label for="{{ form.especie_habitat.id_for_label }}">
-                        {{ form.especie_habitat.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
-                    </label>
-                    {{ form.especie_habitat }}
-                    {% if form.especie_habitat.errors %}
-                        <small style="color: #e11d48;">{{ form.especie_habitat.errors.0 }}</small>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="{{ form.especie_estado_conservacion.id_for_label }}">
-                        {{ form.especie_estado_conservacion.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
-                    </label>
-                    {{ form.especie_estado_conservacion }}
-                    {% if form.especie_estado_conservacion.errors %}
-                        <small style="color: #e11d48;">{{ form.especie_estado_conservacion.errors.0 }}</small>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0;">
-                <label for="{{ form.especie_dato_curioso.id_for_label }}">
-                    {{ form.especie_dato_curioso.label }} <span style="color: #e11d48; font-weight: 800;">*</span>
-                </label>
-                {{ form.especie_dato_curioso }}
-                {% if form.especie_dato_curioso.errors %}
-                    <small style="color: #e11d48;">{{ form.especie_dato_curioso.errors.0 }}</small>
-                {% endif %}
-            </div>
+        <!-- ============================================== -->
+        <!-- ACCIONES (A TODO EL ANCHO)                     -->
+        <!-- ============================================== -->
+        <div class="form-actions">
+            <a href="{% if next %}{{ next }}{% else %}{% url 'panel_productos' %}{% endif %}" style="padding: 10px 20px; text-decoration: none; color: #555; border: 1px solid #ccc; border-radius: 6px; font-weight: bold;">
+                Cancelar
+            </a>
+            
+            <button type="submit" class="btn-categoria" style="padding: 11px 34px; border-radius: 8px; font-size: 1.05rem; font-weight: 700; box-shadow: 0 4px 12px rgba(0, 32, 147, 0.2);">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Producto
+            </button>
         </div>
 
         <script>
@@ -467,76 +721,244 @@ function ejecutarCopiaFormModal() {
             }
         }
 
-        // Calculadora en vivo de Ofertas / % OFF
+        // Calculadora en vivo de Ofertas / % OFF y Monto de Descuento ($ CLP)
         document.addEventListener("DOMContentLoaded", function() {
             var precioInput = document.getElementById("{{ form.precio.id_for_label }}");
             var enOfertaCheckbox = document.getElementById("id_en_oferta");
             var porcentajeInput = document.getElementById("id_porcentaje_descuento");
+            var montoInput = document.getElementById("id_monto_descuento");
             
             var prevRegular = document.getElementById("preview-precio-regular");
             var prevOferta = document.getElementById("preview-precio-oferta");
             var prevBadge = document.getElementById("preview-badge-ahorro");
             var prevAhorro = document.getElementById("preview-monto-ahorro");
 
+            var isSyncing = false;
+
             function formatoCLP(valor) {
                 return "$" + Math.round(valor).toLocaleString('es-CL');
             }
 
-            function actualizarCalculadoraOferta() {
-                if (!precioInput) return;
-                
-                // Parsear precio (quitando puntos y caracteres no numéricos)
-                var precioStr = (precioInput.value || "0").replace(/[^0-9]/g, '');
-                var precio = parseInt(precioStr, 10) || 0;
+            function getPrecioBase() {
+                if (!precioInput) return 0;
+                var str = (precioInput.value || "0").replace(/[^0-9]/g, '');
+                return parseInt(str, 10) || 0;
+            }
 
+            function parseMonto(val) {
+                if (!val) return 0;
+                var str = val.toString().replace(/[^0-9]/g, '');
+                return parseInt(str, 10) || 0;
+            }
+
+            function actualizarEstadoVisual(enOferta) {
+                var opacidad = enOferta ? "1" : "0.5";
+                if (porcentajeInput) porcentajeInput.style.opacity = opacidad;
+                if (montoInput) montoInput.style.opacity = opacidad;
+            }
+
+            function actualizarPreview() {
+                var precio = getPrecioBase();
                 var enOferta = enOfertaCheckbox ? enOfertaCheckbox.checked : false;
-                var porcentaje = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+                var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+                var ahorro = (precio > 0 && pct > 0) ? Math.round((precio * pct) / 100) : 0;
 
-                if (porcentajeInput) {
-                    porcentajeInput.style.opacity = enOferta ? "1" : "0.5";
-                }
+                actualizarEstadoVisual(enOferta);
 
-                if (enOferta && porcentaje > 0 && precio > 0) {
-                    var ahorro = Math.round((precio * porcentaje) / 100);
+                if (enOferta && pct > 0 && precio > 0) {
                     var precioFinal = Math.max(0, precio - ahorro);
 
-                    prevRegular.style.display = "inline";
-                    prevRegular.textContent = formatoCLP(precio);
-
-                    prevOferta.textContent = formatoCLP(precioFinal);
-                    prevOferta.style.color = "#b45309";
-
-                    prevBadge.style.display = "inline-block";
-                    prevBadge.textContent = "-" + porcentaje + "% OFF";
-
-                    prevAhorro.style.display = "block";
-                    prevAhorro.textContent = "El cliente ahorra " + formatoCLP(ahorro);
+                    if (prevRegular) {
+                        prevRegular.style.display = "inline";
+                        prevRegular.textContent = formatoCLP(precio);
+                    }
+                    if (prevOferta) {
+                        prevOferta.textContent = formatoCLP(precioFinal);
+                        prevOferta.style.color = "#b45309";
+                    }
+                    if (prevBadge) {
+                        prevBadge.style.display = "inline-block";
+                        prevBadge.textContent = "-" + pct + "% OFF";
+                    }
+                    if (prevAhorro) {
+                        prevAhorro.style.display = "block";
+                        prevAhorro.textContent = "El cliente ahorra " + formatoCLP(ahorro);
+                    }
                 } else {
-                    prevRegular.style.display = "none";
-                    prevOferta.textContent = formatoCLP(precio);
-                    prevOferta.style.color = "#000E1F";
-                    prevBadge.style.display = "none";
-                    prevAhorro.style.display = "none";
+                    if (prevRegular) prevRegular.style.display = "none";
+                    if (prevOferta) {
+                        prevOferta.textContent = formatoCLP(precio);
+                        prevOferta.style.color = "#000E1F";
+                    }
+                    if (prevBadge) prevBadge.style.display = "none";
+                    if (prevAhorro) prevAhorro.style.display = "none";
                 }
             }
 
-            if (precioInput) precioInput.addEventListener("input", actualizarCalculadoraOferta);
-            if (enOfertaCheckbox) enOfertaCheckbox.addEventListener("change", actualizarCalculadoraOferta);
-            if (porcentajeInput) porcentajeInput.addEventListener("input", actualizarCalculadoraOferta);
+            // Cuando el usuario escribe el porcentaje de descuento (% OFF)
+            function onPorcentajeInput() {
+                if (isSyncing) return;
+                isSyncing = true;
 
-            actualizarCalculadoraOferta();
+                var precio = getPrecioBase();
+                var rawVal = porcentajeInput ? porcentajeInput.value : "";
+                var pct = parseInt(rawVal, 10);
+
+                if (isNaN(pct) || pct <= 0) {
+                    pct = 0;
+                    if (montoInput) montoInput.value = "";
+                } else {
+                    if (pct > 99) {
+                        pct = 99;
+                        porcentajeInput.value = 99;
+                    }
+                    if (enOfertaCheckbox && !enOfertaCheckbox.checked) {
+                        enOfertaCheckbox.checked = true;
+                    }
+                    if (precio > 0 && montoInput) {
+                        var ahorro = Math.round((precio * pct) / 100);
+                        montoInput.value = ahorro > 0 ? ahorro.toLocaleString('es-CL') : "";
+                    }
+                }
+
+                actualizarPreview();
+                isSyncing = false;
+            }
+
+            // Cuando el usuario escribe el monto de descuento ($ CLP)
+            function onMontoInput() {
+                if (isSyncing) return;
+                isSyncing = true;
+
+                var precio = getPrecioBase();
+                var monto = parseMonto(montoInput ? montoInput.value : "");
+
+                if (monto <= 0) {
+                    if (porcentajeInput) porcentajeInput.value = "";
+                } else {
+                    if (enOfertaCheckbox && !enOfertaCheckbox.checked) {
+                        enOfertaCheckbox.checked = true;
+                    }
+
+                    if (precio > 0) {
+                        if (monto >= precio) {
+                            monto = Math.max(1, precio - 1);
+                        }
+                        var pct = Math.round((monto / precio) * 100);
+                        if (pct < 1) pct = 1;
+                        if (pct > 99) pct = 99;
+
+                        if (porcentajeInput) {
+                            porcentajeInput.value = pct;
+                        }
+                    }
+                }
+
+                actualizarPreview();
+                isSyncing = false;
+            }
+
+            // Cuando cambia el precio regular base
+            function onPrecioInput() {
+                if (isSyncing) return;
+                var precio = getPrecioBase();
+                var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+
+                if (pct > 0 && precio > 0 && montoInput) {
+                    isSyncing = true;
+                    var ahorro = Math.round((precio * pct) / 100);
+                    montoInput.value = ahorro > 0 ? ahorro.toLocaleString('es-CL') : "";
+                    isSyncing = false;
+                }
+                actualizarPreview();
+            }
+
+            // Cuando se activa/desactiva el checkbox de oferta
+            function onEnOfertaChange() {
+                var enOferta = enOfertaCheckbox ? enOfertaCheckbox.checked : false;
+                actualizarPreview();
+
+                if (enOferta) {
+                    var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+                    var monto = parseMonto(montoInput ? montoInput.value : "");
+                    if (pct === 0 && monto === 0 && porcentajeInput) {
+                        porcentajeInput.focus();
+                    }
+                }
+            }
+
+            // Event Listeners
+            if (porcentajeInput) porcentajeInput.addEventListener("input", onPorcentajeInput);
+            if (montoInput) {
+                montoInput.addEventListener("input", onMontoInput);
+                montoInput.addEventListener("blur", function() {
+                    var monto = parseMonto(montoInput.value);
+                    if (monto > 0) {
+                        montoInput.value = monto.toLocaleString('es-CL');
+                    }
+                });
+            }
+            if (precioInput) precioInput.addEventListener("input", onPrecioInput);
+            if (enOfertaCheckbox) enOfertaCheckbox.addEventListener("change", onEnOfertaChange);
+
+            // Sincronización inicial si el formulario ya viene con datos (p. ej. al editar producto)
+            (function sincronizarInicial() {
+                var precio = getPrecioBase();
+                var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+                var monto = parseMonto(montoInput ? montoInput.value : "");
+
+                if (pct > 0 && precio > 0 && monto === 0 && montoInput) {
+                    var ahorro = Math.round((precio * pct) / 100);
+                    montoInput.value = ahorro > 0 ? ahorro.toLocaleString('es-CL') : "";
+                } else if (monto > 0 && precio > 0 && pct === 0 && porcentajeInput) {
+                    var calcPct = Math.round((monto / precio) * 100);
+                    porcentajeInput.value = Math.min(99, Math.max(1, calcPct));
+                }
+
+                actualizarPreview();
+            })();
+
+            // Calculadora dinámica de dimensiones Blue Express
+            var altoInput = document.getElementById("id_envio_alto");
+            var anchoInput = document.getElementById("id_envio_ancho");
+            var largoInput = document.getElementById("id_envio_largo");
+            var pesoInput = document.getElementById("id_envio_peso");
+
+            var spanVolumen = document.getElementById("calc-volumen");
+            var spanPesoVol = document.getElementById("calc-peso-vol");
+
+            function actualizarBlueExpressCalc() {
+                if (!altoInput || !anchoInput || !largoInput) return;
+                var a = parseFloat((altoInput.value || "").replace(',', '.')) || 0;
+                var b = parseFloat((anchoInput.value || "").replace(',', '.')) || 0;
+                var c = parseFloat((largoInput.value || "").replace(',', '.')) || 0;
+                var p = parseFloat((pesoInput ? pesoInput.value : "").replace(',', '.')) || 0;
+
+                if (a > 0 && b > 0 && c > 0) {
+                    var vol = a * b * c;
+                    var pesoVol = vol / 4000.0;
+                    if (spanVolumen) spanVolumen.textContent = vol.toLocaleString('es-CL', { maximumFractionDigits: 1 });
+                    if (spanPesoVol) {
+                        var mayor = Math.max(pesoVol, p);
+                        var texto = pesoVol.toFixed(2);
+                        if (p > 0) {
+                            texto += " (Facturable: " + mayor.toFixed(2) + " kg)";
+                        }
+                        spanPesoVol.textContent = texto;
+                    }
+                } else {
+                    if (spanVolumen) spanVolumen.textContent = "--";
+                    if (spanPesoVol) spanPesoVol.textContent = (p > 0) ? (p.toFixed(2) + " (Físico)") : "--";
+                }
+            }
+
+            if (altoInput) altoInput.addEventListener("input", actualizarBlueExpressCalc);
+            if (anchoInput) anchoInput.addEventListener("input", actualizarBlueExpressCalc);
+            if (largoInput) largoInput.addEventListener("input", actualizarBlueExpressCalc);
+            if (pesoInput) pesoInput.addEventListener("input", actualizarBlueExpressCalc);
+            actualizarBlueExpressCalc();
         });
         </script>
-
-        <div class="form-actions">
-            <a href="{% if next %}{{ next }}{% else %}{% url 'panel_productos' %}{% endif %}" style="padding: 10px 20px; text-decoration: none; color: #555; border: 1px solid #ccc; border-radius: 6px; font-weight: bold;">
-                Cancelar
-            </a>
-            
-            <button type="submit" class="btn-categoria" style="padding: 10px 30px; border-radius: 6px; font-size: 1.1rem;">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar Producto
-            </button>
-        </div>
     </form>
 </div>
 

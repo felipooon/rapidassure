@@ -5,11 +5,27 @@ from .models import Categoria
 class ProductoForm(forms.ModelForm):
     # Sobreescribimos el campo precio para recibirlo como texto primero
     precio = forms.CharField(widget=forms.TextInput(attrs={'type': 'text'}))
+    monto_descuento = forms.CharField(
+        required=False,
+        label="Monto de Descuento ($ CLP)",
+        widget=forms.TextInput(attrs={
+            'id': 'id_monto_descuento',
+            'placeholder': 'Ej: 15.000',
+            'style': 'font-weight: 700; font-size: 1.05rem;'
+        })
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if not self.instance.pk and self.initial.get('stock') is None:
             self.initial['stock'] = 1
+
+        # Control de Descuento
+        self.fields['porcentaje_descuento'].required = False
+        if self.instance.pk and self.instance.tiene_descuento:
+            ahorro = self.instance.monto_ahorro
+            if ahorro:
+                self.initial['monto_descuento'] = f"{ahorro:,}".replace(',', '.')
 
         # Especificación Técnica Extendida obligatoria
         self.fields['tiene_ficha_especie'].widget = forms.HiddenInput()
@@ -23,9 +39,14 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         exclude = ['slug']
         widgets = {
+            'marca': forms.TextInput(attrs={'placeholder': 'Ej: Zebra, Epson, Honeywell, SAT', 'list': 'lista-marcas-sugeridas', 'autocomplete': 'off'}),
             'stock': forms.NumberInput(attrs={'min': '0', 'style': 'text-align: center; font-weight: 700; font-size: 1.05rem;'}),
             'en_oferta': forms.CheckboxInput(attrs={'id': 'id_en_oferta'}),
             'porcentaje_descuento': forms.NumberInput(attrs={'id': 'id_porcentaje_descuento', 'min': '0', 'max': '99', 'placeholder': 'Ej: 20', 'style': 'font-weight: 700; font-size: 1.05rem;'}),
+            'alto': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'placeholder': 'Ej: 15.0', 'id': 'id_envio_alto'}),
+            'ancho': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'placeholder': 'Ej: 20.0', 'id': 'id_envio_ancho'}),
+            'largo': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'placeholder': 'Ej: 30.0', 'id': 'id_envio_largo'}),
+            'peso': forms.NumberInput(attrs={'step': '0.01', 'min': '0', 'placeholder': 'Ej: 1.25', 'id': 'id_envio_peso'}),
             'especie_nombre_comun': forms.TextInput(attrs={'placeholder': 'Ej: Terminal POS T-800, Antena RFID UHF'}),
             'especie_nombre_cientifico': forms.TextInput(attrs={'placeholder': 'Ej: Modelo RA-900-V2'}),
             'especie_habitat': forms.TextInput(attrs={'placeholder': 'Ej: Retail, Supermercados, Bodegas y Logística'}),
@@ -33,8 +54,13 @@ class ProductoForm(forms.ModelForm):
             'especie_dato_curioso': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Ej: Equipamiento de alta durabilidad con batería de respaldo...'}),
         }
         labels = {
+            'marca': 'Marca / Fabricante',
             'en_oferta': 'Activar Oferta Promocional (% OFF)',
             'porcentaje_descuento': 'Porcentaje de Descuento (% OFF)',
+            'alto': 'Alto (cm)',
+            'ancho': 'Ancho (cm)',
+            'largo': 'Largo (cm)',
+            'peso': 'Peso (kg)',
             'tiene_ficha_especie': 'Especificación Técnica Extendida',
             'especie_nombre_comun': 'Nombre del Modelo / Especificación',
             'especie_nombre_cientifico': 'Código / SKU Técnico (Opcional)',
@@ -49,8 +75,25 @@ class ProductoForm(forms.ModelForm):
         
         en_oferta = cleaned_data.get('en_oferta')
         porcentaje = cleaned_data.get('porcentaje_descuento') or 0
+        monto_desc_raw = cleaned_data.get('monto_descuento')
+        precio_val = cleaned_data.get('precio')
+
+        if en_oferta:
+            # Si viene en_oferta y monto_descuento pero no porcentaje (o se ingresó monto_descuento)
+            if monto_desc_raw and not porcentaje:
+                try:
+                    monto_clean = int(str(monto_desc_raw).replace('$', '').replace('.', '').replace(' ', '').strip())
+                    precio_clean = int(str(precio_val).replace('$', '').replace('.', '').replace(' ', '').strip()) if precio_val else 0
+                    if precio_clean > 0 and monto_clean > 0:
+                        porcentaje = min(99, max(1, int(round((monto_clean / precio_clean) * 100))))
+                except (ValueError, TypeError):
+                    pass
+        else:
+            porcentaje = 0
+
+        cleaned_data['porcentaje_descuento'] = porcentaje
         if en_oferta and porcentaje <= 0:
-            self.add_error('porcentaje_descuento', 'Debes ingresar un porcentaje de descuento mayor a 0% para activar la oferta.')
+            self.add_error('porcentaje_descuento', 'Debes ingresar un porcentaje o monto de descuento mayor a 0 para activar la oferta.')
         if porcentaje >= 100:
             self.add_error('porcentaje_descuento', 'El porcentaje de descuento debe ser menor al 100%.')
             

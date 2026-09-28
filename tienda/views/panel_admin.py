@@ -126,6 +126,10 @@ def crear_producto(request):
 
             usuario_log = request.user if request.user.is_authenticated else None
             detalles_str = f"Precio inicial: ${producto.precio} | Stock inicial: {producto.stock} | Categoría: {producto.categoria.nombre if producto.categoria else 'Sin categoría'}"
+            if producto.marca:
+                detalles_str += f" | Marca: {producto.marca}"
+            if producto.peso or producto.alto or producto.ancho or producto.largo:
+                detalles_str += f" | Blue Express: {producto.alto or 0}x{producto.ancho or 0}x{producto.largo or 0} cm ({producto.peso or 0} kg)"
             if imagenes_extra:
                 detalles_str += f" | {len(imagenes_extra)} imágenes adicionales subidas"
             LogProducto.objects.create(
@@ -140,9 +144,12 @@ def crear_producto(request):
     else:
         form = ProductoForm()
 
+    marcas_existentes = list(Producto.objects.exclude(marca='').values_list('marca', flat=True).distinct().order_by('marca'))
+
     return render(request, "panel/producto_form.html", {
         "form": form,
-        "next": next_url
+        "next": next_url,
+        "marcas_existentes": marcas_existentes
     })
 
 
@@ -232,10 +239,12 @@ def toggle_producto(request, id):
 def editar_producto(request, id):
     producto = get_object_or_404(Producto, id=id)
     nombre_ant = producto.nombre
+    marca_ant = producto.marca
     precio_ant = producto.precio
     stock_ant = producto.stock
     dispon_ant = producto.disponible
     cat_ant = producto.categoria.nombre if producto.categoria else "Sin categoría"
+    envio_ant = (producto.alto, producto.ancho, producto.largo, producto.peso)
 
     next_url = request.GET.get('next') or request.POST.get('next') or 'panel_productos'
     form = ProductoForm(request.POST or None, request.FILES or None, instance=producto)
@@ -265,6 +274,8 @@ def editar_producto(request, id):
 
         if nombre_ant != prod_editado.nombre:
             cambios.append(f"Nombre: '{nombre_ant}' ➔ '{prod_editado.nombre}'")
+        if marca_ant != prod_editado.marca:
+            cambios.append(f"Marca: '{marca_ant or 'Sin marca'}' ➔ '{prod_editado.marca or 'Sin marca'}'")
         if precio_ant != prod_editado.precio:
             cambios.append(f"Precio: ${precio_ant} ➔ ${prod_editado.precio}")
         if stock_ant != prod_editado.stock:
@@ -278,6 +289,8 @@ def editar_producto(request, id):
 
         if 'imagen' in request.FILES:
             cambios.append("Nueva imagen de portada subida")
+        if envio_ant != (prod_editado.alto, prod_editado.ancho, prod_editado.largo, prod_editado.peso):
+            cambios.append(f"Dimensiones/Peso Blue Express actualizados ({prod_editado.alto or 0}x{prod_editado.ancho or 0}x{prod_editado.largo or 0} cm, {prod_editado.peso or 0} kg)")
 
         detalles_str = " | ".join(cambios) if cambios else "Edición realizada sin cambios principales"
         usuario_log = request.user if request.user.is_authenticated else None
@@ -292,11 +305,14 @@ def editar_producto(request, id):
 
         messages.success(request, f"Producto '{prod_editado.nombre}' actualizado.")
         return redirect(next_url)
-        
+
+    marcas_existentes = list(Producto.objects.exclude(marca='').values_list('marca', flat=True).distinct().order_by('marca'))
+
     return render(request, "panel/producto_form.html", {
         "form": form,
         "editando": True,
-        "next": next_url
+        "next": next_url,
+        "marcas_existentes": marcas_existentes
     })
 
 
@@ -679,7 +695,7 @@ def exportar_stock_excel(request):
     font_agotado = Font(color="E74C3C", bold=True)
     font_disponible = Font(color="27AE60", bold=True)
 
-    headers = ['ID', 'Producto', 'Stock Actual', 'Precio', 'Estado']
+    headers = ['ID', 'Producto', 'Marca', 'Stock Actual', 'Precio', 'Estado']
     ws.append(headers)
     
     for col_num, header in enumerate(headers, 1):
@@ -691,22 +707,23 @@ def exportar_stock_excel(request):
 
     ws.column_dimensions['A'].width = 10
     ws.column_dimensions['B'].width = 35
-    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['C'].width = 20
     ws.column_dimensions['D'].width = 15
-    ws.column_dimensions['E'].width = 18
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 18
 
     productos = Producto.objects.all().order_by('nombre')
     
     for row_num, p in enumerate(productos, start=2): 
         estado = "Disponible" if p.stock > 0 else "Agotado"
-        ws.append([p.id, p.nombre, p.stock, f"${p.precio}", estado])
+        ws.append([p.id, p.nombre, p.marca or 'Sin marca', p.stock, f"${p.precio}", estado])
         
-        for col_num in range(1, 6):
+        for col_num in range(1, 7):
             cell = ws.cell(row=row_num, column=col_num)
             cell.border = thin_border
-            if col_num in [1, 3, 4, 5]: 
+            if col_num in [1, 4, 5, 6]: 
                 cell.alignment = align_center
-            if col_num == 5:
+            if col_num == 6:
                 cell.font = font_agotado if estado == "Agotado" else font_disponible
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

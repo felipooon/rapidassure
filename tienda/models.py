@@ -89,6 +89,7 @@ class Categoria(models.Model):
 
 class Producto(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    marca = models.CharField(max_length=100, blank=True, default='', verbose_name="Marca", help_text="Marca o fabricante del producto (ej: Zebra, Epson, Honeywell, SAT)")
     nombre = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True, null=True)
     descripcion = models.TextField(blank=True)
@@ -103,6 +104,12 @@ class Producto(models.Model):
     en_oferta = models.BooleanField(default=False, help_text="Marcar para activar precio de oferta promocional")
     porcentaje_descuento = models.PositiveIntegerField(default=0, help_text="Porcentaje de descuento (ej: 15 para 15% OFF)")
 
+    # Datos para Cálculo de Envíos (Blue Express)
+    alto = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, verbose_name="Alto (cm)", help_text="Altura del paquete en cm para cálculo de envío Blue Express")
+    ancho = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, verbose_name="Ancho (cm)", help_text="Ancho del paquete en cm para cálculo de envío Blue Express")
+    largo = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, verbose_name="Largo (cm)", help_text="Largo del paquete en cm para cálculo de envío Blue Express")
+    peso = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, verbose_name="Peso (kg)", help_text="Peso físico del paquete en kilogramos (ej: 0.50 para 500g)")
+
     # Especificación Técnica Extendida
     tiene_ficha_especie = models.BooleanField(default=True, help_text="Marcar para incluir Especificación Técnica Extendida")
     especie_nombre_comun = models.CharField(max_length=150, blank=True, help_text="Ej: Terminal POS Táctil 15'', Lector Láser 2D")
@@ -110,6 +117,20 @@ class Producto(models.Model):
     especie_habitat = models.CharField(max_length=200, blank=True, help_text="Ej: Retail, Supermercados, Bodegas y Logística")
     especie_estado_conservacion = models.CharField(max_length=100, blank=True, help_text="Ej: Garantía 24 Meses, Norma IP65")
     especie_dato_curioso = models.TextField(blank=True, help_text="Ficha técnica o características destacadas del equipo")
+
+    @property
+    def peso_volumetrico(self):
+        """Calcula el peso volumétrico estándar según fórmula Blue Express: (alto * ancho * largo) / 4000"""
+        if self.alto and self.ancho and self.largo:
+            return round((float(self.alto) * float(self.ancho) * float(self.largo)) / 4000.0, 2)
+        return None
+
+    @property
+    def volumen_cm3(self):
+        """Calcula el volumen en cm3 del paquete"""
+        if self.alto and self.ancho and self.largo:
+            return round(float(self.alto) * float(self.ancho) * float(self.largo), 2)
+        return None
 
     @property
     def tiene_descuento(self):

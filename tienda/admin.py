@@ -22,10 +22,10 @@ class CategoriaAdmin(admin.ModelAdmin):
 # --- Configuración de Productos ---
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'categoria', 'precio', 'stock', 'disponible')
+    list_display = ('nombre', 'marca', 'categoria', 'precio', 'stock', 'disponible')
     list_editable = ('stock', 'disponible') 
-    list_filter = ('categoria', 'disponible')
-    search_fields = ('nombre',)
+    list_filter = ('categoria', 'marca', 'disponible')
+    search_fields = ('nombre', 'marca')
     inlines = [ImagenProductoInline]
 
 
