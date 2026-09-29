@@ -6,9 +6,14 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
         <h1 style="margin: 0; color: #333;"><i class="fa-solid fa-truck-fast"></i> Gestión de Pedidos</h1>
         
-        <a href="{% url 'exportar_pedidos_excel' %}" style="background-color: #27ae60; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-file-excel"></i> Exportar Pedidos a Excel
-        </a>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{% url 'exportar_pedidos_blue_express' %}" style="background: linear-gradient(135deg, #002093, #0056b3); color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,32,147,0.25);">
+                <i class="fa-solid fa-truck-fast"></i> Carga Masiva Blue Express (.xlsx)
+            </a>
+            <a href="{% url 'exportar_pedidos_excel' %}" style="background-color: #27ae60; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-file-excel"></i> Exportar Pedidos a Excel
+            </a>
+        </div>
     </div>
 
     <!-- Barra de Búsqueda y Filtros Avanzados -->

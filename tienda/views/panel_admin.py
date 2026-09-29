@@ -1,3 +1,4 @@
+import os
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
@@ -14,6 +15,12 @@ from django.utils import timezone
 
 from ..models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, BlogPost, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido, MetricaDiaria, MetricaProducto, BannerPromocional
 from ..forms import CategoriaForm, ProductoForm, CuponForm, BlogPostForm, ConfiguracionSitioForm, BannerPromocionalForm
+from ..comunas_chile import (
+    normalizar_region_blue_express,
+    normalizar_comuna_blue_express,
+    parsear_direccion_chilena,
+    obtener_region_de_comuna
+)
 
 
 class CustomLoginView(LoginView):
@@ -673,6 +680,146 @@ def exportar_pedidos_excel(request):
 
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename="Pedidos_Rapidassure_Retail.xlsx"'
+    wb.save(response)
+    return response
+
+
+@staff_member_required(login_url='login')
+def exportar_pedidos_blue_express(request):
+    """
+    Genera un archivo Excel (.xlsx) con la estructura oficial del portal
+    Blue Express Pyme para la Carga Masiva de Envíos a Domicilio,
+    utilizando la plantilla oficial (Entrega/archivo_carga_masiva_fila.xlsx).
+    """
+    template_candidates = [
+        os.path.join(settings.BASE_DIR, 'Entrega', 'archivo_carga_masiva_fila.xlsx'),
+        os.path.join(settings.BASE_DIR, 'tienda', 'templates_excel', 'archivo_carga_masiva_fila.xlsx'),
+    ]
+    template_path = None
+    for cand in template_candidates:
+        if os.path.exists(cand):
+            template_path = cand
+            break
+
+    if template_path:
+        wb = openpyxl.load_workbook(template_path)
+        ws = wb['Carga Masiva'] if 'Carga Masiva' in wb.sheetnames else wb.active
+    else:
+        # Fallback de seguridad construyendo la estructura exacta
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Carga Masiva"
+        headers_row5 = [
+            None, None, 'Nº Referencia*', 'Nombre Completo*', 'Teléfono*', 'Correo*',
+            'Región*', 'Comuna*', 'Nombre calle*', 'N° Domicilio *', 'N° Dpto / N ° Oficina',
+            'Ayuda para llegar (Ej: Tienda)', 'Alto(cms)*', 'Ancho(cms)*', 'Largo(cms)*',
+            'Peso(kg)*', 'Descripción contenido*', 'Valor Contenido*', 'Servicio*',
+            'Garantía*', 'Nº boleta/factura', 'Servicio DD', 'Tipo documento',
+            'Número documento', 'Servicio COD', 'Método de pago', 'Monto'
+        ]
+        ws.append(headers_row5)
+
+    # Filtrar pedidos de despacho a domicilio
+    pedidos_qs = Pedido.objects.filter(tipo_entrega='ENVIO').order_by('-id')
+
+    estado_filtro = request.GET.get('estado')
+    if estado_filtro:
+        pedidos_qs = pedidos_qs.filter(estado=estado_filtro)
+    elif not request.GET.get('todos'):
+        pedidos_qs = pedidos_qs.filter(estado__in=['PAGADO', 'EN_PREPARACION'])
+
+    start_row = 6
+    for i, p in enumerate(pedidos_qs):
+        current_row = start_row + i
+
+        # Cálculo de dimensiones y peso
+        peso_total = 0.0
+        max_alto = 10
+        max_ancho = 15
+        max_largo = 20
+        for item in p.items.select_related('producto').all():
+            prod = item.producto
+            if prod.peso:
+                try:
+                    peso_total += float(prod.peso) * item.cantidad
+                except (ValueError, TypeError):
+                    pass
+            if prod.alto:
+                try:
+                    if int(prod.alto) > max_alto:
+                        max_alto = int(prod.alto)
+                except (ValueError, TypeError):
+                    pass
+            if prod.ancho:
+                try:
+                    if int(prod.ancho) > max_ancho:
+                        max_ancho = int(prod.ancho)
+                except (ValueError, TypeError):
+                    pass
+            if prod.largo:
+                try:
+                    if int(prod.largo) > max_largo:
+                        max_largo = int(prod.largo)
+                except (ValueError, TypeError):
+                    pass
+
+        # La validación oficial de Blue Express exige peso >= 1 kg
+        peso_declarado = max(1.0, round(peso_total, 2))
+
+        # Teléfono en formato 569XXXXXXXX o 9XXXXXXXX
+        telefono_limpio = p.telefono.strip().replace("+", "").replace(" ", "").replace("-", "")
+        if len(telefono_limpio) == 9 and not telefono_limpio.startswith("56"):
+            telefono_contacto = f"56{telefono_limpio}"
+        else:
+            telefono_contacto = telefono_limpio
+
+        # Parsear dirección en calle, número, depto
+        calle, numero, depto, _ = parsear_direccion_chilena(p.direccion)
+
+        # Región y Comuna según catálogo oficial Blue Express
+        comuna_str = p.comuna or p.ciudad or 'Santiago'
+        region_str = p.region or obtener_region_de_comuna(comuna_str)
+
+        region_bx = normalizar_region_blue_express(region_str)
+        comuna_bx = normalizar_comuna_blue_express(comuna_str)
+
+        valor_contenido = int(p.get_total_cost()) or 10000
+
+        # Mapeo exacto de columnas C a AA (columnas 3 a 27)
+        datos_fila = [
+            f"#{p.codigo_orden}",                                 # Col C (3): Nº Referencia*
+            p.nombre_completo,                                    # Col D (4): Nombre Completo*
+            telefono_contacto,                                    # Col E (5): Teléfono*
+            p.email,                                              # Col F (6): Correo*
+            region_bx,                                            # Col G (7): Región*
+            comuna_bx,                                            # Col H (8): Comuna*
+            calle,                                                # Col I (9): Nombre calle*
+            numero,                                               # Col J (10): N° Domicilio *
+            depto if depto else None,                             # Col K (11): N° Dpto / N ° Oficina
+            getattr(p, 'notas', None) or None,                    # Col L (12): Ayuda para llegar
+            max_alto,                                             # Col M (13): Alto(cms)*
+            max_ancho,                                            # Col N (14): Ancho(cms)*
+            max_largo,                                            # Col O (15): Largo(cms)*
+            peso_declarado,                                       # Col P (16): Peso(kg)*
+            f"Equipamiento tecnológico #{p.codigo_orden}",         # Col Q (17): Descripción contenido*
+            valor_contenido,                                      # Col R (18): Valor Contenido*
+            "EXPRESS",                                            # Col S (19): Servicio*
+            "No",                                                 # Col T (20): Garantía*
+            None,                                                 # Col U (21): Nº boleta/factura
+            "No",                                                 # Col V (22): Servicio DD
+            None,                                                 # Col W (23): Tipo documento
+            None,                                                 # Col X (24): Número documento
+            "No",                                                 # Col Y (25): Servicio COD
+            None,                                                 # Col Z (26): Método de pago
+            None                                                  # Col AA (27): Monto
+        ]
+
+        for col_idx, val in enumerate(datos_fila, start=3):
+            ws.cell(row=current_row, column=col_idx, value=val)
+
+    timestamp = timezone.now().strftime("%Y%m%d_%H%M")
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Carga_Masiva_Blue_Express_{timestamp}.xlsx"'
     wb.save(response)
     return response
 

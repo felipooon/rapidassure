@@ -31,6 +31,7 @@ from .checkout_pagos import (
     pedido_confirmado,
     webpay_retorno,
     webhook_mercadopago,
+    api_cotizar_envio,
 )
 
 from .panel_admin import (
@@ -57,6 +58,7 @@ from .panel_admin import (
     toggle_cupon,
     eliminar_cupon,
     exportar_pedidos_excel,
+    exportar_pedidos_blue_express,
     exportar_stock_excel,
     panel_configuracion,
     panel_blog,

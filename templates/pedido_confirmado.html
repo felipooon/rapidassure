@@ -71,7 +71,12 @@
             <ul style="margin-bottom: 0; padding-left: 20px; color: #475569; line-height: 1.6;">
                 <li>Tu equipo ingresó a despacho y control de calidad.</li>
                 <li>Modalidad: <strong>{{ pedido.get_tipo_entrega_display }}</strong>.</li>
-                <li>Destino: <strong>{{ pedido.direccion }}, {{ pedido.ciudad }}</strong>.</li>
+                {% if pedido.tipo_entrega == 'ENVIO' %}
+                <li>Transportista: <strong>{{ pedido.empresa_transporte|default:"Blue Express" }}</strong> (Envío a Domicilio).</li>
+                <li>Destino: <strong>{{ pedido.direccion }}, {{ pedido.comuna|default:pedido.ciudad }}{% if pedido.region %}, {{ pedido.region }}{% endif %}</strong>.</li>
+                {% else %}
+                <li>Lugar de retiro: <strong>{{ pedido.direccion }}</strong>.</li>
+                {% endif %}
                 <li>Se enviará la confirmación y número de seguimiento al teléfono (<strong>{{ pedido.telefono }}</strong>) y correo registrado (<strong>{{ pedido.email }}</strong>).</li>
             </ul>
         </div>

@@ -333,6 +333,9 @@ class Pedido(models.Model):
     tipo_entrega = models.CharField(max_length=20, choices=TIPO_ENTREGA_CHOICES, default='ENVIO', help_text="Forma de entrega seleccionada por el cliente")
     direccion = models.CharField(max_length=250)
     ciudad = models.CharField(max_length=100, default="Puerto Montt")
+    region = models.CharField(max_length=120, blank=True, default="Metropolitana de Santiago", help_text="Región de entrega")
+    comuna = models.CharField(max_length=100, blank=True, default="Santiago", help_text="Comuna de entrega")
+    costo_envio = models.IntegerField(default=0, help_text="Costo cobrado por despacho Blue Express")
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     # 2. Estado y Seguimiento de Envío
@@ -389,7 +392,7 @@ class Pedido(models.Model):
         return sum(item.get_costo() for item in self.items.all())
         
     def get_total_final(self):
-        return max(0, self.get_total_cost() - self.descuento_aplicado)
+        return max(0, self.get_total_cost() - self.descuento_aplicado + self.costo_envio)
     
     def confirmar_pago(self):
         # 1. Marcamos el pedido como pagado

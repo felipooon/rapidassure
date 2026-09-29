@@ -173,11 +173,50 @@
                             <input type="text" id="direccion_input" name="direccion" value="{{ datos_previos.direccion }}" {% if datos_previos.tipo_entrega != 'RETIRO' %}required{% endif %} class="input-checkout-modern" placeholder="Calle, Número, Depto / Oficina / Local">
                         </div>
 
-                        <div>
-                            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
-                                Ciudad / Comuna <span id="label-ciudad-req" style="color: #ef4444;">{% if datos_previos.tipo_entrega == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
-                            </label>
-                            <input type="text" id="ciudad_input" name="ciudad" value="{{ datos_previos.ciudad|default:'Santiago' }}" {% if datos_previos.tipo_entrega != 'RETIRO' %}required{% endif %} class="input-checkout-modern" placeholder="Ej: Santiago, Concepción, Viña del Mar, Puerto Montt">
+                        <!-- Selector Región y Comuna (Tarifas Blue Express) -->
+                        <div id="sec-selectores-ubicacion" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
+                            <div>
+                                <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
+                                    Región <span id="label-region-req" style="color: #ef4444;">{% if datos_previos.tipo_entrega == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
+                                </label>
+                                <select id="region_select" name="region" class="input-checkout-modern" style="cursor: pointer; background: white;" onchange="onRegionChange()">
+                                    {% for reg, comunas in regiones_comunas.items %}
+                                        <option value="{{ reg }}" {% if reg == region_previa %}selected{% endif %}>{{ reg }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
+                                    Comuna <span id="label-comuna-req" style="color: #ef4444;">{% if datos_previos.tipo_entrega == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
+                                </label>
+                                <select id="comuna_select" name="comuna" class="input-checkout-modern" style="cursor: pointer; background: white;" onchange="onComunaChange()">
+                                    <!-- Se puebla dinámicamente con las comunas de la región -->
+                                </select>
+                                <input type="hidden" id="ciudad_input" name="ciudad" value="{{ comuna_previa }}">
+                            </div>
+                        </div>
+
+                        <!-- Badge Informativo Blue Express -->
+                        <div id="badge-blue-express" style="display: {% if datos_previos.tipo_entrega == 'RETIRO' %}none{% else %}flex{% endif %}; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #eff6ff, #f8fafc); border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 12px 16px; margin-top: 6px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 38px; height: 38px; background: #002093; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,32,147,0.2);">
+                                    <i class="fa-solid fa-truck-fast"></i>
+                                </div>
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <strong style="color: #002093; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 800;">
+                                            Blue Express a Domicilio
+                                        </strong>
+                                        <span id="badge-talla-pill" style="background: #e0e7ff; color: #3730a3; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 6px; letter-spacing: 0.3px;">TALLA {{ talla_envio|default:'XS' }}</span>
+                                    </div>
+                                    <span id="badge-tiempo-envio" style="font-size: 0.78rem; color: #64748b; font-family: 'Open Sans', sans-serif;">
+                                        Entrega estimada: 1 a 3 días hábiles (Peso: {{ peso_total|default:'0.4' }} kg)
+                                    </span>
+                                </div>
+                            </div>
+                            <span id="badge-tarifa-texto" style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #002093; background: #ffffff; border: 1.5px solid #93c5fd; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
+                                {% if costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}
+                            </span>
                         </div>
                     </div>
 
@@ -298,16 +337,16 @@
                         </div>
                     {% endif %}
                     <div style="display: flex; justify-content: space-between;">
-                        <span id="label-resumen-despacho">{% if datos_previos.tipo_entrega == 'RETIRO' %}Recogida (Local):{% else %}Despacho a Domicilio:{% endif %}</span>
-                        <span id="valor-resumen-despacho" style="color: #10b981; font-weight: 800;">
-                            {% if datos_previos.tipo_entrega == 'RETIRO' %}GRATIS{% else %}{% if total_final >= 19990 %}GRATIS{% else %}Por calcular{% endif %}{% endif %}
+                        <span id="label-resumen-despacho">{% if datos_previos.tipo_entrega == 'RETIRO' %}Recogida (Local):{% else %}Despacho Blue Express:{% endif %}</span>
+                        <span id="valor-resumen-despacho" style="color: #002093; font-weight: 800;">
+                            {% if datos_previos.tipo_entrega == 'RETIRO' %}GRATIS{% else %}{% if costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}{% endif %}
                         </span>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: baseline; background: #000E1F; color: white; padding: 16px 18px; border-radius: 14px;">
                     <span style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800;">Total Final:</span>
-                    <span style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: #FCBE00;">
+                    <span id="display-total-final" style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: #FCBE00;">
                         ${{ total_final }}
                     </span>
                 </div>
@@ -440,18 +479,121 @@
         }
     }
 
+    // Maestro de Regiones y Comunas de Chile
+    const REGIONES_DATA = {{ regiones_comunas_json|safe|default:'{}' }};
+    const UMBRAL_GRATIS = {{ umbral_envio_gratis|default:19990 }};
+    const subtotalBruto = {{ subtotal|default:0 }};
+    const descuentoNeto = {{ descuento|default:0 }};
+    const subtotalConDescuento = Math.max(0, subtotalBruto - descuentoNeto);
+    let costoEnvioActual = {{ costo_envio|default:0 }};
+
+    function poblarComunas(regionNombre, comunaSeleccionada) {
+        const comunaSelect = document.getElementById('comuna_select');
+        const ciudadInput = document.getElementById('ciudad_input');
+        if (!comunaSelect) return;
+
+        const comunas = REGIONES_DATA[regionNombre] || [];
+        comunaSelect.innerHTML = '';
+
+        comunas.forEach(function(c) {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c;
+            if (c === comunaSeleccionada || (!comunaSeleccionada && c === 'Santiago')) {
+                opt.selected = true;
+            }
+            comunaSelect.appendChild(opt);
+        });
+
+        if (comunas.length > 0 && !comunaSeleccionada) {
+            comunaSelect.value = comunas.includes('Santiago') ? 'Santiago' : comunas[0];
+        }
+
+        if (ciudadInput) {
+            ciudadInput.value = comunaSelect.value;
+        }
+    }
+
+    function onRegionChange() {
+        const regionSelect = document.getElementById('region_select');
+        if (!regionSelect) return;
+        const region = regionSelect.value;
+        poblarComunas(region, null);
+        onComunaChange();
+    }
+
+    function onComunaChange() {
+        const comunaSelect = document.getElementById('comuna_select');
+        const ciudadInput = document.getElementById('ciudad_input');
+        if (!comunaSelect) return;
+        
+        const comuna = comunaSelect.value;
+        if (ciudadInput) ciudadInput.value = comuna;
+
+        actualizarCotizacionBlueExpress(comuna);
+    }
+
+    function actualizarCotizacionBlueExpress(comuna) {
+        const inputTipo = document.getElementById('tipo_entrega_input');
+        if (inputTipo && inputTipo.value === 'RETIRO') {
+            return;
+        }
+
+        const badgeTarifa = document.getElementById('badge-tarifa-texto');
+        const valorResumen = document.getElementById('valor-resumen-despacho');
+        const displayTotal = document.getElementById('display-total-final');
+
+        if (badgeTarifa) badgeTarifa.innerText = 'Calculando...';
+        if (valorResumen) valorResumen.innerText = 'Calculando...';
+
+        fetch(`/api/cotizar-envio/?comuna=${encodeURIComponent(comuna)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    costoEnvioActual = data.costo_envio;
+                    const txt = data.costo_envio_formateado;
+                    
+                    if (badgeTarifa) {
+                        badgeTarifa.innerText = txt;
+                        badgeTarifa.style.color = data.es_gratis ? '#10b981' : '#002093';
+                    }
+                    if (valorResumen) {
+                        valorResumen.innerText = txt;
+                        valorResumen.style.color = data.es_gratis ? '#10b981' : '#002093';
+                    }
+                    if (displayTotal) {
+                        displayTotal.innerText = data.total_final_formateado;
+                    }
+
+                    const badgeTalla = document.getElementById('badge-talla-pill');
+                    const badgeTiempo = document.getElementById('badge-tiempo-envio');
+                    if (badgeTalla && data.talla) {
+                        badgeTalla.innerText = 'TALLA ' + data.talla;
+                    }
+                    if (badgeTiempo && data.peso_total) {
+                        badgeTiempo.innerText = `Entrega estimada: 1 a 3 días hábiles (Peso: ${data.peso_total} kg)`;
+                    }
+                }
+            })
+            .catch(err => {
+                console.error("Error al cotizar Blue Express:", err);
+            });
+    }
+
     function setTipoEntrega(tipo) {
         const input = document.getElementById('tipo_entrega_input');
         const btnEnvio = document.getElementById('btn-entrega-envio');
         const btnRetiro = document.getElementById('btn-entrega-retiro');
         const secRecogida = document.getElementById('sec-ubicaciones-recogida');
+        const badgeBlue = document.getElementById('badge-blue-express');
         const titleDir = document.getElementById('direccion-sec-title');
         const inputDir = document.getElementById('direccion_input');
-        const inputCiudad = document.getElementById('ciudad_input');
         const labelDirReq = document.getElementById('label-dir-req');
-        const labelCiudadReq = document.getElementById('label-ciudad-req');
+        const labelRegionReq = document.getElementById('label-region-req');
+        const labelComunaReq = document.getElementById('label-comuna-req');
         const labelResumen = document.getElementById('label-resumen-despacho');
         const valorResumen = document.getElementById('valor-resumen-despacho');
+        const displayTotal = document.getElementById('display-total-final');
 
         if (input) input.value = tipo;
 
@@ -459,25 +601,51 @@
             if (btnEnvio) btnEnvio.classList.remove('active');
             if (btnRetiro) btnRetiro.classList.add('active');
             if (secRecogida) secRecogida.style.display = 'block';
+            if (badgeBlue) badgeBlue.style.display = 'none';
             if (titleDir) titleDir.innerText = 'Dirección de facturación';
             if (labelDirReq) labelDirReq.innerText = '(opcional)';
-            if (labelCiudadReq) labelCiudadReq.innerText = '(opcional)';
+            if (labelRegionReq) labelRegionReq.innerText = '(opcional)';
+            if (labelComunaReq) labelComunaReq.innerText = '(opcional)';
             if (inputDir) inputDir.removeAttribute('required');
-            if (inputCiudad) inputCiudad.removeAttribute('required');
             if (labelResumen) labelResumen.innerText = 'Recogida (Local):';
-            if (valorResumen) valorResumen.innerText = 'GRATIS';
+            if (valorResumen) {
+                valorResumen.innerText = 'GRATIS';
+                valorResumen.style.color = '#10b981';
+            }
+            if (displayTotal) {
+                displayTotal.innerText = '$' + subtotalConDescuento.toLocaleString('es-CL');
+            }
         } else {
             if (btnRetiro) btnRetiro.classList.remove('active');
             if (btnEnvio) btnEnvio.classList.add('active');
             if (secRecogida) secRecogida.style.display = 'none';
+            if (badgeBlue) badgeBlue.style.display = 'flex';
             if (titleDir) titleDir.innerText = 'Dirección de Envío';
             if (labelDirReq) labelDirReq.innerText = '*';
-            if (labelCiudadReq) labelCiudadReq.innerText = '*';
+            if (labelRegionReq) labelRegionReq.innerText = '*';
+            if (labelComunaReq) labelComunaReq.innerText = '*';
             if (inputDir) inputDir.setAttribute('required', 'required');
-            if (inputCiudad) inputCiudad.setAttribute('required', 'required');
-            if (labelResumen) labelResumen.innerText = 'Despacho a Domicilio:';
-            if (valorResumen) valorResumen.innerText = '{% if total_final >= 19990 %}GRATIS{% else %}Por calcular{% endif %}';
+            if (labelResumen) labelResumen.innerText = 'Despacho Blue Express:';
+            
+            const comunaSelect = document.getElementById('comuna_select');
+            const comuna = comunaSelect ? comunaSelect.value : 'Santiago';
+            actualizarCotizacionBlueExpress(comuna);
         }
     }
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const comunaPrevia = "{{ comuna_previa|default:'Santiago'|escapejs }}";
+        const regionPrevia = "{{ region_previa|default:'Región Metropolitana de Santiago'|escapejs }}";
+        
+        poblarComunas(regionPrevia, comunaPrevia);
+
+        const inputTipo = document.getElementById('tipo_entrega_input');
+        if (inputTipo && inputTipo.value === 'RETIRO') {
+            setTipoEntrega('RETIRO');
+        } else {
+            actualizarCotizacionBlueExpress(comunaPrevia);
+        }
+    });
 </script>
 {% endblock %}

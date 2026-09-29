@@ -181,7 +181,9 @@ function ejecutarCopiaPedidoModal() {
                 {% endif %}
 
                 <p style="margin: 5px 0;"><strong>Dirección:</strong> {{ pedido.direccion }}</p>
-                <p style="margin: 5px 0;"><strong>Ciudad / Comuna:</strong> {{ pedido.ciudad }}</p>
+                <p style="margin: 5px 0;"><strong>Comuna:</strong> {{ pedido.comuna|default:pedido.ciudad }}</p>
+                <p style="margin: 5px 0;"><strong>Región:</strong> {{ pedido.region|default:"Región Metropolitana de Santiago" }}</p>
+                <p style="margin: 5px 0;"><strong>Costo Despacho:</strong> {% if pedido.costo_envio == 0 %}<span style="color: #10b981; font-weight: 800;">GRATIS</span>{% else %}<span style="font-weight: 800; color: #002093;">${{ pedido.costo_envio }} (Blue Express)</span>{% endif %}</p>
                 <p style="margin: 5px 0;"><strong>Fecha del Pedido:</strong> {{ pedido.creado|date:"d/m/Y H:i" }}</p>
                 <p style="margin: 5px 0;"><strong>Estado Pago:</strong> 
                     {% if pedido.pagado %}
@@ -254,13 +256,26 @@ function ejecutarCopiaPedidoModal() {
             </tbody>
         </table>
 
-        {% if pedido.descuento_aplicado > 0 %}
-        <div style="text-align: right; margin-top: 15px; color: #27ae60; font-weight: bold;">
-            Descuento Cupón ({% if pedido.cupon %}{{ pedido.cupon.codigo }}{% else %}Promocional{% endif %}): -${{ pedido.descuento_aplicado }}
+        <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 12px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px;">
+            <div style="color: #475569; font-size: 0.95rem;">
+                Subtotal Productos: <strong>${{ pedido.get_total_cost }}</strong>
+            </div>
+            {% if pedido.descuento_aplicado > 0 %}
+            <div style="color: #27ae60; font-weight: bold; font-size: 0.95rem;">
+                Descuento Cupón ({% if pedido.cupon %}{{ pedido.cupon.codigo }}{% else %}Promocional{% endif %}): -${{ pedido.descuento_aplicado }}
+            </div>
+            {% endif %}
+            <div style="color: #475569; font-size: 0.95rem;">
+                Despacho ({% if pedido.tipo_entrega == 'RETIRO' %}Retiro en Local{% else %}Blue Express{% endif %}): 
+                {% if pedido.costo_envio == 0 %}
+                    <strong style="color: #10b981;">GRATIS</strong>
+                {% else %}
+                    <strong style="color: #002093;">${{ pedido.costo_envio }}</strong>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
 
-        <div style="text-align: right; margin-top: 15px; padding-top: 15px; border-top: 2px solid #eee;">
+        <div style="text-align: right; margin-top: 10px; padding-top: 12px; border-top: 2px solid #002093;">
             <h2 style="margin: 0;">Total del Pedido: <span style="color: #002093;">${{ pedido.get_total_final }}</span></h2>
         </div>
     </div>

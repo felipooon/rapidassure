@@ -835,6 +835,155 @@ class WebpayPlusIntegrationTests(TestCase):
         self.assertFalse(pedido.pagado)
 
 
+class BlueExpressIntegrationTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth.models import User
+        self.admin_user = User.objects.create_superuser(
+            username='admin_bx',
+            email='admin@rapidassure.cl',
+            password='adminpassword123'
+        )
+        self.categoria = Categoria.objects.create(nombre="Logística & POS")
+        self.producto = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Lector Código de Barras 2D",
+            precio=15000,
+            stock=10,
+            peso=0.6,
+            alto=10,
+            ancho=12,
+            largo=18,
+            disponible=True
+        )
+
+    def test_calcular_costo_envio_zonas(self):
+        """Verifica que las tarifas zonales de Blue Express calculen adecuadamente."""
+        from .comunas_chile import calcular_costo_envio, obtener_tarifa_base_comuna
+
+        # Tarifas oficiales Talla XS (hasta 0.5 kg)
+        self.assertEqual(obtener_tarifa_base_comuna('Santiago'), 3100)
+        self.assertEqual(obtener_tarifa_base_comuna('Providencia'), 3100)
+        self.assertEqual(obtener_tarifa_base_comuna('Viña del Mar'), 4300)
+        self.assertEqual(obtener_tarifa_base_comuna('Punta Arenas'), 5200)
+
+        # Tarifas por Tallas (XS, S, M, L)
+        from .comunas_chile import obtener_tarifa_blue_express
+        # Santiago (RM): 3100, 4200, 4800, 5400
+        self.assertEqual(obtener_tarifa_blue_express('Santiago', peso_kg=0.3), 3100)
+        self.assertEqual(obtener_tarifa_blue_express('Santiago', peso_kg=1.5), 4200)
+        self.assertEqual(obtener_tarifa_blue_express('Santiago', peso_kg=4.0), 4800)
+        self.assertEqual(obtener_tarifa_blue_express('Santiago', peso_kg=10.0), 5400)
+
+        # Centro (Copiapó a Puerto Montt): 4300, 5600, 7300, 9200
+        self.assertEqual(obtener_tarifa_blue_express('Valparaíso', peso_kg=0.3), 4300)
+        self.assertEqual(obtener_tarifa_blue_express('Concepción', peso_kg=2.0), 5600)
+        self.assertEqual(obtener_tarifa_blue_express('Temuco', peso_kg=5.0), 7300)
+        self.assertEqual(obtener_tarifa_blue_express('Puerto Montt', peso_kg=8.0), 9200)
+
+        # Extremo (Arica, Iquique, Aysén, Magallanes): 5200, 9500, 14500, 17000
+        self.assertEqual(obtener_tarifa_blue_express('Arica', peso_kg=0.4), 5200)
+        self.assertEqual(obtener_tarifa_blue_express('Punta Arenas', peso_kg=2.5), 9500)
+        self.assertEqual(obtener_tarifa_blue_express('Coyhaique', peso_kg=4.5), 14500)
+        self.assertEqual(obtener_tarifa_blue_express('Punta Arenas', peso_kg=12.0), 17000)
+
+        # Envío gratis para compras >= 19.990 aplica ÚNICAMENTE en la Región Metropolitana
+        self.assertEqual(calcular_costo_envio('Santiago', 20000, 2.0), 0)
+        self.assertEqual(calcular_costo_envio('Providencia', 25000, 0.4), 0)
+        self.assertEqual(calcular_costo_envio('Santiago', 15000, 0.4), 3100)
+
+        # Fuera de la RM se cobra siempre la tarifa correspondiente sin importar el monto
+        self.assertEqual(calcular_costo_envio('Punta Arenas', 20000, 0.4), 5200)
+        self.assertEqual(calcular_costo_envio('Viña del Mar', 50000, 0.4), 4300)
+        self.assertEqual(calcular_costo_envio('Concepción', 100000, 2.0), 5600)
+
+    def test_pedido_calculo_total_con_costo_envio(self):
+        """El método get_total_final del Pedido debe sumar el costo_envio."""
+        pedido = Pedido.objects.create(
+            nombre_completo='Mario Casas',
+            rut='15.456.789-0',
+            email='mario@example.com',
+            telefono='911223344',
+            tipo_entrega='ENVIO',
+            direccion='Av. Alemania 500',
+            ciudad='Temuco',
+            comuna='Temuco',
+            region='Región de La Araucanía',
+            costo_envio=5600,
+            empresa_transporte='Blue Express'
+        )
+        ItemPedido.objects.create(
+            pedido=pedido,
+            producto=self.producto,
+            precio=15000,
+            cantidad=1
+        )
+        # Total esperado: 15.000 + 5.600 = 20.600
+        self.assertEqual(pedido.get_total_cost(), 15000)
+        self.assertEqual(pedido.costo_envio, 5600)
+        self.assertEqual(pedido.get_total_final(), 20600)
+
+    def test_api_cotizar_envio_endpoint(self):
+        """El endpoint /api/cotizar-envio/ debe responder JSON con la cotización correcta."""
+        # Carrito vacío (peso por defecto 0.40 kg = Talla XS)
+        response = self.client.get('/api/cotizar-envio/?comuna=Santiago')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data['success'])
+        self.assertEqual(data['comuna'], 'Santiago')
+        self.assertEqual(data['costo_envio'], 3100)
+
+        # Cotización a Punta Arenas (Talla XS Extremo)
+        response_ext = self.client.get('/api/cotizar-envio/?comuna=Punta Arenas')
+        self.assertEqual(response_ext.status_code, 200)
+        data_ext = response_ext.json()
+        self.assertEqual(data_ext['costo_envio'], 5200)
+
+    def test_exportar_pedidos_blue_express_excel(self):
+        """Verifica que la exportación de Carga Masiva Blue Express genere un archivo .xlsx válido."""
+        Pedido.objects.create(
+            nombre_completo='Cliente Despacho',
+            rut='18.111.222-3',
+            email='despacho@example.com',
+            telefono='987654321',
+            tipo_entrega='ENVIO',
+            direccion='Los Alerces 123',
+            ciudad='Providencia',
+            comuna='Providencia',
+            region='Región Metropolitana de Santiago',
+            costo_envio=3490,
+            estado='PAGADO',
+            pagado=True,
+            empresa_transporte='Blue Express'
+        )
+
+        self.client.login(username='admin_bx', password='adminpassword123')
+        response = self.client.get('/panel/pedidos/exportar-blue-express/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', response['Content-Type'])
+        self.assertIn('Carga_Masiva_Blue_Express', response['Content-Disposition'])
+
+        import io, openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(response.content))
+        self.assertIn('Carga Masiva', wb.sheetnames)
+        ws = wb['Carga Masiva']
+        # Cabeceras oficiales en fila 5
+        self.assertEqual(ws.cell(5, 3).value, 'Nº Referencia*')
+        self.assertEqual(ws.cell(5, 4).value, 'Nombre Completo*')
+        self.assertEqual(ws.cell(5, 7).value, 'Región*')
+        self.assertEqual(ws.cell(5, 8).value, 'Comuna*')
+        self.assertEqual(ws.cell(5, 9).value, 'Nombre calle*')
+        self.assertEqual(ws.cell(5, 10).value, 'N° Domicilio *')
+        # Datos del pedido en fila 6
+        self.assertEqual(ws.cell(6, 4).value, 'Cliente Despacho')
+        self.assertEqual(ws.cell(6, 7).value, 'Región Metropolitana de Santiago')
+        self.assertEqual(ws.cell(6, 8).value, 'Providencia')
+        self.assertEqual(ws.cell(6, 9).value, 'Los Alerces')
+        self.assertEqual(ws.cell(6, 10).value, '123')
+        self.assertEqual(ws.cell(6, 19).value, 'EXPRESS')
+        self.assertEqual(ws.cell(6, 20).value, 'No')
+
+
+
 
 
 

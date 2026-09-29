@@ -19,6 +19,13 @@ from transbank.common.integration_api_keys import IntegrationApiKeys
 from ..models import Producto, Pedido, ItemPedido, Cupon, LogProducto, LogPedido
 from ..carrito import Carrito
 from ..deseos import Deseos
+from ..comunas_chile import (
+    calcular_costo_envio,
+    obtener_region_de_comuna,
+    REGIONES_Y_COMUNAS,
+    UMBRAL_ENVIO_GRATIS,
+    determinar_talla_peso
+)
 
 
 def enviar_correo_asincrono(asunto, mensaje, destinatario):
@@ -345,51 +352,113 @@ def procesar_pedido(request):
             messages.warning(request, f"¡Atención! Mientras pensabas, el stock de '{producto.nombre}' bajó a {producto.stock} unidades. Por favor ajusta tu carrito.")
             return redirect('ver_carrito')
 
+def obtener_peso_total_carrito(carrito):
+    """
+    Calcula el peso total acumulado de los productos en el carrito.
+    Si un producto no tiene peso definido, asume 0.40 kg (talla XS).
+    """
+    peso = 0.0
+    for item in carrito:
+        prod = item.get('producto_real')
+        if prod and getattr(prod, 'peso', None):
+            try:
+                peso += float(prod.peso) * item.get('cantidad', 1)
+            except (ValueError, TypeError):
+                peso += 0.40 * item.get('cantidad', 1)
+        else:
+            peso += 0.40 * item.get('cantidad', 1)
+    return max(0.40, peso)
+
+
+def procesar_pedido(request):
+    carrito = Carrito(request)
+    
+    if len(carrito) == 0:
+        messages.info(request, "Tu carrito de compras está vacío. Agrega productos para continuar.")
+        return redirect('ver_carrito')
+
+    for item in carrito:
+        producto = item['producto_real']
+        cantidad_pedida = item['cantidad']
+        if cantidad_pedida <= 0:
+            messages.error(request, "Se detectó una cantidad inválida en tu carrito. Por favor, revisa tus productos.")
+            return redirect('ver_carrito')
+            
+        if cantidad_pedida > producto.stock:
+            messages.warning(request, f"¡Atención! Mientras pensabas, el stock de '{producto.nombre}' bajó a {producto.stock} unidades. Por favor ajusta tu carrito.")
+            return redirect('ver_carrito')
+
     total_bruto = carrito.get_total()
     cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto)
-    total_final = max(0, total_bruto - descuento_aplicado)
+    subtotal_descuento = max(0, total_bruto - descuento_aplicado)
+    
+    peso_carrito = obtener_peso_total_carrito(carrito)
+    talla_carrito = determinar_talla_peso(peso_carrito)
+    costo_envio_default = calcular_costo_envio('Santiago', subtotal_descuento, peso_carrito)
+    total_final_default = subtotal_descuento + costo_envio_default
+
+    datos_previos = request.POST if request.method == 'POST' else {}
+    comuna_previa = datos_previos.get('comuna') or datos_previos.get('ciudad') or 'Santiago'
+    region_previa = datos_previos.get('region') or 'Región Metropolitana de Santiago'
+
+    def _build_checkout_context(extra_dict=None):
+        ctx = {
+            'carrito': carrito,
+            'cupon': cupon_obj,
+            'descuento': descuento_aplicado,
+            'subtotal': total_bruto,
+            'total_final': total_final_default,
+            'costo_envio': costo_envio_default,
+            'talla_envio': talla_carrito,
+            'peso_total': round(peso_carrito, 2),
+            'regiones_comunas': REGIONES_Y_COMUNAS,
+            'regiones_comunas_json': json.dumps(REGIONES_Y_COMUNAS),
+            'umbral_envio_gratis': UMBRAL_ENVIO_GRATIS,
+            'datos_previos': datos_previos,
+            'comuna_previa': comuna_previa,
+            'region_previa': region_previa,
+        }
+        if extra_dict:
+            ctx.update(extra_dict)
+        return ctx
 
     if request.method == 'POST':
         rut_ingresado = request.POST.get('rut', '')
         terminos_aceptados = request.POST.get('terminos_aceptados')
 
-        if not terminos_aceptados:
-            context = {
-                'carrito': carrito,
-                'cupon': cupon_obj,
-                'descuento': descuento_aplicado,
-                'total_final': total_final,
-                'error_terminos': "Debes aceptar los Términos y Condiciones y Políticas de Devolución para realizar tu pedido.",
-                'datos_previos': request.POST
-            }
-            return render(request, 'checkout.html', context)
-
-        if not validar_rut_chileno(rut_ingresado):
-            context = {
-                'carrito': carrito,
-                'cupon': cupon_obj,
-                'descuento': descuento_aplicado,
-                'total_final': total_final,
-                'error_rut': "El RUT ingresado no es válido. Por favor, revísalo y escríbelo correctamente.",
-                'datos_previos': request.POST
-            }
-            return render(request, 'checkout.html', context)
-
         tipo_entrega = request.POST.get('tipo_entrega', 'ENVIO')
         direccion = request.POST.get('direccion', '').strip()
-        ciudad = request.POST.get('ciudad', '').strip()
+        region = request.POST.get('region', '').strip() or 'Región Metropolitana de Santiago'
+        comuna = request.POST.get('comuna', '').strip() or request.POST.get('ciudad', '').strip() or 'Santiago'
 
         if tipo_entrega == 'RETIRO':
+            costo_envio = 0
             if not direccion:
                 direccion = "Retiro en Local - San Diego 174 local 8"
-            if not ciudad:
-                ciudad = "Santiago"
-        elif not direccion or not ciudad:
-            # Si es envio a domicilio y faltan datos
+            comuna = "Santiago"
+            region = "Región Metropolitana de Santiago"
+        else:
             if not direccion:
                 direccion = "Dirección no especificada"
-            if not ciudad:
-                ciudad = "Santiago"
+            costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito)
+
+        total_final = max(0, subtotal_descuento + costo_envio)
+
+        if not terminos_aceptados:
+            return render(request, 'checkout.html', _build_checkout_context({
+                'error_terminos': "Debes aceptar los Términos y Condiciones y Políticas de Devolución para realizar tu pedido.",
+                'datos_previos': request.POST,
+                'total_final': total_final,
+                'costo_envio': costo_envio
+            }))
+
+        if not validar_rut_chileno(rut_ingresado):
+            return render(request, 'checkout.html', _build_checkout_context({
+                'error_rut': "El RUT ingresado no es válido. Por favor, revísalo y escríbelo correctamente.",
+                'datos_previos': request.POST,
+                'total_final': total_final,
+                'costo_envio': costo_envio
+            }))
 
         requiere_factura = bool(request.POST.get('requiere_factura'))
         razon_social = request.POST.get('razon_social', '').strip()
@@ -398,15 +467,12 @@ def procesar_pedido(request):
 
         if requiere_factura and rut_empresa:
             if not validar_rut_chileno(rut_empresa):
-                context = {
-                    'carrito': carrito,
-                    'cupon': cupon_obj,
-                    'descuento': descuento_aplicado,
-                    'total_final': total_final,
+                return render(request, 'checkout.html', _build_checkout_context({
                     'error_rut': "El RUT de la Empresa ingresado para la factura no es válido.",
-                    'datos_previos': request.POST
-                }
-                return render(request, 'checkout.html', context)
+                    'datos_previos': request.POST,
+                    'total_final': total_final,
+                    'costo_envio': costo_envio
+                }))
 
         pedido = Pedido.objects.create(
             nombre_completo=request.POST.get('nombre_completo'),
@@ -415,7 +481,11 @@ def procesar_pedido(request):
             telefono=request.POST.get('telefono'),
             tipo_entrega=tipo_entrega,
             direccion=direccion,
-            ciudad=ciudad,
+            ciudad=comuna,
+            region=region,
+            comuna=comuna,
+            costo_envio=costo_envio,
+            empresa_transporte='Blue Express' if tipo_entrega == 'ENVIO' else '',
             cupon=cupon_obj,
             descuento_aplicado=descuento_aplicado,
             requiere_factura=requiere_factura,
@@ -448,7 +518,7 @@ def procesar_pedido(request):
             )
 
         items_summary = ", ".join([f"{item['producto_real'].nombre} (x{item['cantidad']})" for item in carrito])
-        detalles_creacion = f"Pedido iniciado por total ${total_final} | Ítems: {items_summary} | Dirección: {pedido.direccion}, {pedido.ciudad} | RUT: {pedido.rut} | Teléfono: +56{pedido.telefono}"
+        detalles_creacion = f"Pedido iniciado por total ${total_final} (Subtotal: ${total_bruto}, Descuento: -${descuento_aplicado}, Envío Blue Express: ${costo_envio}) | Ítems: {items_summary} | Destino: {pedido.direccion}, {pedido.comuna}, {pedido.region} | RUT: {pedido.rut} | Teléfono: +56{pedido.telefono}"
         if cupon_obj:
             detalles_creacion += f" | Cupón: {cupon_obj.codigo} (-${descuento_aplicado})"
 
@@ -466,8 +536,8 @@ def procesar_pedido(request):
             mensaje_admin = f"""¡Atención! Acaba de entrar un nuevo pedido.
 
 Cliente: {pedido.nombre_completo}
-Ciudad: {pedido.ciudad}
-Total: ${total_final}
+Comuna/Región: {pedido.comuna}, {pedido.region}
+Total: ${total_final} (Envío Blue Express: ${costo_envio})
 Teléfono: +56{pedido.telefono}
 
 Revisa el panel de administración para ver el detalle completo.
@@ -526,12 +596,41 @@ https://rapidassure.cl/panel/
             messages.error(request, f"Hubo un inconveniente al conectar con Transbank Webpay Plus: {e}. Por favor intenta nuevamente.")
             return redirect('ver_carrito')
 
-    return render(request, 'checkout.html', {
-        'carrito': carrito,
-        'cupon': cupon_obj,
+    return render(request, 'checkout.html', _build_checkout_context())
+
+
+def api_cotizar_envio(request):
+    """
+    Endpoint AJAX para cotizar el despacho Blue Express según la comuna seleccionada.
+    """
+    carrito = Carrito(request)
+    comuna = request.GET.get('comuna') or request.POST.get('comuna') or 'Santiago'
+    comuna = comuna.strip()
+    total_bruto = carrito.get_total()
+    cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto)
+    subtotal_descuento = max(0, total_bruto - descuento_aplicado)
+
+    peso_carrito = obtener_peso_total_carrito(carrito)
+    talla_carrito = determinar_talla_peso(peso_carrito)
+    costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito)
+    total_final = subtotal_descuento + costo_envio
+
+    return JsonResponse({
+        'success': True,
+        'comuna': comuna,
+        'region': obtener_region_de_comuna(comuna),
+        'costo_envio': costo_envio,
+        'costo_envio_formateado': f"${costo_envio:,}".replace(',', '.') if costo_envio > 0 else "GRATIS",
+        'es_gratis': (costo_envio == 0),
+        'talla': talla_carrito,
+        'peso_total': round(peso_carrito, 2),
+        'subtotal': total_bruto,
         'descuento': descuento_aplicado,
-        'total_final': total_final
+        'total_final': total_final,
+        'total_final_formateado': f"${total_final:,}".replace(',', '.'),
+        'umbral_envio_gratis': UMBRAL_ENVIO_GRATIS
     })
+
 
 
 @csrf_exempt
