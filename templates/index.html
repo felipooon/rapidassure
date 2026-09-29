@@ -11,17 +11,17 @@
      HERO BANNER IMPACTO RETAIL & EMPRESAS
 ========================================== -->
 <section id="inicio" class="hero-banner-section hero-scene-bg">
-  
+
   <!-- Badge flotante Blueexpress ubicado en la esquina superior derecha extrema del Hero -->
   <div class="hero-bluexpress-floating-card">
     <div class="bx-left-section">
       <span class="bx-tag">TRABAJAMOS CON</span>
       <div class="bx-brand-row">
         <img src="{% static 'img/logo_bluexpress.png' %}" alt="Bluexpress Logo" class="bx-logo-img">
-        <strong class="bx-brand">bluexpress</strong>
+        <strong class="bx-brand">Blue Express</strong>
       </div>
     </div>
-    
+
     <div class="bx-vertical-divider"></div>
 
     <div class="bx-right-section">
@@ -32,10 +32,10 @@
   <div class="hero-fluid-container">
 
     <div class="hero-card-grid">
-      
+
       <!-- Columna Izquierda: Información, Badges y Botón -->
       <div class="hero-left-content">
-        
+
         <!-- Tarjeta Principal Glassmorphism para Titular y Descripción -->
         <div class="hero-title-glass-card">
           <!-- Badge Superior: Venta a Todo Público y Empresas -->
@@ -52,7 +52,8 @@
 
           <!-- Subtítulo -->
           <p class="hero-description-text">
-            Realiza tu compra al detalle o solicita tu cotización corporativa para equiparte con la mejor tecnología, al mejor precio.
+            Realiza tu compra al detalle o solicita tu cotización corporativa para equiparte con la mejor tecnología, al
+            mejor precio.
           </p>
         </div>
 
@@ -87,7 +88,7 @@
           <div class="hero-handwritten-note">
             <span>¡Tu mejor opción en tecnología!</span>
             <svg class="handwritten-underline" viewBox="0 0 140 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 8C35 3 105 2 138 9" stroke="#0038FF" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M2 8C35 3 105 2 138 9" stroke="#0038FF" stroke-width="2.5" stroke-linecap="round" />
             </svg>
           </div>
         </div>
@@ -98,7 +99,7 @@
 
     <!-- Tira Unificada de 4 Beneficios en la parte inferior del Hero -->
     <div class="hero-bottom-benefits-strip">
-      
+
       <!-- Beneficio 1: Envío RM gratis -->
       <div class="benefit-strip-item">
         <div class="benefit-direct-icon"><i class="fa-solid fa-truck-fast"></i></div>
@@ -115,7 +116,7 @@
           <img src="{% static 'img/logo_bluexpress.png' %}" alt="Bluexpress" class="benefit-bx-icon">
         </div>
         <div class="benefit-info">
-          <h4>Envíos a todo Chile <span class="subtext-bx">con Bluexpress</span></h4>
+          <h4>Envíos a todo Chile <span class="subtext-bx">con Blue Express</span></h4>
           <p>Confiables, rápidos y seguros.</p>
         </div>
       </div>
@@ -126,7 +127,8 @@
         <div class="benefit-info">
           <h4>Medios de pago seguros</h4>
           <div class="payment-logos-wrapper">
-            <img src="{% static 'img/payment_brands_row.svg' %}" alt="Medios de pago Transbank, VISA, Mastercard, Magna, Redcompra" class="payment-brands-row-img">
+            <img src="{% static 'img/payment_brands_row.svg' %}"
+              alt="Medios de pago Transbank, VISA, Mastercard, Magna, Redcompra" class="payment-brands-row-img">
           </div>
         </div>
       </div>
@@ -146,9 +148,9 @@
 
   <!-- Cinta Azul Inferior -->
   <div class="hero-ticker-ribbon">
-    <span>TECNOLOGÍA</span> · 
-    <span>COMPUTACIÓN</span> · 
-    <span>ACCESORIOS</span> · 
+    <span>TECNOLOGÍA</span> ·
+    <span>COMPUTACIÓN</span> ·
+    <span>ACCESORIOS</span> ·
     <span>TODO EN UN SOLO LUGAR</span>
   </div>
 </section>
@@ -159,7 +161,7 @@
 ========================================== -->
 <section id="categorias" class="categorias-seccion" style="background: #ffffff; padding: 3.5rem 1rem 3rem;">
   <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
-    
+
     <div style="text-align: center; margin-bottom: 2.2rem;">
       <span class="section-tag-pill">
         <i class="fa-solid fa-layer-group"></i> NAVEGACIÓN RÁPIDA
@@ -174,19 +176,19 @@
 
     <div class="category-pill-grid">
       {% for c in categorias_globales %}
-        <a href="{{ c.get_absolute_url }}" class="category-pill-card">
-          <div class="category-icon-circle">
-            {% if c.imagen %}
-              <img src="{{ c.get_imagen_url_300 }}" alt="{{ c.nombre }}" loading="lazy">
-            {% else %}
-              <i class="fa-solid {{ c.icono_fontawesome }}"></i>
-            {% endif %}
-          </div>
-          <span class="category-name">{{ c.nombre }}</span>
-          <span class="category-action">Explorar <i class="fa-solid fa-arrow-right"></i></span>
-        </a>
+      <a href="{{ c.get_absolute_url }}" class="category-pill-card">
+        <div class="category-icon-circle">
+          {% if c.imagen %}
+          <img src="{{ c.get_imagen_url_300 }}" alt="{{ c.nombre }}" loading="lazy">
+          {% else %}
+          <i class="fa-solid {{ c.icono_fontawesome }}"></i>
+          {% endif %}
+        </div>
+        <span class="category-name">{{ c.nombre }}</span>
+        <span class="category-action">Explorar <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
       {% empty %}
-        <p style="text-align: center; color: #64748b; grid-column: 1 / -1;">No hay categorías registradas.</p>
+      <p style="text-align: center; color: #64748b; grid-column: 1 / -1;">No hay categorías registradas.</p>
       {% endfor %}
     </div>
 
@@ -197,39 +199,40 @@
 <!-- ==========================================
      STRIP DE BANNERS PROMOCIONALES IMPACTO TECH
 ========================================== -->
-<section id="promociones" class="promo-banners-seccion" style="background: #f8fafc; padding: 2.5rem 1rem 3.5rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
+<section id="promociones" class="promo-banners-seccion"
+  style="background: #f8fafc; padding: 2.5rem 1rem 3.5rem; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;">
   <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
-    
+
     <div class="promo-banners-grid">
       {% for b in banners_promocionales %}
-        <div class="promo-banner-card {{ b.estilo_fondo }}">
-          <div class="promo-badge {% if b.badge_gold %}gold{% endif %}">{{ b.badge }}</div>
-          <div class="promo-content">
-            <h3>{{ b.titulo }}</h3>
-            <p>{{ b.subtitulo }}</p>
-            <a href="{{ b.url_destino }}" class="btn-banner-link">
-              {{ b.texto_boton }} <i class="fa-solid fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="promo-banner-icon">
-            <i class="fa-solid {{ b.icono_fontawesome }}"></i>
-          </div>
+      <div class="promo-banner-card {{ b.estilo_fondo }}">
+        <div class="promo-badge {% if b.badge_gold %}gold{% endif %}">{{ b.badge }}</div>
+        <div class="promo-content">
+          <h3>{{ b.titulo }}</h3>
+          <p>{{ b.subtitulo }}</p>
+          <a href="{{ b.url_destino }}" class="btn-banner-link">
+            {{ b.texto_boton }} <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
+        <div class="promo-banner-icon">
+          <i class="fa-solid {{ b.icono_fontawesome }}"></i>
+        </div>
+      </div>
       {% empty %}
-        <!-- Fallback Banners si no hay en DB -->
-        <div class="promo-banner-card dark-navy">
-          <div class="promo-badge">EQUIPAMIENTO DE CAJA</div>
-          <div class="promo-content">
-            <h3>Smart POS Dual Screen</h3>
-            <p>Terminales Android de alta velocidad con cobro contactless e impresora térmica integrada.</p>
-            <a href="/categoria/smart-pos-retail-tech/" class="btn-banner-link">
-              Equipar mi Caja <i class="fa-solid fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="promo-banner-icon">
-            <i class="fa-solid fa-cash-register"></i>
-          </div>
+      <!-- Fallback Banners si no hay en DB -->
+      <div class="promo-banner-card dark-navy">
+        <div class="promo-badge">EQUIPAMIENTO DE CAJA</div>
+        <div class="promo-content">
+          <h3>Smart POS Dual Screen</h3>
+          <p>Terminales Android de alta velocidad con cobro contactless e impresora térmica integrada.</p>
+          <a href="/categoria/smart-pos-retail-tech/" class="btn-banner-link">
+            Equipar mi Caja <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
+        <div class="promo-banner-icon">
+          <i class="fa-solid fa-cash-register"></i>
+        </div>
+      </div>
       {% endfor %}
     </div>
 
@@ -243,7 +246,8 @@
 <section id="destacados" class="destacados-seccion" style="background-color: #ffffff; padding: 4rem 1rem 4.5rem;">
   <div style="max-width: 1180px; margin: 0 auto; width: 100%;">
 
-    <div class="destacados-header-box" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px;">
+    <div class="destacados-header-box"
+      style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 15px;">
       <div>
         <span class="section-tag-pill">
           <i class="fa-solid fa-fire"></i> CATÁLOGO DESTACADO
@@ -255,7 +259,7 @@
           Los productos de hardware y audio más solicitados por nuestros clientes
         </p>
       </div>
-      
+
       <button type="button" class="btn-shuffle" onclick="shuffleDestacados()" id="btn-shuffle-destacados">
         <i class="fa-solid fa-dice" id="shuffle-icon"></i> Explorar Más
       </button>
@@ -263,96 +267,102 @@
 
     <div class="modern-products-grid" id="destacados-container">
       {% for p in productos_destacados %}
-        <div class="modern-product-card">
-          
-          <a href="{% url 'toggle_deseos' p.id %}" class="card-heart-wishlist {% if p.id in deseos_ids %}active{% endif %}" title="{% if p.id in deseos_ids %}Quitar de favoritos{% else %}Guardar en favoritos{% endif %}">
-            {% if p.id in deseos_ids %}
-              <i class="fa-solid fa-heart"></i>
-            {% else %}
-              <i class="fa-regular fa-heart"></i>
-            {% endif %}
-          </a>
+      <div class="modern-product-card">
 
-          <!-- Image Container -->
-          <a href="{{ p.get_absolute_url }}" class="card-image-box" style="position: relative;">
-            {% if p.tiene_descuento %}
-              <span style="position: absolute; top: 10px; left: 10px; z-index: 5; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35); display: inline-flex; align-items: center; gap: 4px;">
-                <i class="fa-solid fa-bolt" style="font-size: 0.65rem;"></i> -{{ p.porcentaje_descuento }}% OFF
+        <a href="{% url 'toggle_deseos' p.id %}"
+          class="card-heart-wishlist {% if p.id in deseos_ids %}active{% endif %}"
+          title="{% if p.id in deseos_ids %}Quitar de favoritos{% else %}Guardar en favoritos{% endif %}">
+          {% if p.id in deseos_ids %}
+          <i class="fa-solid fa-heart"></i>
+          {% else %}
+          <i class="fa-regular fa-heart"></i>
+          {% endif %}
+        </a>
+
+        <!-- Image Container -->
+        <a href="{{ p.get_absolute_url }}" class="card-image-box" style="position: relative;">
+          {% if p.tiene_descuento %}
+          <span
+            style="position: absolute; top: 10px; left: 10px; z-index: 5; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+            <i class="fa-solid fa-bolt" style="font-size: 0.65rem;"></i> -{{ p.porcentaje_descuento }}% OFF
+          </span>
+          {% endif %}
+
+          {% if p.imagen %}
+          <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
+          {% else %}
+          <div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>
+          {% endif %}
+
+          <!-- Badges (Posicionadas en la esquina inferior de la imagen) -->
+          <div class="card-badges-bottom">
+            {% if p.precio >= 19990 %}
+            <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
+            {% else %}
+            <span class="badge-tag-std">Garantizado</span>
+            {% endif %}
+
+            {% if not p.disponible %}
+            <span class="badge-out-stock">Agotado</span>
+            {% endif %}
+          </div>
+        </a>
+
+        <!-- Details -->
+        <div class="card-body">
+          <span class="card-category-tag">{{ p.categoria.nombre|default:"Equipamiento Tech" }}</span>
+
+          {% if config_sitio.mostrar_resenas %}
+          <div class="card-stars-row">
+            {% if p.total_resenas > 0 %}
+            {% for i in "12345"|make_list %}
+            {% if forloop.counter <= p.promedio_calificacion %} <i class="fa-solid fa-star"></i>
+              {% else %}
+              <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
+              {% endif %}
+              {% endfor %}
+              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s"
+                }})</span>
+              {% else %}
+              <span
+                style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fa-regular fa-star" style="color: #cbd5e1;"></i> Sin reseñas aún
               </span>
-            {% endif %}
+              {% endif %}
+          </div>
+          {% endif %}
 
-            {% if p.imagen %}
-              <img src="{{ p.get_imagen_url_600 }}" alt="{{ p.nombre }}" loading="lazy">
+          <h3 class="card-title">
+            <a href="{{ p.get_absolute_url }}">{{ p.nombre }}</a>
+          </h3>
+
+          <div class="card-price-container">
+            {% if p.tiene_descuento %}
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{
+                p.precio }}</span>
+              <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
+            </div>
             {% else %}
-              <div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>
+            <span class="card-price-value">${{ p.precio }}</span>
             {% endif %}
-
-            <!-- Badges (Posicionadas en la esquina inferior de la imagen) -->
-            <div class="card-badges-bottom">
-              {% if p.precio >= 19990 %}
-                <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis</span>
-              {% else %}
-                <span class="badge-tag-std">Garantizado</span>
-              {% endif %}
-              
-              {% if not p.disponible %}
-                <span class="badge-out-stock">Agotado</span>
-              {% endif %}
-            </div>
-          </a>
-
-          <!-- Details -->
-          <div class="card-body">
-            <span class="card-category-tag">{{ p.categoria.nombre|default:"Equipamiento Tech" }}</span>
-            
-            {% if config_sitio.mostrar_resenas %}
-            <div class="card-stars-row">
-              {% if p.total_resenas > 0 %}
-                {% for i in "12345"|make_list %}
-                  {% if forloop.counter <= p.promedio_calificacion %}
-                    <i class="fa-solid fa-star"></i>
-                  {% else %}
-                    <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
-                  {% endif %}
-                {% endfor %}
-                <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s" }})</span>
-              {% else %}
-                <span style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
-                  <i class="fa-regular fa-star" style="color: #cbd5e1;"></i> Sin reseñas aún
-                </span>
-              {% endif %}
-            </div>
-            {% endif %}
-
-            <h3 class="card-title">
-              <a href="{{ p.get_absolute_url }}">{{ p.nombre }}</a>
-            </h3>
-
-            <div class="card-price-container">
-              {% if p.tiene_descuento %}
-                <div style="display: flex; flex-direction: column;">
-                  <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
-                  <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
-                </div>
-              {% else %}
-                <span class="card-price-value">${{ p.precio }}</span>
-              {% endif %}
-              <span class="card-vat-note">IVA Incluido</span>
-            </div>
-
-            <div class="card-actions-row">
-              <a href="{{ p.get_absolute_url }}" class="btn-card-view">
-                <i class="fa-solid fa-eye"></i> Ver
-              </a>
-              <a href="{% url 'agregar_al_carrito' p.id %}" title="Agregar al carrito" class="btn-card-cart">
-                <i class="fa-solid fa-cart-plus"></i> Añadir
-              </a>
-            </div>
+            <span class="card-vat-note">IVA Incluido</span>
           </div>
 
+          <div class="card-actions-row">
+            <a href="{{ p.get_absolute_url }}" class="btn-card-view">
+              <i class="fa-solid fa-eye"></i> Ver
+            </a>
+            <a href="{% url 'agregar_al_carrito' p.id %}" title="Agregar al carrito" class="btn-card-cart">
+              <i class="fa-solid fa-cart-plus"></i> Añadir
+            </a>
+          </div>
         </div>
+
+      </div>
       {% empty %}
-        <p style="text-align: center; color: #64748b; width: 100%; grid-column: 1 / -1;">No hay productos disponibles por ahora.</p>
+      <p style="text-align: center; color: #64748b; width: 100%; grid-column: 1 / -1;">No hay productos disponibles por
+        ahora.</p>
       {% endfor %}
     </div>
 
@@ -367,42 +377,51 @@
 <!-- ==========================================
      SECCIÓN DE RESEÑAS Y OPINIONES VERIFICADAS
 ========================================== -->
-<section id="resenas-destacadas" style="padding: 4.5rem 1rem 4rem; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-top: 1px solid #e2e8f0; position: relative; z-index: 2;">
+<section id="resenas-destacadas"
+  style="padding: 4.5rem 1rem 4rem; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-top: 1px solid #e2e8f0; position: relative; z-index: 2;">
   <div style="max-width: 1200px; margin: 0 auto; width: 100%;">
-    
+
     <div style="text-align: center; margin-bottom: 2.8rem;">
-      <span style="display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.82rem; font-weight: 800; padding: 5px 16px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+      <span
+        style="display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.82rem; font-weight: 800; padding: 5px 16px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
         <i class="fa-solid fa-star"></i> Testimonios Verificados
       </span>
-      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0; letter-spacing: -0.5px;">
+      <h2
+        style="font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0; letter-spacing: -0.5px;">
         Experiencias de Clientes Reales
       </h2>
-      <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
-        Conoce cómo nuestro equipamiento tecnológico y soluciones de soporte potencian negocios y cadenas comerciales a diario.
+      <p
+        style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.05rem; max-width: 650px; margin: 0 auto; line-height: 1.6;">
+        Conoce cómo nuestro equipamiento tecnológico y soluciones de soporte potencian negocios y cadenas comerciales a
+        diario.
       </p>
     </div>
 
     <!-- Grid de Reseñas (Tarjetas con tamaño individual acotado y centradas) -->
     <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;">
       {% for r in resenas %}
-        <div style="width: 100%; max-width: 360px; min-width: 280px; flex: 0 1 360px; background: white; border-radius: 18px; padding: 22px 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, box-shadow 0.25s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0, 32, 147, 0.08)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.04)';">
-          <div>
-            <!-- Calificación y Badge -->
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-              <div style="color: #f59e0b; font-size: 1.05rem; letter-spacing: 2px;">
-                {% for i in "12345"|make_list %}
-                  {% if forloop.counter <= r.calificacion %}★{% else %}☆{% endif %}
-                {% endfor %}
-              </div>
-              {% if r.comprador_verificado %}
-                <span style="background: #e6f4ea; color: #137333; font-weight: 800; font-size: 0.72rem; padding: 3px 9px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #b7e1cd;">
+      <div
+        style="width: 100%; max-width: 360px; min-width: 280px; flex: 0 1 360px; background: white; border-radius: 18px; padding: 22px 20px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.25s ease, box-shadow 0.25s ease;"
+        onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 30px rgba(0, 32, 147, 0.08)';"
+        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.04)';">
+        <div>
+          <!-- Calificación y Badge -->
+          <div
+            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div style="color: #f59e0b; font-size: 1.05rem; letter-spacing: 2px;">
+              {% for i in "12345"|make_list %}
+              {% if forloop.counter <= r.calificacion %}★{% else %}☆{% endif %} {% endfor %} </div>
+                {% if r.comprador_verificado %}
+                <span
+                  style="background: #e6f4ea; color: #137333; font-weight: 800; font-size: 0.72rem; padding: 3px 9px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #b7e1cd;">
                   <i class="fa-solid fa-circle-check"></i> Verificado
                 </span>
-              {% endif %}
+                {% endif %}
             </div>
 
             <!-- Comentario -->
-            <p style="font-family: 'Open Sans', sans-serif; color: #334155; font-size: 0.93rem; line-height: 1.6; margin: 0 0 16px 0; font-style: italic;">
+            <p
+              style="font-family: 'Open Sans', sans-serif; color: #334155; font-size: 0.93rem; line-height: 1.6; margin: 0 0 16px 0; font-style: italic;">
               “{{ r.comentario }}”
             </p>
           </div>
@@ -410,11 +429,13 @@
           <!-- Autor y Producto con Imagen -->
           <div style="border-top: 1px solid #f1f5f9; padding-top: 14px; margin-top: auto;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-              <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #002093, #3230C2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.88rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.2);">
+              <div
+                style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #002093, #3230C2); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.88rem; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0, 32, 147, 0.2);">
                 {{ r.nombre_cliente|slice:":1"|upper }}
               </div>
               <div style="overflow: hidden;">
-                <div style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: #0f172a; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <div
+                  style="font-family: 'Montserrat', sans-serif; font-weight: 700; color: #0f172a; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                   {{ r.nombre_cliente }}
                 </div>
                 <div style="font-size: 0.74rem; color: #94a3b8;">
@@ -424,88 +445,125 @@
             </div>
 
             {% if r.producto %}
-              <a href="{{ r.producto.get_absolute_url }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 10px; transition: all 0.2s ease;" onmouseover="this.style.background='#eef2ff'; this.style.borderColor='#c7d2fe';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
-                {% if r.producto.imagen %}
-                  <img src="{{ r.producto.get_imagen_url_300 }}" alt="{{ r.producto.nombre }}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; background: white; border: 1px solid #e2e8f0; padding: 2px; flex-shrink: 0;">
-                {% else %}
-                  <div style="width: 44px; height: 44px; border-radius: 8px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #94a3b8; flex-shrink: 0; font-size: 1rem;">
-                    <i class="fa-solid fa-box-open"></i>
-                  </div>
-                {% endif %}
-                <div style="overflow: hidden; flex: 1;">
-                  <span style="display: block; font-size: 0.68rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Compró</span>
-                  <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.producto.nombre }}</span>
-                </div>
-                <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94a3b8; flex-shrink: 0;"></i>
-              </a>
+            <a href="{{ r.producto.get_absolute_url }}"
+              style="display: flex; align-items: center; gap: 10px; text-decoration: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 10px; transition: all 0.2s ease;"
+              onmouseover="this.style.background='#eef2ff'; this.style.borderColor='#c7d2fe';"
+              onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+              {% if r.producto.imagen %}
+              <img src="{{ r.producto.get_imagen_url_300 }}" alt="{{ r.producto.nombre }}"
+                style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain; background: white; border: 1px solid #e2e8f0; padding: 2px; flex-shrink: 0;">
+              {% else %}
+              <div
+                style="width: 44px; height: 44px; border-radius: 8px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; color: #94a3b8; flex-shrink: 0; font-size: 1rem;">
+                <i class="fa-solid fa-box-open"></i>
+              </div>
+              {% endif %}
+              <div style="overflow: hidden; flex: 1;">
+                <span
+                  style="display: block; font-size: 0.68rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Compró</span>
+                <span
+                  style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{
+                  r.producto.nombre }}</span>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94a3b8; flex-shrink: 0;"></i>
+            </a>
             {% endif %}
           </div>
         </div>
-      {% endfor %}
-    </div>
+        {% endfor %}
+      </div>
 
-  </div>
+    </div>
 </section>
 {% endif %}
 
 <!-- ==========================================
      SECCIÓN NOSOTROS (3 PILARES Y SELLO)
 ========================================== -->
-<section id="acerca" class="nosotros" style="position: relative; padding: 4.5rem 1rem; width: 100%; min-height: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #000E1F;">
-  <img src="{% static 'img/Oficina.jpg' %}" alt="Oficinas Rapidassure Retail" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; z-index: 1;">
+<section id="acerca" class="nosotros"
+  style="position: relative; padding: 4.5rem 1rem; width: 100%; min-height: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #000E1F;">
+  <img src="{% static 'img/Oficina.jpg' %}" alt="Oficinas Rapidassure Retail"
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; z-index: 1;">
 
   <!-- Soft overlay gradient -->
-  <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0, 14, 31, 0.35) 0%, rgba(0, 14, 31, 0.55) 100%); z-index: 2;"></div>
+  <div
+    style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0, 14, 31, 0.35) 0%, rgba(0, 14, 31, 0.55) 100%); z-index: 2;">
+  </div>
 
   <div style="position: relative; z-index: 3; max-width: 1050px; margin: 0 auto; text-align: center; width: 100%;">
-    
+
     <div style="margin-bottom: 2.5rem;">
-      <span style="display: inline-block; background: rgba(252, 190, 0, 0.15); color: #FCBE00; border: 1px solid rgba(252, 190, 0, 0.3); font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; backdrop-filter: blur(5px);">
+      <span
+        style="display: inline-block; background: rgba(252, 190, 0, 0.15); color: #FCBE00; border: 1px solid rgba(252, 190, 0, 0.3); font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; backdrop-filter: blur(5px);">
         Nuestra Trayectoria
       </span>
-      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.4);">
+      <h2
+        style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.4);">
         ¿Quiénes Somos?
       </h2>
-      <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.9); font-size: 1.08rem; max-width: 760px; margin: 0 auto; line-height: 1.6;">
-        En **Rapidassure Retail** transformamos la experiencia del comercio entregando equipamiento tecnológico de vanguardia, terminales POS y coberturas de garantía que aseguran la continuidad operativa de tu empresa.
+      <p
+        style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.9); font-size: 1.08rem; max-width: 760px; margin: 0 auto; line-height: 1.6;">
+        En **Rapidassure Retail** transformamos la experiencia del comercio entregando equipamiento tecnológico de
+        vanguardia, terminales POS y coberturas de garantía que aseguran la continuidad operativa de tu empresa.
       </p>
     </div>
 
     <!-- 3 Pilares Corporativos -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
-      
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
+
       <!-- Pilar 1 -->
-      <div style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div
+        style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
         <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-microchip"></i></div>
-        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Tecnología Especializada</h3>
-        <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Soluciones de hardware y sistemas diseñados a la medida para optimizar el punto de venta y la administración de stock.
+        <h3
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">
+          Tecnología Especializada</h3>
+        <p
+          style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          Soluciones de hardware y sistemas diseñados a la medida para optimizar el punto de venta y la administración
+          de stock.
         </p>
       </div>
 
       <!-- Pilar 2 -->
-      <div style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-shield-virus"></i></div>
-        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Respaldo & Cobertura</h3>
-        <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+      <div
+        style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-shield-virus"></i>
+        </div>
+        <h3
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">
+          Respaldo & Cobertura</h3>
+        <p
+          style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
           Planes de protección y reemplazo inmediato ante imprevistos para garantizar que tus ventas nunca se detengan.
         </p>
       </div>
 
       <!-- Pilar 3 -->
-      <div style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div
+        style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;"
+        onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
         <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-handshake"></i></div>
-        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">Compromiso Corporativo</h3>
-        <p style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Acompañamos a PyMEs y grandes cadenas en su crecimiento operacional con soluciones integrales y asesoría profesional.
+        <h3
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">
+          Compromiso Corporativo</h3>
+        <p
+          style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          Acompañamos a PyMEs y grandes cadenas en su crecimiento operacional con soluciones integrales y asesoría
+          profesional.
         </p>
       </div>
 
     </div>
 
     <!-- Sello corporativo -->
-    <div style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px); border: 1px solid rgba(252, 190, 0, 0.3); border-radius: 16px; padding: 20px 25px; display: inline-block; max-width: 650px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-      <p style="font-family: 'Open Sans', sans-serif; font-size: 1.02rem; font-weight: 600; color: rgba(255, 255, 255, 0.95); margin: 0 0 6px 0; font-style: italic;">
+    <div
+      style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px); border: 1px solid rgba(252, 190, 0, 0.3); border-radius: 16px; padding: 20px 25px; display: inline-block; max-width: 650px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+      <p
+        style="font-family: 'Open Sans', sans-serif; font-size: 1.02rem; font-weight: 600; color: rgba(255, 255, 255, 0.95); margin: 0 0 6px 0; font-style: italic;">
         "Innovación, velocidad y seguridad para asegurar el éxito operativo de tu negocio retail."
       </p>
       <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #FCBE00;">
@@ -519,56 +577,83 @@
 <!-- ==========================================
      CONTACTO CON MAPA & FORMULARIO FLOTANTE (ESTILO RAPIDASSURE.CL)
 ========================================== -->
-<section id="contacto" class="contacto-seccion" style="position: relative; padding: 4.5rem 1rem 3.5rem; background-color: #f8fafc; overflow: hidden;">
+<section id="contacto" class="contacto-seccion"
+  style="position: relative; padding: 4.5rem 1rem 3.5rem; background-color: #f8fafc; overflow: hidden;">
   <div style="max-width: 1150px; margin: 0 auto; width: 100%;">
-    
+
     <!-- Encabezado -->
     <div style="text-align: center; margin-bottom: 2.5rem;">
-      <span style="display: inline-block; background: #e0e7ff; color: #002093; font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
+      <span
+        style="display: inline-block; background: #e0e7ff; color: #002093; font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">
         Atención Corporativa & Presencial
       </span>
-      <h2 style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+      <h2
+        style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
         Contáctanos
       </h2>
-      <p style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.02rem; max-width: 620px; margin: 0 auto; line-height: 1.6;">
-        ¿Tienes alguna pregunta, comentario o necesitas cotizar equipamiento? Escríbenos y un asesor te responderá a la brevedad.
+      <p
+        style="font-family: 'Open Sans', sans-serif; color: #64748b; font-size: 1.02rem; max-width: 620px; margin: 0 auto; line-height: 1.6;">
+        ¿Tienes alguna pregunta, comentario o necesitas cotizar equipamiento? Escríbenos y un asesor te responderá a la
+        brevedad.
       </p>
     </div>
 
     <!-- Contenedor Principal: Mapa interactivo con Formulario Flotante en superposición -->
-    <div style="position: relative; width: 100%; min-height: 520px; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; margin-bottom: 3rem; background: #e5e3df;">
-      
+    <div
+      style="position: relative; width: 100%; min-height: 520px; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; margin-bottom: 3rem; background: #e5e3df;">
+
       <!-- Mapa de Google Embed de Fondo (San Diego 174 Local 8, Santiago) -->
-      <iframe src="https://maps.google.com/maps?q=San+Diego+174+Local+8+Santiago+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; min-height: 520px; filter: contrast(1.02) saturate(1.05);" allowfullscreen="" loading="lazy" title="Ubicación Rapidassure Retail"></iframe>
+      <iframe
+        src="https://maps.google.com/maps?q=San+Diego+174+Local+8+Santiago+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed"
+        width="100%" height="100%"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; min-height: 520px; filter: contrast(1.02) saturate(1.05);"
+        allowfullscreen="" loading="lazy" title="Ubicación Rapidassure Retail"></iframe>
 
       <!-- Formulario Flotante Glassmorphic (Superpuesto en el mapa a la izquierda) -->
-      <div style="position: relative; z-index: 10; max-width: 440px; margin: 25px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 32px 28px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
-        
-        <h3 style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #000E1F; margin: 0 0 8px 0;">
+      <div
+        style="position: relative; z-index: 10; max-width: 440px; margin: 25px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 32px 28px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
+
+        <h3
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.4rem; font-weight: 800; color: #000E1F; margin: 0 0 8px 0;">
           Contáctanos
         </h3>
-        
-        <p style="font-family: 'Open Sans', sans-serif; font-size: 0.88rem; color: #64748b; line-height: 1.5; margin-bottom: 20px;">
-          Tu opinión y consultas son muy importantes para nosotros. Estaremos encantados de ayudarte. ¡Gracias por confiar en nosotros!
+
+        <p
+          style="font-family: 'Open Sans', sans-serif; font-size: 0.88rem; color: #64748b; line-height: 1.5; margin-bottom: 20px;">
+          Tu opinión y consultas son muy importantes para nosotros. Estaremos encantados de ayudarte. ¡Gracias por
+          confiar en nosotros!
         </p>
 
         <form id="form-contacto-rapida" onsubmit="enviarMensajeContacto(event)">
           <div style="margin-bottom: 14px;">
-            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre</label>
-            <input type="text" required placeholder="Tu nombre completo" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;" onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
+            <label
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre</label>
+            <input type="text" required placeholder="Tu nombre completo"
+              style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
+              onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
           </div>
 
           <div style="margin-bottom: 14px;">
-            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto / Email</label>
-            <input type="text" required placeholder="Ej: Cotización Smart POS / correo@empresa.cl" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;" onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
+            <label
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto
+              / Email</label>
+            <input type="text" required placeholder="Ej: Cotización Smart POS / correo@empresa.cl"
+              style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
+              onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
           </div>
 
           <div style="margin-bottom: 18px;">
-            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Mensaje</label>
-            <textarea required rows="3" placeholder="Escribe tu mensaje o consulta aquí..." style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; resize: vertical; transition: border-color 0.2s;" onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
+            <label
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Mensaje</label>
+            <textarea required rows="3" placeholder="Escribe tu mensaje o consulta aquí..."
+              style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; resize: vertical; transition: border-color 0.2s;"
+              onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
           </div>
 
-          <button type="submit" id="btn-enviar-contacto" style="width: 100%; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 32, 147, 0.3); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(0, 32, 147, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px rgba(0, 32, 147, 0.3)'">
+          <button type="submit" id="btn-enviar-contacto"
+            style="width: 100%; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 32, 147, 0.3); transition: transform 0.2s, box-shadow 0.2s;"
+            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 18px rgba(0, 32, 147, 0.4)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px rgba(0, 32, 147, 0.3)'">
             <i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Enviar Mensaje
           </button>
         </form>
@@ -577,43 +662,58 @@
     </div>
 
     <!-- Tira de Información Directa de Contacto (Estilo rapidassure.cl) -->
-    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px 30px; box-shadow: 0 6px 25px rgba(0,0,0,0.03); margin-bottom: 3rem;">
-      <h4 style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F; margin: 0 0 18px 0; text-align: center;">
+    <div
+      style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px 30px; box-shadow: 0 6px 25px rgba(0,0,0,0.03); margin-bottom: 3rem;">
+      <h4
+        style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F; margin: 0 0 18px 0; text-align: center;">
         Información de Contacto
       </h4>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; text-align: left;">
-        
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; text-align: left;">
+
         <!-- Dirección -->
         <div style="display: flex; align-items: flex-start; gap: 14px;">
-          <div style="width: 44px; height: 44px; background: #e0e7ff; color: #002093; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+          <div
+            style="width: 44px; height: 44px; background: #e0e7ff; color: #002093; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
             <i class="fa-solid fa-location-dot"></i>
           </div>
           <div>
-            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Dirección</span>
-            <span style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #64748b; line-height: 1.4;">San Diego 174 Local 8, Santiago</span>
+            <span
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Dirección</span>
+            <span style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #64748b; line-height: 1.4;">San
+              Diego 174 Local 8, Santiago</span>
           </div>
         </div>
 
         <!-- Teléfono / WhatsApp -->
         <div style="display: flex; align-items: flex-start; gap: 14px;">
-          <div style="width: 44px; height: 44px; background: #e8f5e9; color: #25D366; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+          <div
+            style="width: 44px; height: 44px; background: #e8f5e9; color: #25D366; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
             <i class="fa-solid fa-phone"></i>
           </div>
           <div>
-            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Teléfono & WhatsApp</span>
-            <a href="https://wa.me/56929789628" target="_blank" style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #002093; font-weight: 700; text-decoration: none;">+56 9 2978 9628</a>
+            <span
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Teléfono
+              & WhatsApp</span>
+            <a href="https://wa.me/56929789628" target="_blank"
+              style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #002093; font-weight: 700; text-decoration: none;">+56
+              9 2978 9628</a>
           </div>
         </div>
 
         <!-- Correo Electrónico -->
         <div style="display: flex; align-items: flex-start; gap: 14px;">
-          <div style="width: 44px; height: 44px; background: #e0e7ff; color: #002093; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
+          <div
+            style="width: 44px; height: 44px; background: #e0e7ff; color: #002093; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
             <i class="fa-solid fa-envelope"></i>
           </div>
           <div>
-            <span style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Correo Electrónico</span>
-            <a href="mailto:contacto@rapidassure.cl" style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #002093; font-weight: 700; text-decoration: none;">contacto@rapidassure.cl</a>
+            <span
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F;">Correo
+              Electrónico</span>
+            <a href="mailto:contacto@rapidassure.cl"
+              style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #002093; font-weight: 700; text-decoration: none;">contacto@rapidassure.cl</a>
           </div>
         </div>
 
@@ -621,34 +721,47 @@
     </div>
 
     <!-- Bloque FAQ Corporativo -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2.5rem;">
-      
-      <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 2.5rem;">
+
+      <div
+        style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
           <i class="fa-solid fa-truck-fast" style="color: #002093; font-size: 1.15rem;"></i>
-          <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">¿Despachos a Sucursales?</h4>
+          <h4
+            style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">
+            ¿Despachos a Sucursales?</h4>
         </div>
-        <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
+        <p
+          style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
           Realizamos envíos asegurados a sucursales y puntos de venta en todo el país.
         </p>
       </div>
 
-      <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
+      <div
+        style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
           <i class="fa-solid fa-clock" style="color: #002093; font-size: 1.15rem;"></i>
-          <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">¿Tiempos de Respuesta?</h4>
+          <h4
+            style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">
+            ¿Tiempos de Respuesta?</h4>
         </div>
-        <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
+        <p
+          style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
           Atención prioritaria y despacho rápido en menos de 24 horas hábiles.
         </p>
       </div>
 
-      <div style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
+      <div
+        style="background: white; padding: 22px 18px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); text-align: left;">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
           <i class="fa-solid fa-credit-card" style="color: #002093; font-size: 1.15rem;"></i>
-          <h4 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">¿Facturación & Pagos?</h4>
+          <h4
+            style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 700; color: #000E1F;">
+            ¿Facturación & Pagos?</h4>
         </div>
-        <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
+        <p
+          style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.88rem; color: #64748b; line-height: 1.5;">
           Factura electrónica instantánea, pago en línea protegido y convenios corporativos.
         </p>
       </div>
@@ -656,12 +769,16 @@
     </div>
 
     <!-- Bloque Horarios & Compromiso -->
-    <div style="text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 24px; max-width: 750px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
-      <p style="margin: 0 0 6px 0; font-size: 0.9rem; color: #000E1F; font-weight: 600; font-family: 'Montserrat', sans-serif;">
-        <i class="fa-solid fa-clock" style="color: #FCBE00; margin-right: 6px;"></i> Horario de Atención Corporativa: Lunes a Viernes de 10:00 a 16:00 hrs.
+    <div
+      style="text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 24px; max-width: 750px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+      <p
+        style="margin: 0 0 6px 0; font-size: 0.9rem; color: #000E1F; font-weight: 600; font-family: 'Montserrat', sans-serif;">
+        <i class="fa-solid fa-clock" style="color: #FCBE00; margin-right: 6px;"></i> Horario de Atención Corporativa:
+        Lunes a Viernes de 10:00 a 16:00 hrs.
       </p>
       <p style="font-family: 'Open Sans', sans-serif; margin: 0; font-size: 0.86rem; color: #64748b;">
-        <i class="fa-solid fa-building"></i> <strong>Rapidassure SPA</strong> — Respaldo, Tecnología y Cobertura a nivel nacional.
+        <i class="fa-solid fa-building"></i> <strong>Rapidassure SPA</strong> — Respaldo, Tecnología y Cobertura a nivel
+        nacional.
       </p>
     </div>
 
@@ -669,70 +786,70 @@
 </section>
 
 <script>
-function enviarMensajeContacto(e) {
-  e.preventDefault();
-  const btn = document.getElementById('btn-enviar-contacto');
-  if (btn) {
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
-    btn.disabled = true;
-  }
-  setTimeout(() => {
-    alert('¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito. Un ejecutivo de Rapidassure se pondrá en contacto contigo a la brevedad.');
-    document.getElementById('form-contacto-rapida').reset();
+  function enviarMensajeContacto(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-enviar-contacto');
     if (btn) {
-      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Mensaje';
-      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+      btn.disabled = true;
     }
-  }, 800);
-}
+    setTimeout(() => {
+      alert('¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito. Un ejecutivo de Rapidassure se pondrá en contacto contigo a la brevedad.');
+      document.getElementById('form-contacto-rapida').reset();
+      if (btn) {
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Mensaje';
+        btn.disabled = false;
+      }
+    }, 800);
+  }
 </script>
 
 <script>
-function scrollDestacados(amount) {
-  const container = document.getElementById('destacados-container');
-  if (!container) return;
+  function scrollDestacados(amount) {
+    const container = document.getElementById('destacados-container');
+    if (!container) return;
 
-  const maxScrollLeft = container.scrollWidth - container.clientWidth;
+    const maxScrollLeft = container.scrollWidth - container.clientWidth;
 
-  if (amount > 0) {
-    if (container.scrollLeft >= maxScrollLeft - 15) {
-      const firstCard = container.firstElementChild;
-      if (firstCard) {
-        container.appendChild(firstCard);
+    if (amount > 0) {
+      if (container.scrollLeft >= maxScrollLeft - 15) {
+        const firstCard = container.firstElementChild;
+        if (firstCard) {
+          container.appendChild(firstCard);
+        }
       }
-    }
-    container.scrollBy({ left: amount, behavior: 'smooth' });
-  } else {
-    if (container.scrollLeft <= 15) {
-      const lastCard = container.lastElementChild;
-      if (lastCard) {
-        container.insertBefore(lastCard, container.firstElementChild);
+      container.scrollBy({ left: amount, behavior: 'smooth' });
+    } else {
+      if (container.scrollLeft <= 15) {
+        const lastCard = container.lastElementChild;
+        if (lastCard) {
+          container.insertBefore(lastCard, container.firstElementChild);
+        }
       }
+      container.scrollBy({ left: amount, behavior: 'smooth' });
     }
-    container.scrollBy({ left: amount, behavior: 'smooth' });
   }
-}
 
-const MOSTRAR_RESENAS = {% if config_sitio.mostrar_resenas %}true{% else %}false{% endif %};
+  const MOSTRAR_RESENAS = {% if config_sitio.mostrar_resenas %}true{% else %} false{% endif %};
 
-async function shuffleDestacados() {
-  const container = document.getElementById('destacados-container');
-  const icon = document.getElementById('shuffle-icon');
-  if (!container) return;
+  async function shuffleDestacados() {
+    const container = document.getElementById('destacados-container');
+    const icon = document.getElementById('shuffle-icon');
+    if (!container) return;
 
-  if (icon) icon.classList.add('fa-spin');
-  
-  container.style.opacity = '0.4';
-  container.style.transition = 'opacity 0.25s ease';
+    if (icon) icon.classList.add('fa-spin');
 
-  try {
-    const response = await fetch('/api/destacados-random/');
-    const data = await response.json();
-    
-    if (data.productos && data.productos.length > 0) {
-      container.innerHTML = '';
-      data.productos.forEach(p => {
-        const cardHtml = `
+    container.style.opacity = '0.4';
+    container.style.transition = 'opacity 0.25s ease';
+
+    try {
+      const response = await fetch('/api/destacados-random/');
+      const data = await response.json();
+
+      if (data.productos && data.productos.length > 0) {
+        container.innerHTML = '';
+        data.productos.forEach(p => {
+          const cardHtml = `
           <div class="modern-product-card">
             <a href="/deseos/toggle/${p.id}/" class="card-heart-wishlist ${p.en_deseos ? 'active' : ''}" title="${p.en_deseos ? 'Quitar de favoritos' : 'Guardar en favoritos'}">
               ${p.en_deseos ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}
@@ -787,18 +904,18 @@ async function shuffleDestacados() {
             </div>
           </div>
         `;
-        container.insertAdjacentHTML('beforeend', cardHtml);
-      });
+          container.insertAdjacentHTML('beforeend', cardHtml);
+        });
+      }
+    } catch (err) {
+      console.error('Error al actualizar destacados:', err);
+    } finally {
+      setTimeout(() => {
+        container.style.opacity = '1';
+        if (icon) icon.classList.remove('fa-spin');
+      }, 200);
     }
-  } catch (err) {
-    console.error('Error al actualizar destacados:', err);
-  } finally {
-    setTimeout(() => {
-      container.style.opacity = '1';
-      if (icon) icon.classList.remove('fa-spin');
-    }, 200);
   }
-}
 </script>
 
 {% endblock %}
