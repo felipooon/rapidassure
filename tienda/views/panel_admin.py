@@ -968,6 +968,249 @@ def exportar_pedidos_puntos_blue(request):
 
 
 @staff_member_required(login_url='login')
+def exportar_pedidos_gratis_rm(request):
+    """
+    Genera un archivo Excel (.xlsx) exclusivo para gestionar los pedidos con
+    Despacho a Domicilio Gratis en la Región Metropolitana (compras >= $19.990).
+    """
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Envios Gratis RM"
+
+    # Estilos elegantes en tonos verde esmeralda distintivo
+    fill_header = PatternFill(start_color="047857", end_color="047857", fill_type="solid")
+    font_header = Font(name='Calibri', size=11, bold=True, color="FFFFFF")
+    align_center = Alignment(horizontal="center", vertical="center")
+    align_left = Alignment(horizontal="left", vertical="center")
+    thin_border = Border(
+        left=Side(style='thin', color='DDDDDD'),
+        right=Side(style='thin', color='DDDDDD'),
+        top=Side(style='thin', color='DDDDDD'),
+        bottom=Side(style='thin', color='DDDDDD')
+    )
+
+    headers = [
+        'Nº Pedido', 'Fecha', 'Cliente', 'RUT', 'Teléfono', 'Email',
+        'Dirección Entrega', 'Comuna', 'Región', 'Productos / Detalle',
+        'Peso (kg)', 'Total Compra ($)', 'Documento', 'Razón Social / Empresa',
+        'Estado Pago', 'Nº Seguimiento (OT)', 'Notas'
+    ]
+    ws.append(headers)
+
+    for col_num in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.fill = fill_header
+        cell.font = font_header
+        cell.alignment = align_center
+        cell.border = thin_border
+
+    column_widths = {
+        'A': 12, 'B': 16, 'C': 26, 'D': 15, 'E': 16, 'F': 26,
+        'G': 32, 'H': 20, 'I': 25, 'J': 35, 'K': 12, 'L': 16,
+        'M': 14, 'N': 26, 'O': 16, 'P': 22, 'Q': 25
+    }
+    for col_letter, width in column_widths.items():
+        ws.column_dimensions[col_letter].width = width
+
+    # Filtrar exclusivamente pedidos GRATIS_RM
+    estado_filtro = request.GET.get('estado')
+    if estado_filtro:
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='GRATIS_RM', estado=estado_filtro).order_by('-id'))
+    elif request.GET.get('todos'):
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='GRATIS_RM').order_by('-id'))
+    else:
+        pedidos_qs = list(
+            Pedido.objects.filter(tipo_entrega='GRATIS_RM')
+            .filter(models.Q(estado='PAGADO') | (models.Q(pagado=True) & models.Q(estado='PENDIENTE')))
+            .order_by('-id')
+        )
+
+    for row_num, p in enumerate(pedidos_qs, start=2):
+        items_desc = []
+        peso_total = 0.0
+        for item in p.items.select_related('producto').all():
+            items_desc.append(f"{item.cantidad}x {item.producto.nombre}")
+            if item.producto.peso:
+                try:
+                    peso_total += float(item.producto.peso) * item.cantidad
+                except (ValueError, TypeError):
+                    pass
+        productos_str = ", ".join(items_desc) if items_desc else "Equipamiento tecnológico"
+        peso_declarado = max(1.0, round(peso_total, 2))
+
+        doc_str = "Factura" if p.requiere_factura else "Boleta"
+        empresa_str = f"{p.razon_social or ''} ({p.rut_empresa or ''})".strip() if p.requiere_factura else "-"
+
+        ws.append([
+            f"#{p.codigo_orden}",
+            p.creado.strftime("%Y-%m-%d %H:%M"),
+            p.nombre_completo,
+            p.rut,
+            normalizar_telefono_chile(p.telefono),
+            p.email,
+            p.direccion,
+            p.comuna or p.ciudad,
+            p.region,
+            productos_str,
+            peso_declarado,
+            f"${p.get_total_cost() - p.descuento_aplicado}",
+            doc_str,
+            empresa_str,
+            p.get_estado_display(),
+            p.numero_seguimiento or "",
+            getattr(p, 'notas', '') or ""
+        ])
+
+        for col_num in range(1, len(headers) + 1):
+            cell = ws.cell(row=row_num, column=col_num)
+            cell.border = thin_border
+            if col_num in [1, 2, 4, 5, 11, 12, 13, 15]:
+                cell.alignment = align_center
+            else:
+                cell.alignment = align_left
+
+    usuario_log = request.user if request.user.is_authenticated else None
+    for p in pedidos_qs:
+        if p.estado == 'PAGADO' or (p.pagado and p.estado == 'PENDIENTE'):
+            p.estado = 'EN_PREPARACION'
+            if not p.empresa_transporte:
+                p.empresa_transporte = 'Blue Express'
+            p.save()
+
+            LogPedido.objects.create(
+                pedido_id=p.id,
+                codigo_orden=p.codigo_orden,
+                cliente_nombre=p.nombre_completo,
+                cliente_email=p.email,
+                accion='ESTADO_CAMBIO',
+                usuario=usuario_log,
+                detalles="Estado cambiado a 'En Preparación' por exportación de Planilla Envíos Gratis RM"
+            )
+
+    timestamp = timezone.now().strftime("%Y%m%d_%H%M")
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Planilla_Envios_Gratis_RM_{timestamp}.xlsx"'
+    wb.save(response)
+    return response
+
+
+@staff_member_required(login_url='login')
+def exportar_pedidos_retiro_local(request):
+    """
+    Genera un archivo Excel (.xlsx) para control, preparación y entrega en mesón
+    de pedidos con Retiro en Tienda Física (San Diego 174 Local 8).
+    """
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Retiros en Local"
+
+    # Estilos elegantes en tonos ámbar/dorado corporativo
+    fill_header = PatternFill(start_color="B45309", end_color="B45309", fill_type="solid")
+    font_header = Font(name='Calibri', size=11, bold=True, color="FFFFFF")
+    align_center = Alignment(horizontal="center", vertical="center")
+    align_left = Alignment(horizontal="left", vertical="center")
+    thin_border = Border(
+        left=Side(style='thin', color='DDDDDD'),
+        right=Side(style='thin', color='DDDDDD'),
+        top=Side(style='thin', color='DDDDDD'),
+        bottom=Side(style='thin', color='DDDDDD')
+    )
+
+    headers = [
+        'Nº Pedido', 'Fecha Compra', 'Cliente', 'RUT Cliente', 'Teléfono', 'Email',
+        'Productos para Preparar (Picking)', 'Total Pagado ($)', 'Documento',
+        'Razón Social / Empresa', 'Estado Pago', 'Fecha Retiro',
+        'Nombre y RUT Receptor', 'Firma / Conforme', 'Notas / Observaciones'
+    ]
+    ws.append(headers)
+
+    for col_num in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.fill = fill_header
+        cell.font = font_header
+        cell.alignment = align_center
+        cell.border = thin_border
+
+    column_widths = {
+        'A': 12, 'B': 16, 'C': 26, 'D': 15, 'E': 16, 'F': 26,
+        'G': 40, 'H': 16, 'I': 14, 'J': 26, 'K': 16,
+        'L': 18, 'M': 26, 'N': 22, 'O': 26
+    }
+    for col_letter, width in column_widths.items():
+        ws.column_dimensions[col_letter].width = width
+
+    # Filtrar exclusivamente pedidos RETIRO
+    estado_filtro = request.GET.get('estado')
+    if estado_filtro:
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='RETIRO', estado=estado_filtro).order_by('-id'))
+    elif request.GET.get('todos'):
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='RETIRO').order_by('-id'))
+    else:
+        pedidos_qs = list(
+            Pedido.objects.filter(tipo_entrega='RETIRO')
+            .filter(models.Q(estado='PAGADO') | (models.Q(pagado=True) & models.Q(estado='PENDIENTE')))
+            .order_by('-id')
+        )
+
+    for row_num, p in enumerate(pedidos_qs, start=2):
+        items_desc = []
+        for item in p.items.select_related('producto').all():
+            items_desc.append(f"{item.cantidad}x {item.producto.nombre}")
+        productos_str = ", ".join(items_desc) if items_desc else "Equipamiento tecnológico"
+
+        doc_str = "Factura" if p.requiere_factura else "Boleta"
+        empresa_str = f"{p.razon_social or ''} ({p.rut_empresa or ''})".strip() if p.requiere_factura else "-"
+
+        ws.append([
+            f"#{p.codigo_orden}",
+            p.creado.strftime("%Y-%m-%d %H:%M"),
+            p.nombre_completo,
+            p.rut,
+            normalizar_telefono_chile(p.telefono),
+            p.email,
+            productos_str,
+            f"${p.get_total_cost() - p.descuento_aplicado}",
+            doc_str,
+            empresa_str,
+            p.get_estado_display(),
+            "",  # Fecha de Retiro (espacio para mesón)
+            "",  # Nombre y RUT Receptor (espacio para mesón)
+            "",  # Firma / Conforme (espacio para mesón)
+            getattr(p, 'notas', '') or ""
+        ])
+
+        for col_num in range(1, len(headers) + 1):
+            cell = ws.cell(row=row_num, column=col_num)
+            cell.border = thin_border
+            if col_num in [1, 2, 4, 5, 8, 9, 11, 12]:
+                cell.alignment = align_center
+            else:
+                cell.alignment = align_left
+
+    usuario_log = request.user if request.user.is_authenticated else None
+    for p in pedidos_qs:
+        if p.estado == 'PAGADO' or (p.pagado and p.estado == 'PENDIENTE'):
+            p.estado = 'EN_PREPARACION'
+            p.save()
+
+            LogPedido.objects.create(
+                pedido_id=p.id,
+                codigo_orden=p.codigo_orden,
+                cliente_nombre=p.nombre_completo,
+                cliente_email=p.email,
+                accion='ESTADO_CAMBIO',
+                usuario=usuario_log,
+                detalles="Estado cambiado a 'En Preparación' por exportación de Planilla Retiro en Local"
+            )
+
+    timestamp = timezone.now().strftime("%Y%m%d_%H%M")
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Planilla_Retiro_en_Local_{timestamp}.xlsx"'
+    wb.save(response)
+    return response
+
+
+@staff_member_required(login_url='login')
 def exportar_stock_excel(request):
     wb = openpyxl.Workbook()
     ws = wb.active

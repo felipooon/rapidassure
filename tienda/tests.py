@@ -1163,6 +1163,81 @@ class BlueExpressIntegrationTests(TestCase):
         nombres_en_planilla = [ws.cell(r, 4).value for r in range(6, ws.max_row + 1)]
         self.assertIn('Cliente Gratis RM', nombres_en_planilla)
 
+    def test_exportar_pedidos_gratis_rm_excel(self):
+        """Verifica la generación de la planilla exclusiva de pedidos con Envío Gratis RM."""
+        p_gratis = Pedido.objects.create(
+            nombre_completo='Cliente Planilla RM',
+            rut='19.555.666-7',
+            email='planilla_rm@example.com',
+            telefono='988776655',
+            tipo_entrega='GRATIS_RM',
+            direccion='Av. Vitacura 5000',
+            ciudad='Vitacura',
+            comuna='Vitacura',
+            region='Región Metropolitana de Santiago',
+            costo_envio=0,
+            estado='PAGADO',
+            pagado=True,
+            empresa_transporte='Blue Express'
+        )
+
+        self.client.login(username='admin_bx', password='adminpassword123')
+        resp = self.client.get('/panel/pedidos/exportar-gratis-rm/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', resp['Content-Type'])
+        self.assertIn('Planilla_Envios_Gratis_RM', resp['Content-Disposition'])
+
+        import io, openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(resp.content))
+        self.assertIn('Envios Gratis RM', wb.sheetnames)
+        ws = wb['Envios Gratis RM']
+        self.assertEqual(ws.cell(1, 1).value, 'Nº Pedido')
+        self.assertEqual(ws.cell(1, 3).value, 'Cliente')
+        self.assertEqual(ws.cell(2, 3).value, 'Cliente Planilla RM')
+        self.assertEqual(ws.cell(2, 7).value, 'Av. Vitacura 5000')
+
+        # Verificar actualización de estado a EN_PREPARACION
+        p_gratis.refresh_from_db()
+        self.assertEqual(p_gratis.estado, 'EN_PREPARACION')
+
+    def test_exportar_pedidos_retiro_local_excel(self):
+        """Verifica la generación de la planilla para Retiros en Local / Tienda."""
+        p_retiro = Pedido.objects.create(
+            nombre_completo='Cliente Retiro Tienda',
+            rut='16.444.333-2',
+            email='retiro_tienda@example.com',
+            telefono='977665544',
+            tipo_entrega='RETIRO',
+            direccion='San Diego 174',
+            ciudad='Santiago',
+            comuna='Santiago',
+            region='Región Metropolitana de Santiago',
+            costo_envio=0,
+            estado='PAGADO',
+            pagado=True
+        )
+
+        self.client.login(username='admin_bx', password='adminpassword123')
+        resp = self.client.get('/panel/pedidos/exportar-retiro-local/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', resp['Content-Type'])
+        self.assertIn('Planilla_Retiro_en_Local', resp['Content-Disposition'])
+
+        import io, openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(resp.content))
+        self.assertIn('Retiros en Local', wb.sheetnames)
+        ws = wb['Retiros en Local']
+        self.assertEqual(ws.cell(1, 1).value, 'Nº Pedido')
+        self.assertEqual(ws.cell(1, 3).value, 'Cliente')
+        self.assertEqual(ws.cell(1, 7).value, 'Productos para Preparar (Picking)')
+        self.assertEqual(ws.cell(1, 14).value, 'Firma / Conforme')
+        self.assertEqual(ws.cell(2, 3).value, 'Cliente Retiro Tienda')
+
+        # Verificar actualización de estado a EN_PREPARACION
+        p_retiro.refresh_from_db()
+        self.assertEqual(p_retiro.estado, 'EN_PREPARACION')
+
+
 
 
 

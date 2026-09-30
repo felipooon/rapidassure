@@ -62,6 +62,8 @@ from .panel_admin import (
     exportar_pedidos_excel,
     exportar_pedidos_blue_express,
     exportar_pedidos_puntos_blue,
+    exportar_pedidos_gratis_rm,
+    exportar_pedidos_retiro_local,
     exportar_stock_excel,
     panel_configuracion,
     panel_blog,

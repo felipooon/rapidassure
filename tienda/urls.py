@@ -68,6 +68,8 @@ urlpatterns = [
     path('panel/pedidos/exportar/', views.exportar_pedidos_excel, name='exportar_pedidos_excel'),
     path('panel/pedidos/exportar-blue-express/', views.exportar_pedidos_blue_express, name='exportar_pedidos_blue_express'),
     path('panel/pedidos/exportar-puntos-blue/', views.exportar_pedidos_puntos_blue, name='exportar_pedidos_puntos_blue'),
+    path('panel/pedidos/exportar-gratis-rm/', views.exportar_pedidos_gratis_rm, name='exportar_pedidos_gratis_rm'),
+    path('panel/pedidos/exportar-retiro-local/', views.exportar_pedidos_retiro_local, name='exportar_pedidos_retiro_local'),
     path('panel/pedidos/<int:id>/actualizar-estado/', views.actualizar_estado_pedido, name='actualizar_estado_pedido'),
     path('panel/pedidos/enviar-seguimiento/<int:id>/', views.enviar_seguimiento_email, name='enviar_seguimiento_email'),
 
