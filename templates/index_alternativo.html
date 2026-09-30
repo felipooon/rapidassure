@@ -1020,87 +1020,139 @@
 
 
 <!-- ==========================================
-     SECCIÓN NOSOTROS (3 PILARES Y SELLO)
+     SECCIÓN NOSOTROS (4 PILARES Y SELLO)
 ========================================== -->
 <section id="acerca" class="nosotros"
-  style="position: relative; padding: 4.5rem 1rem; width: 100%; min-height: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #000E1F;">
+  style="position: relative; padding: 5rem 1.5rem; width: 100%; min-height: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; background: #000E1F;">
   <img src="{% static 'img/Oficina.jpg' %}" alt="Oficinas Rapidassure Retail"
     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.85; z-index: 1;">
 
+  <!-- Soft overlay gradient -->
   <div
-    style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0, 14, 31, 0.35) 0%, rgba(0, 14, 31, 0.55) 100%); z-index: 2;">
+    style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, rgba(0, 14, 31, 0.40) 0%, rgba(0, 14, 31, 0.65) 100%); z-index: 2;">
   </div>
 
-  <div style="position: relative; z-index: 3; max-width: 1050px; margin: 0 auto; text-align: center; width: 100%;">
-    <div style="margin-bottom: 2.5rem;">
+  <div style="position: relative; z-index: 3; max-width: 1160px; margin: 0 auto; text-align: center; width: 100%;">
+
+    <!-- Encabezado & Presentación -->
+    <div style="margin-bottom: 3rem;">
       <span
-        style="display: inline-block; background: rgba(252, 190, 0, 0.15); color: #FCBE00; border: 1px solid rgba(252, 190, 0, 0.3); font-size: 0.85rem; font-weight: 800; padding: 5px 16px; border-radius: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; backdrop-filter: blur(5px);">
-        Nuestra Trayectoria
+        style="display: inline-flex; align-items: center; gap: 8px; background: rgba(252, 190, 0, 0.15); color: #FCBE00; border: 1px solid rgba(252, 190, 0, 0.35); font-size: 0.82rem; font-weight: 800; padding: 6px 18px; border-radius: 999px; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 14px; backdrop-filter: blur(8px);">
+        <i class="fa-solid fa-building"></i> Sobre Nosotros
       </span>
       <h2
-        style="font-family: 'Montserrat', sans-serif; font-size: 2.3rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.4);">
+        style="font-family: 'Montserrat', sans-serif; font-size: clamp(2.1rem, 4.5vw, 2.85rem); font-weight: 800; color: #ffffff; margin: 0 0 16px 0; text-shadow: 0 2px 14px rgba(0,0,0,0.5); letter-spacing: -0.5px;">
         ¿Quiénes Somos?
       </h2>
-      <p
-        style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.9); font-size: 1.08rem; max-width: 760px; margin: 0 auto; line-height: 1.6;">
-        En <strong>Rapidassure Retail</strong> transformamos la experiencia del comercio entregando equipamiento tecnológico de vanguardia, terminales POS y coberturas de garantía que aseguran la continuidad operativa de tu empresa.
-      </p>
+      <div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;">
+        <p
+          style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.95); font-size: 1.12rem; line-height: 1.7; margin: 0; font-weight: 500;">
+          En <strong style="color: #FCBE00; font-weight: 800;">Rapidassure Retail</strong> somos una empresa especializada en la comercialización de productos tecnológicos, computación y soluciones para el día a día, orientada tanto a empresas como a clientes particulares.
+        </p>
+        <p
+          style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 1.02rem; line-height: 1.65; margin: 0;">
+          Trabajamos para ofrecer productos de calidad, un servicio confiable y una experiencia de compra rápida y segura, seleccionando soluciones que respondan a las necesidades de nuestros clientes.
+        </p>
+      </div>
     </div>
 
-    <!-- 3 Pilares Corporativos -->
+    <!-- 4 Pilares Corporativos -->
     <div
-      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; margin-bottom: 3rem;">
+
+      <!-- Pilar 1: Tecnología para cada necesidad -->
       <div
-        style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;"
-        onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-microchip"></i></div>
+        style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
+        onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
+        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+          <i class="fa-solid fa-laptop-code"></i>
+        </div>
         <h3
-          style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">
-          Tecnología Especializada</h3>
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; line-height: 1.35; min-height: 2.7em; display: flex; align-items: center; justify-content: center;">
+          Tecnología para cada necesidad
+        </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Soluciones de hardware y sistemas diseñados a la medida para optimizar el punto de venta y la administración de stock.
+          Contamos con un catálogo de productos tecnológicos, accesorios y equipamiento para computación, conectividad, audio, gaming, escritorio y uso diario.
         </p>
       </div>
 
+      <!-- Pilar 2: Calidad y confianza -->
       <div
-        style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;"
-        onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-shield-virus"></i></div>
+        style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
+        onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
+        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
         <h3
-          style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">
-          Respaldo & Cobertura</h3>
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; line-height: 1.35; min-height: 2.7em; display: flex; align-items: center; justify-content: center;">
+          Calidad y confianza
+        </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Planes de protección y reemplazo inmediato ante imprevistos para garantizar que tus ventas nunca se detengan.
+          Seleccionamos productos de marcas reconocidas y alternativas confiables, buscando entregar una excelente relación entre calidad, precio y funcionalidad.
         </p>
       </div>
 
+      <!-- Pilar 3: Atención para empresas y clientes finales -->
       <div
-        style="background: rgba(0, 32, 147, 0.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 30px 22px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease;"
-        onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-        <div style="font-size: 2rem; color: #FCBE00; margin-bottom: 12px;"><i class="fa-solid fa-handshake"></i></div>
+        style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
+        onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
+        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+          <i class="fa-solid fa-handshake-angle"></i>
+        </div>
         <h3
-          style="font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; color: #ffffff; margin: 0 0 10px 0;">
-          Compromiso Corporativo</h3>
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; line-height: 1.35; min-height: 2.7em; display: flex; align-items: center; justify-content: center;">
+          Atención para empresas y clientes finales
+        </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Acompañamos a PyMEs y grandes cadenas en su crecimiento operacional con soluciones integrales y asesoría profesional.
+          Atendemos tanto a empresas, PyMEs y organizaciones como a clientes particulares, ofreciendo soluciones adaptadas a cada necesidad y apoyo durante el proceso de compra.
         </p>
       </div>
+
+      <!-- Pilar 4: Rapidez y seguridad -->
+      <div
+        style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
+        onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
+        onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
+        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <h3
+          style="font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #ffffff; margin: 0 0 12px 0; line-height: 1.35; min-height: 2.7em; display: flex; align-items: center; justify-content: center;">
+          Rapidez y seguridad
+        </h3>
+        <p
+          style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
+          Nos preocupamos de que cada compra sea un proceso simple, rápido y seguro, desde la selección del producto hasta su entrega.
+        </p>
+      </div>
+
     </div>
 
-    <!-- Sello corporativo -->
+    <!-- Sello / Frase corporativa -->
     <div
-      style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(8px); border: 1px solid rgba(252, 190, 0, 0.3); border-radius: 16px; padding: 20px 25px; display: inline-block; max-width: 650px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
-      <p
-        style="font-family: 'Open Sans', sans-serif; font-size: 1.02rem; font-weight: 600; color: rgba(255, 255, 255, 0.95); margin: 0 0 6px 0; font-style: italic;">
-        "Innovación, velocidad y seguridad para asegurar el éxito operativo de tu negocio retail."
-      </p>
-      <span style="font-family: 'Montserrat', sans-serif; font-size: 0.92rem; font-weight: 800; color: #FCBE00;">
-        — Rapidassure Retail
-      </span>
+      style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 32, 147, 0.35) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(252, 190, 0, 0.4); border-radius: 20px; padding: 26px 32px; display: inline-flex; flex-direction: column; align-items: center; max-width: 780px; width: 100%; box-shadow: 0 12px 32px rgba(0,0,0,0.35); position: relative;">
+      <div style="font-size: 1.6rem; color: #FCBE00; margin-bottom: 10px; opacity: 0.9;">
+        <i class="fa-solid fa-quote-left"></i>
+      </div>
+      <blockquote
+        style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: clamp(1.05rem, 2.2vw, 1.25rem); font-weight: 700; color: #ffffff; line-height: 1.55; font-style: italic; letter-spacing: 0.2px;">
+        “Tecnología confiable, servicio cercano y soluciones que avanzan contigo.”
+      </blockquote>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 14px;">
+        <span style="height: 2px; width: 24px; background: #FCBE00; display: inline-block;"></span>
+        <span style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #FCBE00; letter-spacing: 1.2px; text-transform: uppercase;">
+          Rapidassure Retail
+        </span>
+        <span style="height: 2px; width: 24px; background: #FCBE00; display: inline-block;"></span>
+      </div>
     </div>
+
   </div>
 </section>
 
@@ -1128,16 +1180,16 @@
     </div>
 
     <!-- Mapa interactivo con Formulario Flotante -->
-    <div
+    <div class="contacto-mapa-form-box"
       style="position: relative; width: 100%; min-height: 520px; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; margin-bottom: 3rem; background: #e5e3df;">
 
-      <iframe
+      <iframe class="contacto-mapa-iframe"
         src="https://maps.google.com/maps?q=San+Diego+174+Local+8+Santiago+Chile&t=&z=16&ie=UTF8&iwloc=&output=embed"
         width="100%" height="100%"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; min-height: 520px; filter: contrast(1.02) saturate(1.05);"
         allowfullscreen="" loading="lazy" title="Ubicación Rapidassure Retail"></iframe>
 
-      <div
+      <div class="contacto-form-glass-card"
         style="position: relative; z-index: 10; max-width: 440px; margin: 25px; background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 32px 28px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 15px 35px rgba(0,0,0,0.15);">
 
         <h3

@@ -5466,16 +5466,302 @@ body.panel-body {
   }
 
   .hero-md-badges-container {
-    flex-direction: column;
-    padding: 12px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px 8px !important;
+    padding: 8px 10px !important;
   }
 
   .hero-md-badge-item {
-    width: 100%;
-    flex: 1 1 100%;
+    width: 100% !important;
+    padding: 6px 10px !important;
+    gap: 8px !important;
+    border-radius: 10px !important;
+  }
+
+  .hero-md-badge-icon {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .hero-md-badge-title {
+    font-size: 0.76rem !important;
+  }
+
+  .hero-md-badge-sub {
+    font-size: 0.65rem !important;
   }
 
   .hero-md-badge-highlight {
-    width: 100%;
+    grid-column: span 2 !important;
+    width: 100% !important;
+    padding: 4px 8px !important;
+    text-align: center !important;
+  }
+
+  .hero-md-highlight-main {
+    font-size: 0.75rem !important;
+  }
+
+  .hero-md-highlight-sub {
+    font-size: 0.72rem !important;
+  }
+}
+
+/* =======================================================
+   RESPONSIVE FIX: SLIDER BANNER 2 Y SECCIÓN CONTACTO MÓVIL
+   ======================================================= */
+
+/* 1. SECCIÓN CONTACTO: MAPA Y FORMULARIO SEPARADOS EN MÓVIL */
+.contacto-mapa-form-box {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 3rem;
+  background: #e5e3df;
+}
+
+.contacto-mapa-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  min-height: 520px;
+  filter: contrast(1.02) saturate(1.05);
+}
+
+.contacto-form-glass-card {
+  position: relative;
+  z-index: 10;
+  max-width: 440px;
+  margin: 25px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 32px 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 900px) {
+  .contacto-mapa-form-box {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    gap: 20px !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .contacto-mapa-iframe {
+    position: relative !important;
+    width: 100% !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    border-radius: 20px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    order: 2 !important; /* Mapa 100% visible sin que el formulario lo tape */
+  }
+
+  .contacto-form-glass-card {
+    position: relative !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 24px 18px !important;
+    border-radius: 20px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    order: 1 !important; /* Formulario ordenado arriba */
+    background: #ffffff !important;
+  }
+}
+
+/* 2. HERO SLIDER VIEWPORT Y BANNER 2 EN MÓVIL */
+@media (max-width: 768px) {
+  .hero-slider-viewport {
+    height: clamp(560px, calc(100vh - 120px), 640px) !important;
+  }
+
+  /* Slide 2: Adaptación fluida sin deformación */
+  .hero-slide-item .hero-banner-section.hero-scene-bg {
+    padding: 1rem 0.9rem 0.5rem !important;
+    background-position: 65% center !important;
+    background-size: cover !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hero-slide-item .hero-banner-section.hero-scene-bg::before {
+    width: 100% !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.90) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
+  }
+
+  /* Ocultar tarjeta flotante redundante de Blue Express en móvil para liberar espacio */
+  .hero-slide-item .hero-bluexpress-floating-card {
+    display: none !important;
+  }
+
+  .hero-slide-item .hero-fluid-container {
+    justify-content: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .hero-slide-item .hero-card-grid {
+    margin-bottom: 0 !important;
+  }
+
+  .hero-slide-item .hero-title-glass-card {
+    padding: 14px 14px !important;
+    margin-bottom: 0 !important;
+    border-radius: 16px !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    box-shadow: 0 6px 20px rgba(0, 32, 147, 0.06) !important;
+  }
+
+  .hero-slide-item .hero-yellow-badge {
+    font-size: 0.7rem !important;
+    padding: 3px 8px !important;
+    margin-bottom: 6px !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-slide-item .hero-main-heading {
+    font-size: clamp(1.3rem, 5.2vw, 1.65rem) !important;
+    line-height: 1.2 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .hero-slide-item .hero-description-text {
+    font-size: 0.82rem !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* 4 Características Clave en Grid 2x2 compacto */
+  .hero-slide-item .hero-features-glass-card {
+    padding: 10px 12px !important;
+    margin-bottom: 0 !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.80) !important;
+  }
+
+  .hero-slide-item .hero-key-features-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px 8px !important;
+    margin: 0 !important;
+  }
+
+  .hero-slide-item .key-feature-item {
+    font-size: 0.74rem !important;
+    gap: 6px !important;
+    padding: 0 !important;
+    align-items: center !important;
+  }
+
+  .hero-slide-item .key-feature-item .feature-icon {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 0.75rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .hero-slide-item .key-feature-item span {
+    line-height: 1.2 !important;
+  }
+
+  /* Botón CTA compacto */
+  .hero-slide-item .hero-cta-wrapper {
+    margin-top: 2px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+
+  .hero-slide-item .btn-hero-blue-pill {
+    padding: 9px 18px !important;
+    font-size: 0.84rem !important;
+    width: 100% !important;
+    max-width: 260px !important;
+    justify-content: center !important;
+  }
+
+  .hero-slide-item .hero-handwritten-note {
+    font-size: 0.72rem !important;
+    margin-top: 0 !important;
+  }
+
+  /* Tira de Beneficios en Grid 2x2 ultra limpio */
+  .hero-slide-item .hero-bottom-benefits-strip {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    padding: 8px 10px !important;
+    margin-top: auto !important;
+    margin-bottom: 4px !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.86) !important;
+  }
+
+  .hero-slide-item .benefit-strip-item {
+    padding: 2px 4px !important;
+    gap: 6px !important;
+    border: none !important;
+  }
+
+  .hero-slide-item .benefit-direct-icon {
+    font-size: 1.15rem !important;
+  }
+
+  .hero-slide-item .benefit-bx-icon {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .hero-slide-item .benefit-info h4 {
+    font-size: 0.72rem !important;
+    line-height: 1.15 !important;
+    margin: 0 !important;
+  }
+
+  .hero-slide-item .benefit-info p {
+    display: none !important;
+  }
+
+  .hero-slide-item .badge-free-yellow {
+    font-size: 0.62rem !important;
+    padding: 1px 5px !important;
+  }
+
+  .hero-slide-item .payment-brands-row-img {
+    max-height: 13px !important;
+  }
+
+  .hero-slide-item .hero-ticker-ribbon {
+    padding: 6px 0.5rem !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.8px !important;
+    margin-top: 0 !important;
   }
 }
