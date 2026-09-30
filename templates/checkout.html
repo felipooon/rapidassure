@@ -109,11 +109,12 @@
                             <input type="email" name="email" value="{{ datos_previos.email }}" required class="input-checkout-modern" placeholder="correo@ejemplo.com">
                         </div>
                         <div>
-                            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Teléfono WhatsApp *</label>
+                            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Teléfono WhatsApp / Contacto *</label>
                             <div style="display: flex;">
                                 <span style="background: #f1f5f9; border: 1px solid #cbd5e1; border-right: none; padding: 10px 14px; border-radius: 10px 0 0 10px; color: #002093; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center;">+56</span>
-                                <input type="tel" name="telefono" value="{{ datos_previos.telefono }}" required class="input-checkout-modern" style="border-radius: 0 10px 10px 0;" placeholder="9 1234 5678" maxlength="9">
+                                <input type="tel" name="telefono" id="input_telefono" value="{{ datos_previos.telefono }}" required class="input-checkout-modern" style="border-radius: 0 10px 10px 0;" placeholder="9 1111 1111 o 2 111 1111" maxlength="15">
                             </div>
+                            <span style="font-size: 0.73rem; color: #64748b; margin-top: 4px; display: block;">Ej: 9 1111 1111 (móvil) o 2 111 1111 (fijo)</span>
                         </div>
                     </div>
 
@@ -645,6 +646,29 @@
             setTipoEntrega('RETIRO');
         } else {
             actualizarCotizacionBlueExpress(comunaPrevia);
+        }
+
+        const formCheckout = document.getElementById('form-checkout-rapida');
+        if (formCheckout) {
+            formCheckout.addEventListener('submit', function() {
+                const inputTel = document.getElementById('input_telefono');
+                if (inputTel && inputTel.value) {
+                    let digits = inputTel.value.replace(/\D/g, '');
+                    if (digits.startsWith('56')) {
+                        inputTel.value = digits;
+                    } else if (digits.startsWith('9') && digits.length === 9) {
+                        inputTel.value = '56' + digits;
+                    } else if (digits.startsWith('2')) {
+                        inputTel.value = '56' + digits;
+                    } else if (digits.length === 8) {
+                        inputTel.value = (['2', '3', '4', '5', '6', '7'].includes(digits[0])) ? ('56' + digits) : ('569' + digits);
+                    } else if (digits.length === 7 && digits.startsWith('2')) {
+                        inputTel.value = '56' + digits;
+                    } else if (digits) {
+                        inputTel.value = '56' + digits;
+                    }
+                }
+            });
         }
     });
 </script>

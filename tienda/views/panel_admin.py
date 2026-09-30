@@ -21,6 +21,7 @@ from ..comunas_chile import (
     parsear_direccion_chilena,
     obtener_region_de_comuna
 )
+from ..utils import normalizar_telefono_chile
 
 
 class CustomLoginView(LoginView):
@@ -656,7 +657,7 @@ def exportar_pedidos_excel(request):
             p.nombre_completo,
             p.rut,
             p.email,
-            f"+56{p.telefono}",
+            p.telefono_display,
             p.get_tipo_entrega_display() if hasattr(p, 'get_tipo_entrega_display') else p.tipo_entrega,
             p.ciudad,
             p.direccion,
@@ -719,14 +720,18 @@ def exportar_pedidos_blue_express(request):
         ]
         ws.append(headers_row5)
 
-    # Filtrar pedidos de despacho a domicilio
-    pedidos_qs = Pedido.objects.filter(tipo_entrega='ENVIO').order_by('-id')
-
+    # Filtrar solo pedidos pagados para despacho a domicilio
     estado_filtro = request.GET.get('estado')
     if estado_filtro:
-        pedidos_qs = pedidos_qs.filter(estado=estado_filtro)
-    elif not request.GET.get('todos'):
-        pedidos_qs = pedidos_qs.filter(estado__in=['PAGADO', 'EN_PREPARACION'])
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='ENVIO', estado=estado_filtro).order_by('-id'))
+    elif request.GET.get('todos'):
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='ENVIO').order_by('-id'))
+    else:
+        pedidos_qs = list(
+            Pedido.objects.filter(tipo_entrega='ENVIO')
+            .filter(models.Q(estado='PAGADO') | (models.Q(pagado=True) & models.Q(estado='PENDIENTE')))
+            .order_by('-id')
+        )
 
     start_row = 6
     for i, p in enumerate(pedidos_qs):
@@ -766,12 +771,8 @@ def exportar_pedidos_blue_express(request):
         # La validación oficial de Blue Express exige peso >= 1 kg
         peso_declarado = max(1.0, round(peso_total, 2))
 
-        # Teléfono en formato 569XXXXXXXX o 9XXXXXXXX
-        telefono_limpio = p.telefono.strip().replace("+", "").replace(" ", "").replace("-", "")
-        if len(telefono_limpio) == 9 and not telefono_limpio.startswith("56"):
-            telefono_contacto = f"56{telefono_limpio}"
-        else:
-            telefono_contacto = telefono_limpio
+        # Teléfono normalizado oficial Blue Express (569XXXXXXXX para celular, 562XXXXXXXX para fijo)
+        telefono_contacto = normalizar_telefono_chile(p.telefono)
 
         # Parsear dirección en calle, número, depto
         calle, numero, depto, _ = parsear_direccion_chilena(p.direccion)
@@ -816,6 +817,25 @@ def exportar_pedidos_blue_express(request):
 
         for col_idx, val in enumerate(datos_fila, start=3):
             ws.cell(row=current_row, column=col_idx, value=val)
+
+    # Actualizar estado de los pedidos pagados exportados a 'EN_PREPARACION'
+    usuario_log = request.user if request.user.is_authenticated else None
+    for p in pedidos_qs:
+        if p.estado == 'PAGADO' or (p.pagado and p.estado == 'PENDIENTE'):
+            p.estado = 'EN_PREPARACION'
+            if not p.empresa_transporte:
+                p.empresa_transporte = 'Blue Express'
+            p.save()
+
+            LogPedido.objects.create(
+                pedido_id=p.id,
+                codigo_orden=p.codigo_orden,
+                cliente_nombre=p.nombre_completo,
+                cliente_email=p.email,
+                accion='ESTADO_CAMBIO',
+                usuario=usuario_log,
+                detalles="Estado cambiado automáticamente a 'En Preparación' por generación de Carga Masiva Blue Express"
+            )
 
     timestamp = timezone.now().strftime("%Y%m%d_%H%M")
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

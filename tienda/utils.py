@@ -61,3 +61,46 @@ def get_cloudinary_url(image_field_or_url, width=None, quality="auto", format_ty
         url = f"{prefix}{transform_str}/{suffix}"
 
     return url
+
+
+import re
+
+def normalizar_telefono_chile(raw_telefono):
+    """
+    Normaliza cualquier número de teléfono ingresado (móvil o fijo) al formato oficial
+    requerido por la planilla de Carga Masiva de Blue Express y las comunicaciones:
+    - Celular: 569XXXXXXXX (11 dígitos, ej: 56911111111)
+    - Teléfono Fijo: 562XXXXXXX o 56XXXXXXXXX (ej: 562111111)
+    """
+    if not raw_telefono:
+        return ""
+    digits = re.sub(r'\D', '', str(raw_telefono).strip())
+    if not digits:
+        return ""
+
+    # Si ya comienza con prefijo chileno 56
+    if digits.startswith('56'):
+        return digits
+
+    # Si tiene 9 dígitos
+    # - Celular chileno: 9XXXXXXXX -> 569XXXXXXXX
+    # - Fijo: 2XXXXXXXX -> 562XXXXXXXX (o código de área de región)
+    if len(digits) == 9:
+        return f"56{digits}"
+
+    # Si tiene 8 dígitos
+    # - Fijo (ej: 21111111 o 2XXXXXXX): 562XXXXXXX
+    # - Celular sin el 9 inicial (ej: 87654321): 56987654321
+    if len(digits) == 8:
+        if digits.startswith(('2', '3', '4', '5', '6', '7')):
+            return f"56{digits}"
+        return f"569{digits}"
+
+    # Fijo antiguo de 7 dígitos (ej: 2111111)
+    if len(digits) == 7:
+        if digits.startswith('2'):
+            return f"56{digits}"
+        return f"562{digits}"
+
+    # Fallback general
+    return f"56{digits}"

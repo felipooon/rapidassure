@@ -982,6 +982,10 @@ class BlueExpressIntegrationTests(TestCase):
         self.assertEqual(ws.cell(6, 19).value, 'EXPRESS')
         self.assertEqual(ws.cell(6, 20).value, 'No')
 
+        # Verificar que el pedido cambió de estado a EN_PREPARACION
+        p_updated = Pedido.objects.get(email='despacho@example.com')
+        self.assertEqual(p_updated.estado, 'EN_PREPARACION')
+
 
 
 

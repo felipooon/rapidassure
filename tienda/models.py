@@ -361,7 +361,21 @@ class Pedido(models.Model):
         """        
         return str(self.id + 1100)
     
-    # 4. Datos de la transacción
+    @property
+    def telefono_display(self):
+        """Muestra el teléfono con prefijo + (ej: +56912345678)."""
+        t = str(self.telefono or '').strip().replace('+', '').replace(' ', '').replace('-', '')
+        if not t.startswith('56'):
+            return f"+56{t}" if t else ""
+        return f"+{t}"
+
+    @property
+    def telefono_wa(self):
+        """Teléfono limpio con prefijo 56 para enlaces wa.me."""
+        t = str(self.telefono or '').strip().replace('+', '').replace(' ', '').replace('-', '')
+        if not t.startswith('56'):
+            return f"56{t}" if t else ""
+        return t
     creado = models.DateTimeField(auto_now_add=True)
     actualizado = models.DateTimeField(auto_now=True)
     pagado = models.BooleanField(default=False)
@@ -397,6 +411,8 @@ class Pedido(models.Model):
     def confirmar_pago(self):
         # 1. Marcamos el pedido como pagado
         self.pagado = True
+        if self.estado == 'PENDIENTE':
+            self.estado = 'PAGADO'
         self.save()
 
         # 2. Recorremos cada item comprado optimizando la consulta

@@ -3582,20 +3582,22 @@ body.panel-body {
 
 /* Tira de 4 Iconos de Características */
 .hero-key-features-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  gap: 14px 32px;
+  align-items: center;
   margin-bottom: 2.2rem;
 }
 
 .key-feature-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.85rem;
   font-weight: 700;
   color: #002A9E;
+  line-height: 1.35;
 }
 
 .key-feature-item .feature-icon {
@@ -3610,6 +3612,7 @@ body.panel-body {
   font-size: 0.95rem;
   background: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 56, 255, 0.08);
+  flex-shrink: 0;
 }
 
 /* Botón CTA Blue Pill + Frase */
@@ -4003,8 +4006,8 @@ body.panel-body {
   }
 
   .hero-key-features-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 

@@ -26,6 +26,7 @@ from ..comunas_chile import (
     UMBRAL_ENVIO_GRATIS,
     determinar_talla_peso
 )
+from ..utils import normalizar_telefono_chile
 
 
 def enviar_correo_asincrono(asunto, mensaje, destinatario):
@@ -478,7 +479,7 @@ def procesar_pedido(request):
             nombre_completo=request.POST.get('nombre_completo'),
             rut=rut_ingresado,
             email=request.POST.get('email'),
-            telefono=request.POST.get('telefono'),
+            telefono=normalizar_telefono_chile(request.POST.get('telefono')),
             tipo_entrega=tipo_entrega,
             direccion=direccion,
             ciudad=comuna,
@@ -518,7 +519,7 @@ def procesar_pedido(request):
             )
 
         items_summary = ", ".join([f"{item['producto_real'].nombre} (x{item['cantidad']})" for item in carrito])
-        detalles_creacion = f"Pedido iniciado por total ${total_final} (Subtotal: ${total_bruto}, Descuento: -${descuento_aplicado}, Envío Blue Express: ${costo_envio}) | Ítems: {items_summary} | Destino: {pedido.direccion}, {pedido.comuna}, {pedido.region} | RUT: {pedido.rut} | Teléfono: +56{pedido.telefono}"
+        detalles_creacion = f"Pedido iniciado por total ${total_final} (Subtotal: ${total_bruto}, Descuento: -${descuento_aplicado}, Envío Blue Express: ${costo_envio}) | Ítems: {items_summary} | Destino: {pedido.direccion}, {pedido.comuna}, {pedido.region} | RUT: {pedido.rut} | Teléfono: {pedido.telefono_display}"
         if cupon_obj:
             detalles_creacion += f" | Cupón: {cupon_obj.codigo} (-${descuento_aplicado})"
 
@@ -538,7 +539,7 @@ def procesar_pedido(request):
 Cliente: {pedido.nombre_completo}
 Comuna/Región: {pedido.comuna}, {pedido.region}
 Total: ${total_final} (Envío Blue Express: ${costo_envio})
-Teléfono: +56{pedido.telefono}
+Teléfono: {pedido.telefono_display}
 
 Revisa el panel de administración para ver el detalle completo.
 https://rapidassure.cl/panel/
@@ -792,7 +793,7 @@ DATOS DE ENTREGA:
 Tipo: {pedido.get_tipo_entrega_display()}
 Dirección: {pedido.direccion}, {pedido.ciudad}
 
-Estamos preparando tus productos de inmediato. En cuanto sean despachados te contactaremos por WhatsApp (+56{pedido.telefono}).
+Estamos preparando tus productos de inmediato. En cuanto sean despachados te contactaremos por WhatsApp ({pedido.telefono_display}).
 
 ¡Muchas gracias por tu compra en Rapidassure Retail!
 https://rapidassure.cl
@@ -912,7 +913,7 @@ Estamos preparando tu equipamiento corporativo con la mayor eficiencia para su d
 
 Destino: {pedido.direccion}, {pedido.ciudad}.
 
-En cuanto realicemos el envío, te contactaremos por WhatsApp al +56{pedido.telefono} para enviarte el comprobante y el número de seguimiento.
+En cuanto realicemos el envío, te contactaremos por WhatsApp al {pedido.telefono_display} para enviarte el comprobante y el número de seguimiento.
 
 ¡Gracias por confiar en Rapidassure Retail!
 

@@ -170,7 +170,15 @@
                                 ${{ p.get_total_cost }}
                             </td>
                             <td style="padding: 12px 10px;">
-                                {% if p.pagado %}
+                                {% if p.estado == 'EN_PREPARACION' %}
+                                    <span style="background: #fef9e7; color: #d97706; padding: 3px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 800;">En Prep.</span>
+                                {% elif p.estado == 'ENVIADO' %}
+                                    <span style="background: #eff6ff; color: #2563eb; padding: 3px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 800;">Enviado</span>
+                                {% elif p.estado == 'ENTREGADO' %}
+                                    <span style="background: #ecfdf5; color: #059669; padding: 3px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 800;">Entregado</span>
+                                {% elif p.estado == 'CANCELADO' %}
+                                    <span style="background: #fef2f2; color: #dc2626; padding: 3px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 800;">Cancelado</span>
+                                {% elif p.estado == 'PAGADO' or p.pagado %}
                                     <span style="background: #ecfdf5; color: #047857; padding: 3px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 800;">Pagado</span>
                                 {% else %}
                                     <span style="background: #fffbeb; color: #b45309; padding: 3px 8px; border-radius: 10px; font-size: 0.78rem; font-weight: 800;">Pendiente</span>
