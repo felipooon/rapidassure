@@ -43,8 +43,8 @@
     <!-- Grid Principal de Checkout (2 Columnas en escritorio, 1 en móvil) -->
     <div class="checkout-grid-container">
         
-        <!-- COLUMNA IZQUIERDA: FORMULARIO DE ENVÍO Y DATOS -->
-        <div>
+        <!-- COLUMNA IZQUIERDA: FORMULARIO DE IDENTIFICACIÓN, CONTACTO Y ENVÍO -->
+        <div class="checkout-form-column">
             <form method="POST" id="form-checkout-rapida" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 32px 28px; box-shadow: 0 6px 25px rgba(0,0,0,0.03);">
                 {% csrf_token %}
                 
@@ -93,17 +93,17 @@
 
                 </div>
 
-                <!-- PASO 2: Contacto & Opción de Entrega -->
+                <!-- PASO 2: Datos de Contacto -->
                 <div style="margin-bottom: 28px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
                         <span style="width: 28px; height: 28px; background: #002093; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; font-family: 'Montserrat', sans-serif;">2</span>
                         <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F;">
-                            Contacto & Método de Entrega
+                            Datos de Contacto
                         </h3>
                     </div>
 
                     <!-- Datos de Contacto -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 22px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px;">
                         <div>
                             <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Correo Electrónico *</label>
                             <input type="email" name="email" value="{{ datos_previos.email }}" required class="input-checkout-modern" placeholder="correo@ejemplo.com">
@@ -117,68 +117,102 @@
                             <span style="font-size: 0.73rem; color: #64748b; margin-top: 4px; display: block;">Ej: 9 1111 1111 (móvil) o 2 111 1111 (fijo)</span>
                         </div>
                     </div>
+                </div>
 
-                    <!-- OPCIÓN DE ENTREGA (ENVIO O RETIRO) -->
-                    <div style="margin-bottom: 22px;">
-                        <h4 style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800; color: #FCBE00; background: #000E1F; padding: 6px 14px; border-radius: 8px; margin: 0 0 12px 0; width: fit-content; display: inline-block;">
-                            Entrega
+                <!-- PASO 3: Método de Entrega & Destino -->
+                <div style="margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+                        <span style="width: 28px; height: 28px; background: #002093; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; font-family: 'Montserrat', sans-serif;">3</span>
+                        <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F;">
+                            Método de Entrega & Ubicación
+                        </h3>
+                    </div>
+                    
+                    <input type="hidden" name="tipo_entrega" id="tipo_entrega_input" value="{{ tipo_entrega_default }}">
+                    <input type="hidden" name="punto_entrega_id" id="punto_entrega_id_input" value="{{ datos_previos.punto_entrega_id|default:'' }}">
+                    <input type="hidden" name="punto_entrega_nombre" id="punto_entrega_nombre_input" value="{{ datos_previos.punto_entrega_nombre|default:'' }}">
+                    <input type="hidden" name="terminos_aceptados" id="hidden_terminos_input" value="{% if datos_previos.terminos_aceptados %}on{% endif %}">
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 16px;">
+                        <!-- Opción 1: Envío Gratis RM (Sólo visible si Región Metropolitana y compra >= $19.990) -->
+                        <button type="button" id="btn-entrega-gratis-rm" class="btn-tab-entrega {% if tipo_entrega_default == 'GRATIS_RM' %}active{% endif %}" onclick="setTipoEntrega('GRATIS_RM')" style="display: {% if permite_gratis_rm %}flex{% else %}none{% endif %}; border-color: #10b981;">
+                            <i class="fa-solid fa-gift" style="font-size: 1.25rem; color: #10b981;"></i>
+                            <div style="text-align: left;">
+                                <span style="display: block; font-size: 0.92rem; font-weight: 800; color: #047857;">Envío Gratis RM</span>
+                                <span style="display: block; font-size: 0.72rem; color: #10b981; font-weight: 800;">A Domicilio (+$19.990)</span>
+                            </div>
+                        </button>
+
+                        <!-- Opción 2: A Domicilio Estándar Blue Express -->
+                        <button type="button" id="btn-entrega-envio" class="btn-tab-entrega {% if tipo_entrega_default == 'ENVIO' %}active{% endif %}" onclick="setTipoEntrega('ENVIO')">
+                            <i class="fa-solid fa-truck" style="font-size: 1.2rem; color: #002093;"></i>
+                            <div style="text-align: left;">
+                                <span style="display: block; font-size: 0.92rem; font-weight: 800; color: #000E1F;">A Domicilio</span>
+                                <span style="display: block; font-size: 0.72rem; color: #64748b; font-weight: 600;">Blue Express</span>
+                            </div>
+                        </button>
+
+                        <!-- Opción 3: Blue Express Punto de Retiro -->
+                        <button type="button" id="btn-entrega-punto" class="btn-tab-entrega {% if tipo_entrega_default == 'PUNTO_BLUE' %}active{% endif %}" onclick="setTipoEntrega('PUNTO_BLUE')">
+                            <i class="fa-solid fa-location-dot" style="font-size: 1.2rem; color: #7e22ce;"></i>
+                            <div style="text-align: left;">
+                                <span style="display: block; font-size: 0.92rem; font-weight: 800; color: #000E1F;">Punto de Retiro</span>
+                                <span style="display: block; font-size: 0.72rem; color: #7e22ce; font-weight: 700;">Copec / Blue Express</span>
+                            </div>
+                        </button>
+
+                        <!-- Opción 4: Retiro en Local -->
+                        <button type="button" id="btn-entrega-retiro" class="btn-tab-entrega {% if tipo_entrega_default == 'RETIRO' %}active{% endif %}" onclick="setTipoEntrega('RETIRO')">
+                            <i class="fa-solid fa-store" style="font-size: 1.2rem; color: #10b981;"></i>
+                            <div style="text-align: left;">
+                                <span style="display: block; font-size: 0.92rem; font-weight: 800; color: #000E1F;">Retiro en Tienda</span>
+                                <span style="display: block; font-size: 0.72rem; color: #10b981; font-weight: 700;">San Diego (Gratis)</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta Ubicaciones de Recogida (Sólo si es RETIRO EN TIENDA) -->
+                    <div id="sec-ubicaciones-recogida" style="display: {% if tipo_entrega_default == 'RETIRO' %}block{% else %}none{% endif %}; margin-bottom: 20px;">
+                        <h4 style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
+                            Ubicación de retiro en local
                         </h4>
-                        
-                        <input type="hidden" name="tipo_entrega" id="tipo_entrega_input" value="{{ datos_previos.tipo_entrega|default:'ENVIO' }}">
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                            <button type="button" id="btn-entrega-envio" class="btn-tab-entrega {% if datos_previos.tipo_entrega != 'RETIRO' %}active{% endif %}" onclick="setTipoEntrega('ENVIO')">
-                                <i class="fa-solid fa-truck" style="font-size: 1.1rem;"></i>
-                                <span>Enviar</span>
-                            </button>
-                            <button type="button" id="btn-entrega-retiro" class="btn-tab-entrega {% if datos_previos.tipo_entrega == 'RETIRO' %}active{% endif %}" onclick="setTipoEntrega('RETIRO')">
-                                <i class="fa-solid fa-store" style="font-size: 1.1rem;"></i>
-                                <span>Recogida</span>
-                            </button>
-                        </div>
-
-                        <!-- Tarjeta Ubicaciones de Recogida (Sólo si es RETIRO) -->
-                        <div id="sec-ubicaciones-recogida" style="display: {% if datos_previos.tipo_entrega == 'RETIRO' %}block{% else %}none{% endif %}; margin-bottom: 20px;">
-                            <h4 style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 10px 0;">
-                                Ubicaciones de recogida
-                            </h4>
-                            <div style="border: 2px solid #000E1F; border-radius: 12px; padding: 16px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
-                                <div style="display: flex; align-items: flex-start; gap: 12px;">
-                                    <input type="radio" checked readOnly style="width: 18px; height: 18px; accent-color: #000E1F; margin-top: 3px; cursor: default;">
-                                    <div>
-                                        <strong style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin-bottom: 2px;">Local</strong>
-                                        <span style="display: block; font-size: 0.85rem; color: #64748b; line-height: 1.4; font-family: 'Open Sans', sans-serif;">
-                                            <i class="fa-solid fa-location-dot" style="color: #002093; margin-right: 4px;"></i>
-                                            San Diego 174 local 8, Metropolitana de Santiago, 8320000 Santiago
-                                        </span>
-                                    </div>
+                        <div style="border: 2px solid #000E1F; border-radius: 12px; padding: 16px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+                            <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                <input type="radio" checked readOnly style="width: 18px; height: 18px; accent-color: #000E1F; margin-top: 3px; cursor: default;">
+                                <div>
+                                    <strong style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin-bottom: 2px;">Local Principal Rapidassure</strong>
+                                    <span style="display: block; font-size: 0.85rem; color: #64748b; line-height: 1.4; font-family: 'Open Sans', sans-serif;">
+                                        <i class="fa-solid fa-location-dot" style="color: #002093; margin-right: 4px;"></i>
+                                        San Diego 174 local 8, Metropolitana de Santiago, 8320000 Santiago
+                                    </span>
                                 </div>
-                                <span style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; color: #10b981; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
-                                    GRATIS
-                                </span>
+                            </div>
+                            <span style="font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 800; color: #10b981; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 20px; white-space: nowrap;">
+                                GRATIS
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Dirección de Envío / Ubicación -->
+                    <div id="sec-direccion-box">
+                        <h4 id="direccion-sec-title" style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 12px 0;">
+                            {% if tipo_entrega_default == 'RETIRO' %}Dirección de facturación{% elif tipo_entrega_default == 'PUNTO_BLUE' %}Ubicación del Punto de Retiro{% elif tipo_entrega_default == 'GRATIS_RM' %}Dirección de Entrega (Envío Gratis RM){% else %}Dirección de Envío a Domicilio{% endif %}
+                        </h4>
+
+                        <!-- Banner Promoción Despacho Gratis RM -->
+                        <div id="banner-promo-rm" style="display: none; background: #ecfdf5; border: 1.5px solid #a7f3d0; color: #065f46; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; font-size: 0.88rem; font-weight: 700; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);">
+                            <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.25rem;"></i>
+                            <div>
+                                <span style="display: block;">¡Envío GRATIS aplicado a Región Metropolitana!</span>
+                                <span style="font-size: 0.78rem; color: #047857; font-weight: normal;">Tu compra supera los $19.990. Despacho sin costo cortesía de Rapidassure.</span>
                             </div>
                         </div>
 
-                    </div>
-
-                    <!-- Dirección de Envío / Facturación -->
-                    <div id="sec-direccion-box">
-                        <h4 id="direccion-sec-title" style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #000E1F; margin: 0 0 12px 0;">
-                            {% if datos_previos.tipo_entrega == 'RETIRO' %}Dirección de facturación{% else %}Dirección de Envío{% endif %}
-                        </h4>
-
-                        <div style="margin-bottom: 18px;">
-                            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
-                                Dirección <span id="label-dir-req" style="color: #ef4444;">{% if datos_previos.tipo_entrega == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
-                            </label>
-                            <input type="text" id="direccion_input" name="direccion" value="{{ datos_previos.direccion }}" {% if datos_previos.tipo_entrega != 'RETIRO' %}required{% endif %} class="input-checkout-modern" placeholder="Calle, Número, Depto / Oficina / Local">
-                        </div>
-
-                        <!-- Selector Región y Comuna (Tarifas Blue Express) -->
+                        <!-- Selector Región y Comuna (Tarifas Blue Express y Puntos) -->
                         <div id="sec-selectores-ubicacion" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px;">
                             <div>
                                 <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
-                                    Región <span id="label-region-req" style="color: #ef4444;">{% if datos_previos.tipo_entrega == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
+                                Región <span id="label-region-req" style="color: #ef4444;">{% if tipo_entrega_default == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
                                 </label>
                                 <select id="region_select" name="region" class="input-checkout-modern" style="cursor: pointer; background: white;" onchange="onRegionChange()">
                                     {% for reg, comunas in regiones_comunas.items %}
@@ -188,7 +222,7 @@
                             </div>
                             <div>
                                 <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
-                                    Comuna <span id="label-comuna-req" style="color: #ef4444;">{% if datos_previos.tipo_entrega == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
+                                    Comuna <span id="label-comuna-req" style="color: #ef4444;">{% if tipo_entrega_default == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
                                 </label>
                                 <select id="comuna_select" name="comuna" class="input-checkout-modern" style="cursor: pointer; background: white;" onchange="onComunaChange()">
                                     <!-- Se puebla dinámicamente con las comunas de la región -->
@@ -197,15 +231,49 @@
                             </div>
                         </div>
 
+                        <!-- Selector Específico de Punto Blue Express (Sólo si PUNTO_BLUE) -->
+                        <div id="sec-selector-punto-blue" style="display: {% if tipo_entrega_default == 'PUNTO_BLUE' %}block{% else %}none{% endif %}; margin-bottom: 18px; background: #faf5ff; border: 1.5px solid #d8b4fe; border-radius: 12px; padding: 16px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                <label style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #581c87; display: flex; align-items: center; gap: 8px; margin: 0;">
+                                    <i class="fa-solid fa-map-pin" style="color: #7e22ce;"></i> Selecciona tu Punto Blue Express / Copec *
+                                </label>
+                                <span id="puntos-count-badge" style="font-size: 0.75rem; background: #e9d5ff; color: #6b21a8; font-weight: 800; padding: 2px 8px; border-radius: 10px;">
+                                    Buscando puntos...
+                                </span>
+                            </div>
+                            <select id="punto_blue_select" class="input-checkout-modern" style="cursor: pointer; background: white; border-color: #c084fc; font-weight: 600;" onchange="onPuntoBlueSelected()">
+                                <option value="">Cargando puntos de retiro disponibles...</option>
+                            </select>
+                            
+                            <div id="punto-info-card" style="margin-top: 12px; display: none; background: white; border: 1.5px solid #e9d5ff; border-radius: 10px; padding: 12px 14px; box-shadow: 0 2px 6px rgba(126, 34, 206, 0.05);">
+                                <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                                    <strong style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #581c87;" id="punto-card-nombre"></strong>
+                                    <span id="punto-card-tag" style="background: #f3e8ff; color: #6b21a8; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px;"></span>
+                                </div>
+                                <div style="margin-top: 4px; font-size: 0.84rem; color: #4b5563; font-family: 'Open Sans', sans-serif;" id="punto-card-direccion"></div>
+                                <div style="margin-top: 6px; font-size: 0.8rem; color: #047857; font-weight: 700; display: flex; align-items: center; gap: 6px;" id="punto-card-horario">
+                                    <i class="fa-solid fa-clock"></i> <span id="punto-card-horario-texto"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campo Dirección Manual (Para Domicilio o Facturación en Retiro) -->
+                        <div id="sec-campo-direccion" style="margin-bottom: 18px; display: {% if tipo_entrega_default == 'PUNTO_BLUE' %}none{% else %}block{% endif %};">
+                            <label style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">
+                                <span id="label-dir-titulo">Dirección de Entrega</span> <span id="label-dir-req" style="color: #ef4444;">{% if tipo_entrega_default == 'RETIRO' %}(opcional){% else %}*{% endif %}</span>
+                            </label>
+                            <input type="text" id="direccion_input" name="direccion" value="{{ datos_previos.direccion }}" {% if tipo_entrega_default == 'ENVIO' or tipo_entrega_default == 'GRATIS_RM' or not tipo_entrega_default %}required{% endif %} class="input-checkout-modern" placeholder="Calle, Número, Depto / Oficina / Local">
+                        </div>
+
                         <!-- Badge Informativo Blue Express -->
-                        <div id="badge-blue-express" style="display: {% if datos_previos.tipo_entrega == 'RETIRO' %}none{% else %}flex{% endif %}; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #eff6ff, #f8fafc); border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 12px 16px; margin-top: 6px;">
+                        <div id="badge-blue-express" style="display: {% if tipo_entrega_default == 'RETIRO' %}none{% else %}flex{% endif %}; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #eff6ff, #f8fafc); border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 12px 16px; margin-top: 6px;">
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 38px; height: 38px; background: #002093; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,32,147,0.2);">
+                                <div id="badge-icon-box" style="width: 38px; height: 38px; background: #002093; color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,32,147,0.2);">
                                     <i class="fa-solid fa-truck-fast"></i>
                                 </div>
                                 <div>
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <strong style="color: #002093; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 800;">
+                                        <strong id="badge-servicio-titulo" style="color: #002093; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 800;">
                                             Blue Express a Domicilio
                                         </strong>
                                         <span id="badge-talla-pill" style="background: #e0e7ff; color: #3730a3; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 6px; letter-spacing: 0.3px;">TALLA {{ talla_envio|default:'XS' }}</span>
@@ -221,51 +289,6 @@
                         </div>
                     </div>
 
-                </div>
-
-                <!-- PASO 3: Términos & Pago -->
-                <div style="margin-bottom: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
-                        <span style="width: 28px; height: 28px; background: #002093; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; font-family: 'Montserrat', sans-serif;">3</span>
-                        <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.15rem; font-weight: 800; color: #000E1F;">
-                            Confirmación & Pago
-                        </h3>
-                    </div>
-
-                    <!-- Checkbox Términos y Condiciones obligatorio -->
-                    <div style="display: flex; margin-bottom: 22px; align-items: flex-start; gap: 12px; background: #f8fafc; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0;">
-                        <input type="checkbox" id="terminos_checkbox" name="terminos_aceptados" required style="width: 20px; height: 20px; cursor: pointer; accent-color: #002093; margin-top: 2px;">
-                        <label for="terminos_checkbox" style="color: #334155; font-size: 0.9rem; cursor: pointer; line-height: 1.5; font-family: 'Open Sans', sans-serif;">
-                            He leído y acepto los <a href="{% url 'terminos' %}" target="_blank" style="color: #002093; font-weight: 800; text-decoration: underline;">Términos y Condiciones, Garantía y Políticas de Devolución</a> de Rapidassure Retail. *
-                        </label>
-                    </div>
-
-                    <!-- Botón de Pago Transbank Webpay Plus -->
-                    <div style="margin-top: 10px;">
-                        <button type="submit" id="btn-webpay" style="width: 100%; background: linear-gradient(135deg, #e11d48, #be123c); color: white; border: none; padding: 18px 24px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 8px 25px rgba(225, 29, 72, 0.35); display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(225, 29, 72, 0.45)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(225, 29, 72, 0.35)';">
-                            <i class="fa-solid fa-credit-card" style="font-size: 1.3rem;"></i>
-                            <span>Pagar con Webpay Plus</span>
-                            <i class="fa-solid fa-chevron-right" style="font-size: 0.9rem; margin-left: 4px;"></i>
-                        </button>
-
-                        <!-- Medios de Pago aceptados y Sellos de Confianza -->
-                        <div style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: center;">
-                            <div style="display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;">
-                                <span style="font-size: 0.76rem; font-weight: 800; color: #002093; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Montserrat', sans-serif;">
-                                    <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i> Transbank Webpay Plus
-                                </span>
-                                <span style="color: #cbd5e1;">|</span>
-                                <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Débito (Redcompra)</span>
-                                <span style="color: #cbd5e1;">•</span>
-                                <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Crédito</span>
-                                <span style="color: #cbd5e1;">•</span>
-                                <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Prepago</span>
-                            </div>
-                            <div style="font-size: 0.78rem; color: #64748b; line-height: 1.4;">
-                                Transacción 100% protegida y encriptada por Transbank.
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
             </form>
@@ -338,9 +361,9 @@
                         </div>
                     {% endif %}
                     <div style="display: flex; justify-content: space-between;">
-                        <span id="label-resumen-despacho">{% if datos_previos.tipo_entrega == 'RETIRO' %}Recogida (Local):{% else %}Despacho Blue Express:{% endif %}</span>
+                        <span id="label-resumen-despacho">{% if tipo_entrega_default == 'RETIRO' %}Recogida (Local):{% elif tipo_entrega_default == 'GRATIS_RM' %}Envío Gratis RM:{% elif tipo_entrega_default == 'PUNTO_BLUE' %}Punto Pick-up Blue Express:{% else %}Despacho Blue Express:{% endif %}</span>
                         <span id="valor-resumen-despacho" style="color: #002093; font-weight: 800;">
-                            {% if datos_previos.tipo_entrega == 'RETIRO' %}GRATIS{% else %}{% if costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}{% endif %}
+                            {% if tipo_entrega_default == 'RETIRO' or tipo_entrega_default == 'GRATIS_RM' or costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}
                         </span>
                     </div>
                 </div>
@@ -350,6 +373,46 @@
                     <span id="display-total-final" style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: #FCBE00;">
                         ${{ total_final }}
                     </span>
+                </div>
+
+                <!-- CONFIRMACIÓN Y PAGO TRANSBANK (Ubicado estratégicamente debajo del Total Final) -->
+                <div style="margin-top: 20px; padding-top: 18px; border-top: 1px dashed #e2e8f0;">
+                    
+                    <!-- Checkbox Términos y Condiciones obligatorio -->
+                    <div style="display: flex; margin-bottom: 16px; align-items: flex-start; gap: 10px; background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                        <input type="checkbox" id="terminos_checkbox" name="terminos_aceptados" form="form-checkout-rapida" required style="width: 18px; height: 18px; cursor: pointer; accent-color: #002093; margin-top: 2px;">
+                        <label for="terminos_checkbox" style="color: #334155; font-size: 0.82rem; cursor: pointer; line-height: 1.45; font-family: 'Open Sans', sans-serif;">
+                            He leído y acepto los <a href="{% url 'terminos' %}" target="_blank" style="color: #002093; font-weight: 800; text-decoration: underline;">Términos y Condiciones, Garantía y Políticas de Devolución</a> de Rapidassure Retail. *
+                        </label>
+                    </div>
+
+                    <!-- Botón de Pago Transbank Webpay Plus -->
+                    <div>
+                        <button type="submit" id="btn-webpay" form="form-checkout-rapida" style="width: 100%; background: linear-gradient(135deg, #e11d48, #be123c); color: white; border: none; padding: 18px 24px; border-radius: 14px; font-weight: 800; font-size: 1.15rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 8px 25px rgba(225, 29, 72, 0.35); display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.25s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 30px rgba(225, 29, 72, 0.45)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(225, 29, 72, 0.35)';">
+                            <i class="fa-solid fa-credit-card" style="font-size: 1.25rem;"></i>
+                            <span>Pagar con Webpay Plus</span>
+                            <i class="fa-solid fa-chevron-right" style="font-size: 0.85rem; margin-left: 4px;"></i>
+                        </button>
+
+                        <!-- Medios de Pago aceptados y Sellos de Confianza -->
+                        <div style="margin-top: 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; text-align: center;">
+                            <div style="display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px;">
+                                <span style="font-size: 0.74rem; font-weight: 800; color: #002093; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Montserrat', sans-serif;">
+                                    <i class="fa-solid fa-shield-halved" style="color: #10b981;"></i> Webpay Plus
+                                </span>
+                                <span style="color: #cbd5e1;">|</span>
+                                <span style="font-size: 0.76rem; font-weight: 700; color: #475569;">Débito</span>
+                                <span style="color: #cbd5e1;">•</span>
+                                <span style="font-size: 0.76rem; font-weight: 700; color: #475569;">Crédito</span>
+                                <span style="color: #cbd5e1;">•</span>
+                                <span style="font-size: 0.76rem; font-weight: 700; color: #475569;">Prepago</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: #64748b; line-height: 1.3;">
+                                Transacción 100% protegida y encriptada por Transbank.
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -363,14 +426,22 @@
 <style>
 .checkout-grid-container {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 30px;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 32px;
     align-items: start;
+    width: 100%;
+}
+
+.checkout-form-column {
+    min-width: 0;
+    width: 100%;
 }
 
 .checkout-summary-column {
+    min-width: 0;
+    width: 100%;
     position: sticky;
-    top: 110px;
+    top: 90px;
 }
 
 @media (max-width: 991px) {
@@ -380,12 +451,20 @@
     }
 
     .checkout-grid-container {
-        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
         gap: 20px !important;
+    }
+
+    .checkout-form-column {
+        width: 100% !important;
+        order: 1;
     }
 
     .checkout-summary-column {
         position: static !important;
+        width: 100% !important;
+        order: 2;
         margin-bottom: 10px;
     }
 
@@ -446,6 +525,13 @@
     color: #000E1F;
     font-weight: 800;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+#btn-entrega-gratis-rm.active {
+    background: #ecfdf5 !important;
+    border: 2px solid #10b981 !important;
+    color: #047857 !important;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.18) !important;
 }
 </style>
 
@@ -515,13 +601,40 @@
         }
     }
 
+    function verificarCondicionGratisRM() {
+        const regionSelect = document.getElementById('region_select');
+        const region = regionSelect ? regionSelect.value : '';
+        const esRM = (region === 'Región Metropolitana de Santiago' || region === 'Metropolitana de Santiago');
+        const cumpleMonto = (subtotalConDescuento >= UMBRAL_GRATIS);
+        return esRM && cumpleMonto;
+    }
+
+    function actualizarVisibilidadOpcionGratisRM() {
+        const btnGratis = document.getElementById('btn-entrega-gratis-rm');
+        const inputTipo = document.getElementById('tipo_entrega_input');
+        const cumple = verificarCondicionGratisRM();
+
+        if (btnGratis) {
+            btnGratis.style.display = cumple ? 'flex' : 'none';
+        }
+
+        // Si estaba seleccionado GRATIS_RM pero ya no cumple las condiciones, volver a ENVIO estándar
+        if (!cumple && inputTipo && inputTipo.value === 'GRATIS_RM') {
+            setTipoEntrega('ENVIO');
+        }
+        return cumple;
+    }
+
     function onRegionChange() {
         const regionSelect = document.getElementById('region_select');
         if (!regionSelect) return;
         const region = regionSelect.value;
         poblarComunas(region, null);
+        actualizarVisibilidadOpcionGratisRM();
         onComunaChange();
     }
+
+    let puntosDisponiblesActuales = [];
 
     function onComunaChange() {
         const comunaSelect = document.getElementById('comuna_select');
@@ -531,23 +644,145 @@
         const comuna = comunaSelect.value;
         if (ciudadInput) ciudadInput.value = comuna;
 
-        actualizarCotizacionBlueExpress(comuna);
+        actualizarVisibilidadOpcionGratisRM();
+
+        const inputTipo = document.getElementById('tipo_entrega_input');
+        const tipo = inputTipo ? inputTipo.value : 'ENVIO';
+
+        if (tipo === 'PUNTO_BLUE') {
+            cargarPuntosBlue(comuna);
+        }
+
+        actualizarCotizacionBlueExpress(comuna, tipo);
     }
 
-    function actualizarCotizacionBlueExpress(comuna) {
+    function cargarPuntosBlue(comuna, puntoIdSeleccionar) {
+        const selectPunto = document.getElementById('punto_blue_select');
+        const badgeCount = document.getElementById('puntos-count-badge');
+        const cardInfo = document.getElementById('punto-info-card');
+
+        if (!selectPunto) return;
+        selectPunto.innerHTML = '<option value="">Cargando puntos de retiro disponibles...</option>';
+        if (badgeCount) badgeCount.innerText = 'Buscando puntos...';
+        if (cardInfo) cardInfo.style.display = 'none';
+
+        fetch(`/api/puntos-blue/?comuna=${encodeURIComponent(comuna)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.puntos && data.puntos.length > 0) {
+                    puntosDisponiblesActuales = data.puntos;
+                    selectPunto.innerHTML = '';
+                    
+                    if (badgeCount) {
+                        badgeCount.innerText = `${data.puntos.length} puntos disponibles`;
+                        badgeCount.style.background = '#e9d5ff';
+                        badgeCount.style.color = '#6b21a8';
+                    }
+
+                    data.puntos.forEach((p, idx) => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        const esCopec = p.nombre.toLowerCase().includes('copec') || p.tipo.toLowerCase().includes('copec');
+                        const icono = esCopec ? '⛽' : '📦';
+                        const tag24 = p.es_24_7 ? ' [24/7]' : '';
+                        opt.textContent = `${icono} ${p.nombre} - ${p.direccion_completa}${tag24}`;
+                        opt.dataset.index = idx;
+                        selectPunto.appendChild(opt);
+                    });
+
+                    // Seleccionar punto previo o primero
+                    if (puntoIdSeleccionar) {
+                        selectPunto.value = puntoIdSeleccionar;
+                    }
+                    if (!selectPunto.value && selectPunto.options.length > 0) {
+                        selectPunto.selectedIndex = 0;
+                    }
+
+                    onPuntoBlueSelected();
+                } else {
+                    puntosDisponiblesActuales = [];
+                    selectPunto.innerHTML = '<option value="">No hay puntos de retiro en esta comuna (Elige despacho a domicilio)</option>';
+                    if (badgeCount) {
+                        badgeCount.innerText = 'Sin cobertura en comuna';
+                        badgeCount.style.background = '#fee2e2';
+                        badgeCount.style.color = '#991b1b';
+                    }
+                    if (cardInfo) cardInfo.style.display = 'none';
+                    
+                    const inputId = document.getElementById('punto_entrega_id_input');
+                    const inputNom = document.getElementById('punto_entrega_nombre_input');
+                    if (inputId) inputId.value = '';
+                    if (inputNom) inputNom.value = '';
+                }
+            })
+            .catch(err => {
+                console.error("Error al cargar puntos Blue Express:", err);
+                selectPunto.innerHTML = '<option value="">Error cargando puntos</option>';
+            });
+    }
+
+    function onPuntoBlueSelected() {
+        const selectPunto = document.getElementById('punto_blue_select');
+        const inputId = document.getElementById('punto_entrega_id_input');
+        const inputNom = document.getElementById('punto_entrega_nombre_input');
+        const inputDir = document.getElementById('direccion_input');
+        const cardInfo = document.getElementById('punto-info-card');
+        const cardNombre = document.getElementById('punto-card-nombre');
+        const cardTag = document.getElementById('punto-card-tag');
+        const cardDir = document.getElementById('punto-card-direccion');
+        const cardHorarioTexto = document.getElementById('punto-card-horario-texto');
+
+        if (!selectPunto || !selectPunto.value) return;
+
+        const selectedOpt = selectPunto.options[selectPunto.selectedIndex];
+        const pIndex = selectedOpt ? selectedOpt.dataset.index : null;
+        const punto = (pIndex !== null && puntosDisponiblesActuales[pIndex]) ? puntosDisponiblesActuales[pIndex] : null;
+
+        if (punto) {
+            if (inputId) inputId.value = punto.id;
+            if (inputNom) inputNom.value = punto.nombre;
+            if (inputDir) inputDir.value = `${punto.direccion_completa} (${punto.nombre})`;
+
+            if (cardInfo) {
+                cardInfo.style.display = 'block';
+                if (cardNombre) cardNombre.innerText = punto.nombre;
+                if (cardTag) cardTag.innerText = punto.tipo || 'Punto Blue';
+                if (cardDir) cardDir.innerHTML = `<i class="fa-solid fa-location-dot" style="color: #7e22ce; margin-right: 4px;"></i> <strong>${punto.direccion_completa}</strong>, ${punto.comuna}`;
+                if (cardHorarioTexto) cardHorarioTexto.innerText = `Horario: ${punto.horario}`;
+            }
+        }
+    }
+
+    function actualizarCotizacionBlueExpress(comuna, tipo) {
         const inputTipo = document.getElementById('tipo_entrega_input');
-        if (inputTipo && inputTipo.value === 'RETIRO') {
+        const tipoActual = tipo || (inputTipo ? inputTipo.value : 'ENVIO');
+
+        if (tipoActual === 'RETIRO') {
+            return;
+        }
+
+        if (tipoActual === 'GRATIS_RM') {
+            costoEnvioActual = 0;
+            const badgeTarifa = document.getElementById('badge-tarifa-texto');
+            const valorResumen = document.getElementById('valor-resumen-despacho');
+            const displayTotal = document.getElementById('display-total-final');
+            const bannerRM = document.getElementById('banner-promo-rm');
+            if (badgeTarifa) { badgeTarifa.innerText = 'GRATIS'; badgeTarifa.style.color = '#10b981'; }
+            if (valorResumen) { valorResumen.innerText = 'GRATIS'; valorResumen.style.color = '#10b981'; }
+            if (displayTotal) { displayTotal.innerText = '$' + subtotalConDescuento.toLocaleString('es-CL'); }
+            if (bannerRM) { bannerRM.style.display = 'flex'; }
             return;
         }
 
         const badgeTarifa = document.getElementById('badge-tarifa-texto');
         const valorResumen = document.getElementById('valor-resumen-despacho');
         const displayTotal = document.getElementById('display-total-final');
+        const bannerRM = document.getElementById('banner-promo-rm');
 
         if (badgeTarifa) badgeTarifa.innerText = 'Calculando...';
         if (valorResumen) valorResumen.innerText = 'Calculando...';
 
-        fetch(`/api/cotizar-envio/?comuna=${encodeURIComponent(comuna)}`)
+        fetch(`/api/cotizar-envio/?comuna=${encodeURIComponent(comuna)}&tipo_entrega=${encodeURIComponent(tipoActual)}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -564,6 +799,10 @@
                     }
                     if (displayTotal) {
                         displayTotal.innerText = data.total_final_formateado;
+                    }
+
+                    if (bannerRM) {
+                        bannerRM.style.display = (tipoActual === 'GRATIS_RM') ? 'flex' : 'none';
                     }
 
                     const badgeTalla = document.getElementById('badge-talla-pill');
@@ -583,10 +822,17 @@
 
     function setTipoEntrega(tipo) {
         const input = document.getElementById('tipo_entrega_input');
+        const btnGratis = document.getElementById('btn-entrega-gratis-rm');
         const btnEnvio = document.getElementById('btn-entrega-envio');
+        const btnPunto = document.getElementById('btn-entrega-punto');
         const btnRetiro = document.getElementById('btn-entrega-retiro');
         const secRecogida = document.getElementById('sec-ubicaciones-recogida');
+        const secSelectorPunto = document.getElementById('sec-selector-punto-blue');
+        const secCampoDir = document.getElementById('sec-campo-direccion');
         const badgeBlue = document.getElementById('badge-blue-express');
+        const badgeServicioTitulo = document.getElementById('badge-servicio-titulo');
+        const badgeIconBox = document.getElementById('badge-icon-box');
+        const badgeTarifa = document.getElementById('badge-tarifa-texto');
         const titleDir = document.getElementById('direccion-sec-title');
         const inputDir = document.getElementById('direccion_input');
         const labelDirReq = document.getElementById('label-dir-req');
@@ -595,20 +841,61 @@
         const labelResumen = document.getElementById('label-resumen-despacho');
         const valorResumen = document.getElementById('valor-resumen-despacho');
         const displayTotal = document.getElementById('display-total-final');
+        const bannerRM = document.getElementById('banner-promo-rm');
 
         if (input) input.value = tipo;
 
-        if (tipo === 'RETIRO') {
-            if (btnEnvio) btnEnvio.classList.remove('active');
+        // Reset active tabs
+        if (btnGratis) btnGratis.classList.remove('active');
+        if (btnEnvio) btnEnvio.classList.remove('active');
+        if (btnPunto) btnPunto.classList.remove('active');
+        if (btnRetiro) btnRetiro.classList.remove('active');
+
+        const comunaSelect = document.getElementById('comuna_select');
+        const comuna = comunaSelect ? comunaSelect.value : 'Santiago';
+
+        if (tipo === 'GRATIS_RM') {
+            if (btnGratis) btnGratis.classList.add('active');
+            if (secRecogida) secRecogida.style.display = 'none';
+            if (secSelectorPunto) secSelectorPunto.style.display = 'none';
+            if (secCampoDir) secCampoDir.style.display = 'block';
+            if (badgeBlue) badgeBlue.style.display = 'flex';
+            if (bannerRM) bannerRM.style.display = 'flex';
+            if (titleDir) titleDir.innerText = 'Dirección de Entrega a Domicilio (Envío Gratis RM)';
+            if (labelDirReq) labelDirReq.innerText = '*';
+            if (labelRegionReq) labelRegionReq.innerText = '*';
+            if (labelComunaReq) labelComunaReq.innerText = '*';
+            if (inputDir) inputDir.setAttribute('required', 'required');
+            if (labelResumen) labelResumen.innerText = 'Despacho Gratis RM:';
+            if (valorResumen) {
+                valorResumen.innerText = 'GRATIS';
+                valorResumen.style.color = '#10b981';
+            }
+            if (badgeServicioTitulo) badgeServicioTitulo.innerText = 'Envío Gratis RM (+ $19.990)';
+            if (badgeIconBox) {
+                badgeIconBox.innerHTML = '<i class="fa-solid fa-gift"></i>';
+                badgeIconBox.style.background = '#10b981';
+            }
+            if (badgeTarifa) {
+                badgeTarifa.innerText = 'GRATIS';
+                badgeTarifa.style.color = '#10b981';
+            }
+            if (displayTotal) {
+                displayTotal.innerText = '$' + subtotalConDescuento.toLocaleString('es-CL');
+            }
+        } else if (tipo === 'RETIRO') {
             if (btnRetiro) btnRetiro.classList.add('active');
             if (secRecogida) secRecogida.style.display = 'block';
+            if (secSelectorPunto) secSelectorPunto.style.display = 'none';
+            if (secCampoDir) secCampoDir.style.display = 'block';
             if (badgeBlue) badgeBlue.style.display = 'none';
+            if (bannerRM) bannerRM.style.display = 'none';
             if (titleDir) titleDir.innerText = 'Dirección de facturación';
             if (labelDirReq) labelDirReq.innerText = '(opcional)';
             if (labelRegionReq) labelRegionReq.innerText = '(opcional)';
             if (labelComunaReq) labelComunaReq.innerText = '(opcional)';
             if (inputDir) inputDir.removeAttribute('required');
-            if (labelResumen) labelResumen.innerText = 'Recogida (Local):';
+            if (labelResumen) labelResumen.innerText = 'Recogida en Tienda:';
             if (valorResumen) {
                 valorResumen.innerText = 'GRATIS';
                 valorResumen.style.color = '#10b981';
@@ -616,21 +903,49 @@
             if (displayTotal) {
                 displayTotal.innerText = '$' + subtotalConDescuento.toLocaleString('es-CL');
             }
+        } else if (tipo === 'PUNTO_BLUE') {
+            if (btnPunto) btnPunto.classList.add('active');
+            if (secRecogida) secRecogida.style.display = 'none';
+            if (secSelectorPunto) secSelectorPunto.style.display = 'block';
+            if (secCampoDir) secCampoDir.style.display = 'none';
+            if (badgeBlue) badgeBlue.style.display = 'flex';
+            if (bannerRM) bannerRM.style.display = 'none';
+            if (titleDir) titleDir.innerText = 'Ubicación del Punto de Retiro';
+            if (labelRegionReq) labelRegionReq.innerText = '*';
+            if (labelComunaReq) labelComunaReq.innerText = '*';
+            if (inputDir) inputDir.removeAttribute('required');
+            if (labelResumen) labelResumen.innerText = 'Punto Blue Express:';
+            
+            if (badgeServicioTitulo) badgeServicioTitulo.innerText = 'Punto Blue Express / Copec';
+            if (badgeIconBox) {
+                badgeIconBox.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
+                badgeIconBox.style.background = '#7e22ce';
+            }
+
+            cargarPuntosBlue(comuna, "{{ datos_previos.punto_entrega_id|default:''|escapejs }}");
+            actualizarCotizacionBlueExpress(comuna, 'PUNTO_BLUE');
         } else {
-            if (btnRetiro) btnRetiro.classList.remove('active');
+            // ENVIO A DOMICILIO ESTÁNDAR
             if (btnEnvio) btnEnvio.classList.add('active');
             if (secRecogida) secRecogida.style.display = 'none';
+            if (secSelectorPunto) secSelectorPunto.style.display = 'none';
+            if (secCampoDir) secCampoDir.style.display = 'block';
             if (badgeBlue) badgeBlue.style.display = 'flex';
-            if (titleDir) titleDir.innerText = 'Dirección de Envío';
+            if (bannerRM) bannerRM.style.display = 'none';
+            if (titleDir) titleDir.innerText = 'Dirección de Envío a Domicilio';
             if (labelDirReq) labelDirReq.innerText = '*';
             if (labelRegionReq) labelRegionReq.innerText = '*';
             if (labelComunaReq) labelComunaReq.innerText = '*';
             if (inputDir) inputDir.setAttribute('required', 'required');
             if (labelResumen) labelResumen.innerText = 'Despacho Blue Express:';
-            
-            const comunaSelect = document.getElementById('comuna_select');
-            const comuna = comunaSelect ? comunaSelect.value : 'Santiago';
-            actualizarCotizacionBlueExpress(comuna);
+
+            if (badgeServicioTitulo) badgeServicioTitulo.innerText = 'Blue Express a Domicilio';
+            if (badgeIconBox) {
+                badgeIconBox.innerHTML = '<i class="fa-solid fa-truck-fast"></i>';
+                badgeIconBox.style.background = '#002093';
+            }
+
+            actualizarCotizacionBlueExpress(comuna, 'ENVIO');
         }
     }
 
@@ -640,17 +955,62 @@
         const regionPrevia = "{{ region_previa|default:'Región Metropolitana de Santiago'|escapejs }}";
         
         poblarComunas(regionPrevia, comunaPrevia);
+        actualizarVisibilidadOpcionGratisRM();
 
         const inputTipo = document.getElementById('tipo_entrega_input');
-        if (inputTipo && inputTipo.value === 'RETIRO') {
+        const tipoInicial = (inputTipo && inputTipo.value) ? inputTipo.value : '{{ tipo_entrega_default|default:"ENVIO"|escapejs }}';
+        
+        if (tipoInicial === 'GRATIS_RM' && verificarCondicionGratisRM()) {
+            setTipoEntrega('GRATIS_RM');
+        } else if (tipoInicial === 'RETIRO') {
             setTipoEntrega('RETIRO');
+        } else if (tipoInicial === 'PUNTO_BLUE') {
+            setTipoEntrega('PUNTO_BLUE');
+        } else if (verificarCondicionGratisRM() && tipoInicial !== 'RETIRO' && tipoInicial !== 'PUNTO_BLUE') {
+            setTipoEntrega('GRATIS_RM');
         } else {
-            actualizarCotizacionBlueExpress(comunaPrevia);
+            setTipoEntrega('ENVIO');
         }
 
         const formCheckout = document.getElementById('form-checkout-rapida');
+        const terminosCheckbox = document.getElementById('terminos_checkbox');
+        const hiddenTerminos = document.getElementById('hidden_terminos_input');
+        const btnWebpay = document.getElementById('btn-webpay');
+
+        if (terminosCheckbox && hiddenTerminos) {
+            terminosCheckbox.addEventListener('change', function() {
+                hiddenTerminos.value = this.checked ? 'on' : '';
+            });
+        }
+
+        if (btnWebpay) {
+            btnWebpay.addEventListener('click', function(e) {
+                if (terminosCheckbox) {
+                    if (hiddenTerminos) hiddenTerminos.value = terminosCheckbox.checked ? 'on' : '';
+                    if (!terminosCheckbox.checked) {
+                        terminosCheckbox.reportValidity();
+                        e.preventDefault();
+                        return false;
+                    }
+                }
+                if (formCheckout && !formCheckout.checkValidity()) {
+                    formCheckout.reportValidity();
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        }
+
         if (formCheckout) {
-            formCheckout.addEventListener('submit', function() {
+            formCheckout.addEventListener('submit', function(e) {
+                if (terminosCheckbox) {
+                    if (hiddenTerminos) hiddenTerminos.value = terminosCheckbox.checked ? 'on' : '';
+                    if (!terminosCheckbox.checked) {
+                        terminosCheckbox.reportValidity();
+                        e.preventDefault();
+                        return false;
+                    }
+                }
                 const inputTel = document.getElementById('input_telefono');
                 if (inputTel && inputTel.value) {
                     let digits = inputTel.value.replace(/\D/g, '');

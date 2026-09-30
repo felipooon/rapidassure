@@ -720,15 +720,15 @@ def exportar_pedidos_blue_express(request):
         ]
         ws.append(headers_row5)
 
-    # Filtrar solo pedidos pagados para despacho a domicilio
+    # Filtrar solo pedidos pagados para despacho a domicilio (incluye ENVIO y GRATIS_RM; excluye Punto Blue y Retiro en local)
     estado_filtro = request.GET.get('estado')
     if estado_filtro:
-        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='ENVIO', estado=estado_filtro).order_by('-id'))
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega__in=['ENVIO', 'GRATIS_RM'], estado=estado_filtro).order_by('-id'))
     elif request.GET.get('todos'):
-        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='ENVIO').order_by('-id'))
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega__in=['ENVIO', 'GRATIS_RM']).order_by('-id'))
     else:
         pedidos_qs = list(
-            Pedido.objects.filter(tipo_entrega='ENVIO')
+            Pedido.objects.filter(tipo_entrega__in=['ENVIO', 'GRATIS_RM'])
             .filter(models.Q(estado='PAGADO') | (models.Q(pagado=True) & models.Q(estado='PENDIENTE')))
             .order_by('-id')
         )
@@ -840,6 +840,129 @@ def exportar_pedidos_blue_express(request):
     timestamp = timezone.now().strftime("%Y%m%d_%H%M")
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="Carga_Masiva_Blue_Express_{timestamp}.xlsx"'
+    wb.save(response)
+    return response
+
+
+@staff_member_required(login_url='login')
+def exportar_pedidos_puntos_blue(request):
+    """
+    Genera un archivo Excel (.xlsx) exclusivo para gestionar de forma individual
+    los pedidos con retiro en Punto Blue Express (Copec / Pick-up).
+    """
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Puntos Blue Express"
+
+    # Estilos elegantes en tonos morado/índigo para diferenciar de la carga masiva
+    fill_header = PatternFill(start_color="4C1D95", end_color="4C1D95", fill_type="solid")
+    font_header = Font(name='Calibri', size=11, bold=True, color="FFFFFF")
+    align_center = Alignment(horizontal="center", vertical="center")
+    align_left = Alignment(horizontal="left", vertical="center")
+    thin_border = Border(
+        left=Side(style='thin', color='DDDDDD'),
+        right=Side(style='thin', color='DDDDDD'),
+        top=Side(style='thin', color='DDDDDD'),
+        bottom=Side(style='thin', color='DDDDDD')
+    )
+
+    headers = [
+        'Nº Pedido', 'Fecha', 'Cliente', 'RUT', 'Teléfono', 'Email',
+        'ID Agencia Blue', 'Nombre Punto Blue', 'Dirección Punto', 'Comuna', 'Región',
+        'Productos / Detalle', 'Peso (kg)', 'Total ($)', 'Estado Pago', 'Nº Seguimiento (OT)', 'Notas'
+    ]
+    ws.append(headers)
+
+    for col_num in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.fill = fill_header
+        cell.font = font_header
+        cell.alignment = align_center
+        cell.border = thin_border
+
+    column_widths = {
+        'A': 12, 'B': 16, 'C': 26, 'D': 15, 'E': 16, 'F': 26,
+        'G': 16, 'H': 32, 'I': 32, 'J': 20, 'K': 25,
+        'L': 35, 'M': 12, 'N': 15, 'O': 16, 'P': 22, 'Q': 25
+    }
+    for col_letter, width in column_widths.items():
+        ws.column_dimensions[col_letter].width = width
+
+    # Filtrar exclusivamente pedidos PUNTO_BLUE
+    estado_filtro = request.GET.get('estado')
+    if estado_filtro:
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='PUNTO_BLUE', estado=estado_filtro).order_by('-id'))
+    elif request.GET.get('todos'):
+        pedidos_qs = list(Pedido.objects.filter(tipo_entrega='PUNTO_BLUE').order_by('-id'))
+    else:
+        pedidos_qs = list(
+            Pedido.objects.filter(tipo_entrega='PUNTO_BLUE')
+            .filter(models.Q(estado='PAGADO') | (models.Q(pagado=True) & models.Q(estado='PENDIENTE')))
+            .order_by('-id')
+        )
+
+    for row_num, p in enumerate(pedidos_qs, start=2):
+        items_desc = []
+        peso_total = 0.0
+        for item in p.items.select_related('producto').all():
+            items_desc.append(f"{item.cantidad}x {item.producto.nombre}")
+            if item.producto.peso:
+                try:
+                    peso_total += float(item.producto.peso) * item.cantidad
+                except (ValueError, TypeError):
+                    pass
+        productos_str = ", ".join(items_desc) if items_desc else "Equipamiento tecnológico"
+        peso_declarado = max(1.0, round(peso_total, 2))
+
+        ws.append([
+            f"#{p.codigo_orden}",
+            p.creado.strftime("%Y-%m-%d %H:%M"),
+            p.nombre_completo,
+            p.rut,
+            normalizar_telefono_chile(p.telefono),
+            p.email,
+            p.punto_entrega_id or "S/I",
+            p.punto_entrega_nombre or "Punto Blue Express",
+            p.direccion,
+            p.comuna or p.ciudad,
+            p.region,
+            productos_str,
+            peso_declarado,
+            f"${p.get_total_cost() - p.descuento_aplicado}",
+            p.get_estado_display(),
+            p.numero_seguimiento or "",
+            getattr(p, 'notas', '') or ""
+        ])
+
+        for col_num in range(1, len(headers) + 1):
+            cell = ws.cell(row=row_num, column=col_num)
+            cell.border = thin_border
+            if col_num in [1, 2, 4, 5, 7, 13, 14, 15]:
+                cell.alignment = align_center
+            else:
+                cell.alignment = align_left
+
+    usuario_log = request.user if request.user.is_authenticated else None
+    for p in pedidos_qs:
+        if p.estado == 'PAGADO' or (p.pagado and p.estado == 'PENDIENTE'):
+            p.estado = 'EN_PREPARACION'
+            if not p.empresa_transporte:
+                p.empresa_transporte = 'Blue Express'
+            p.save()
+
+            LogPedido.objects.create(
+                pedido_id=p.id,
+                codigo_orden=p.codigo_orden,
+                cliente_nombre=p.nombre_completo,
+                cliente_email=p.email,
+                accion='ESTADO_CAMBIO',
+                usuario=usuario_log,
+                detalles="Estado cambiado a 'En Preparación' por exportación de Planilla Puntos Blue Express"
+            )
+
+    timestamp = timezone.now().strftime("%Y%m%d_%H%M")
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Planilla_Puntos_Blue_Express_{timestamp}.xlsx"'
     wb.save(response)
     return response
 

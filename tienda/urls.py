@@ -45,6 +45,7 @@ urlpatterns = [
 
     path('checkout/', views.procesar_pedido, name='procesar_pedido'),
     path('api/cotizar-envio/', views.api_cotizar_envio, name='api_cotizar_envio'),
+    path('api/puntos-blue/', views.api_puntos_blue_express, name='api_puntos_blue_express'),
     path('pedido-confirmado/<int:pedido_id>/', views.pedido_confirmado, name='pedido_confirmado'),
     path('webpay/retorno/', views.webpay_retorno, name='webpay_retorno'),
 
@@ -66,6 +67,7 @@ urlpatterns = [
     # Panel - Pedidos avanzadas
     path('panel/pedidos/exportar/', views.exportar_pedidos_excel, name='exportar_pedidos_excel'),
     path('panel/pedidos/exportar-blue-express/', views.exportar_pedidos_blue_express, name='exportar_pedidos_blue_express'),
+    path('panel/pedidos/exportar-puntos-blue/', views.exportar_pedidos_puntos_blue, name='exportar_pedidos_puntos_blue'),
     path('panel/pedidos/<int:id>/actualizar-estado/', views.actualizar_estado_pedido, name='actualizar_estado_pedido'),
     path('panel/pedidos/enviar-seguimiento/<int:id>/', views.enviar_seguimiento_email, name='enviar_seguimiento_email'),
 

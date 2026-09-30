@@ -323,6 +323,8 @@ class Pedido(models.Model):
     TIPO_ENTREGA_CHOICES = (
         ('ENVIO', 'Despacho a Domicilio'),
         ('RETIRO', 'Retiro en Local'),
+        ('PUNTO_BLUE', 'Punto Blue Express (Pick-up / Copec)'),
+        ('GRATIS_RM', 'Envío Gratis RM (+ $19.990)'),
     )
 
     # 1. Datos del cliente (Compra como invitado)
@@ -331,6 +333,8 @@ class Pedido(models.Model):
     email = models.EmailField()
     telefono = models.CharField(max_length=20)
     tipo_entrega = models.CharField(max_length=20, choices=TIPO_ENTREGA_CHOICES, default='ENVIO', help_text="Forma de entrega seleccionada por el cliente")
+    punto_entrega_id = models.CharField(max_length=50, blank=True, default='', help_text="ID Agencia Blue Express")
+    punto_entrega_nombre = models.CharField(max_length=200, blank=True, default='', help_text="Nombre de Agencia Blue Express")
     direccion = models.CharField(max_length=250)
     ciudad = models.CharField(max_length=100, default="Puerto Montt")
     region = models.CharField(max_length=120, blank=True, default="Metropolitana de Santiago", help_text="Región de entrega")

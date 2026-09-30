@@ -886,13 +886,14 @@ class BlueExpressIntegrationTests(TestCase):
         self.assertEqual(obtener_tarifa_blue_express('Coyhaique', peso_kg=4.5), 14500)
         self.assertEqual(obtener_tarifa_blue_express('Punta Arenas', peso_kg=12.0), 17000)
 
-        # Envío gratis para compras >= 19.990 aplica ÚNICAMENTE en la Región Metropolitana
-        self.assertEqual(calcular_costo_envio('Santiago', 20000, 2.0), 0)
-        self.assertEqual(calcular_costo_envio('Providencia', 25000, 0.4), 0)
-        self.assertEqual(calcular_costo_envio('Santiago', 15000, 0.4), 3100)
+        # Envío gratis para compras >= 19.990 aplica con tipo_entrega='GRATIS_RM' en la Región Metropolitana
+        self.assertEqual(calcular_costo_envio('Santiago', 20000, 2.0, tipo_entrega='GRATIS_RM'), 0)
+        self.assertEqual(calcular_costo_envio('Providencia', 25000, 0.4, tipo_entrega='GRATIS_RM'), 0)
+        # Si no cumple el monto mínimo o es fuera de RM, calcula la tarifa correspondiente
+        self.assertEqual(calcular_costo_envio('Santiago', 15000, 0.4, tipo_entrega='GRATIS_RM'), 3100)
+        self.assertEqual(calcular_costo_envio('Punta Arenas', 20000, 0.4, tipo_entrega='GRATIS_RM'), 5200)
 
-        # Fuera de la RM se cobra siempre la tarifa correspondiente sin importar el monto
-        self.assertEqual(calcular_costo_envio('Punta Arenas', 20000, 0.4), 5200)
+        # Fuera de la RM se cobra siempre la tarifa correspondiente según peso
         self.assertEqual(calcular_costo_envio('Viña del Mar', 50000, 0.4), 4300)
         self.assertEqual(calcular_costo_envio('Concepción', 100000, 2.0), 5600)
 
@@ -985,6 +986,184 @@ class BlueExpressIntegrationTests(TestCase):
         # Verificar que el pedido cambió de estado a EN_PREPARACION
         p_updated = Pedido.objects.get(email='despacho@example.com')
         self.assertEqual(p_updated.estado, 'EN_PREPARACION')
+
+    def test_api_puntos_blue_express(self):
+        """Verifica que el endpoint /api/puntos-blue/ retorne los puntos disponibles en la comuna."""
+        response = self.client.get('/api/puntos-blue/?comuna=Santiago')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data['success'])
+        self.assertGreater(data['total'], 0)
+        primer_punto = data['puntos'][0]
+        self.assertIn('id', primer_punto)
+        self.assertIn('nombre', primer_punto)
+        self.assertIn('direccion_completa', primer_punto)
+
+    def test_cotizar_punto_blue_express(self):
+        """Verifica que la cotización para PUNTO_BLUE aplique la tarifa reducida oficial."""
+        # Cotización normal Punto Blue Santiago (< 19990) -> 2600
+        response = self.client.get('/api/cotizar-envio/?comuna=Santiago&tipo_entrega=PUNTO_BLUE')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['costo_envio'], 2600)
+        self.assertEqual(data['tipo_entrega'], 'PUNTO_BLUE')
+
+        # Cotización Punto Blue Valparaíso / Viña del Mar -> 3800
+        response_vina = self.client.get('/api/cotizar-envio/?comuna=Viña del Mar&tipo_entrega=PUNTO_BLUE')
+        self.assertEqual(response_vina.status_code, 200)
+        self.assertEqual(response_vina.json()['costo_envio'], 3800)
+
+    def test_exportar_pedidos_blue_express_excluye_puntos_blue(self):
+        """Verifica que los pedidos con PUNTO_BLUE NO entren a la planilla de carga masiva de domicilio."""
+        Pedido.objects.create(
+            nombre_completo='Cliente Punto Excluido',
+            rut='19.222.333-4',
+            email='excluido@example.com',
+            telefono='911223344',
+            tipo_entrega='PUNTO_BLUE',
+            punto_entrega_id='3167',
+            punto_entrega_nombre='Punto Blue Express Good Travel',
+            direccion='Sargento aldea 776 (Punto Blue)',
+            ciudad='Iquique',
+            comuna='Iquique',
+            region='Región de Tarapacá',
+            costo_envio=4700,
+            estado='PAGADO',
+            pagado=True,
+            empresa_transporte='Blue Express'
+        )
+
+        self.client.login(username='admin_bx', password='adminpassword123')
+        response = self.client.get('/panel/pedidos/exportar-blue-express/')
+        self.assertEqual(response.status_code, 200)
+
+        import io, openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(response.content))
+        ws = wb['Carga Masiva']
+        nombres_en_hoja = [ws.cell(row, 4).value for row in range(6, ws.max_row + 1)]
+        self.assertNotIn('Cliente Punto Excluido', nombres_en_hoja, "Los pedidos con PUNTO_BLUE no deben estar en la carga masiva a domicilio")
+
+    def test_exportar_pedidos_puntos_blue_excel(self):
+        """Verifica que la planilla individual de Puntos Blue Express exporte correctamente sus datos."""
+        Pedido.objects.create(
+            nombre_completo='Cliente Para Gestion Individual',
+            rut='17.333.444-5',
+            email='individual@example.com',
+            telefono='988776655',
+            tipo_entrega='PUNTO_BLUE',
+            punto_entrega_id='5038',
+            punto_entrega_nombre='Punto Blue Express Minimarket El Almacen',
+            direccion='TORONTO 3711',
+            ciudad='Iquique',
+            comuna='Iquique',
+            region='Región de Tarapacá',
+            costo_envio=4700,
+            estado='PAGADO',
+            pagado=True,
+            empresa_transporte='Blue Express'
+        )
+
+        self.client.login(username='admin_bx', password='adminpassword123')
+        response = self.client.get('/panel/pedidos/exportar-puntos-blue/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', response['Content-Type'])
+        self.assertIn('Planilla_Puntos_Blue_Express', response['Content-Disposition'])
+
+        import io, openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(response.content))
+        ws = wb['Puntos Blue Express']
+        # Cabeceras
+        self.assertEqual(ws.cell(1, 1).value, 'Nº Pedido')
+        self.assertEqual(ws.cell(1, 3).value, 'Cliente')
+        self.assertEqual(ws.cell(1, 7).value, 'ID Agencia Blue')
+        self.assertEqual(ws.cell(1, 8).value, 'Nombre Punto Blue')
+        self.assertEqual(ws.cell(1, 9).value, 'Dirección Punto')
+
+        # Buscar fila del pedido
+        encontrado = False
+        for row in range(2, ws.max_row + 1):
+            if ws.cell(row, 3).value == 'Cliente Para Gestion Individual':
+                encontrado = True
+                self.assertEqual(ws.cell(row, 7).value, '5038')
+                self.assertEqual(ws.cell(row, 8).value, 'Punto Blue Express Minimarket El Almacen')
+                self.assertEqual(ws.cell(row, 9).value, 'TORONTO 3711')
+                break
+        self.assertTrue(encontrado, "El pedido con PUNTO_BLUE debe estar presente en la planilla individual de Puntos Blue")
+
+        # Verificar cambio de estado a EN_PREPARACION
+        p_updated = Pedido.objects.get(email='individual@example.com')
+        self.assertEqual(p_updated.estado, 'EN_PREPARACION')
+
+    def test_envio_gratis_rm_metodo_y_panel(self):
+        """Verifica que GRATIS_RM se cotice a $0 cuando cumple condiciones, se filtre y muestre en el panel de pedidos y se exporte en Blue Express."""
+        # 1. Cotizar en API sin cumplir monto (< 19.990) -> No permite gratis
+        resp_invalido = self.client.get('/api/cotizar-envio/?comuna=Santiago&tipo_entrega=GRATIS_RM')
+        self.assertEqual(resp_invalido.status_code, 200)
+        self.assertFalse(resp_invalido.json()['permite_gratis_rm'])
+
+        # Cargar carrito con $25.000 en sesión
+        session = self.client.session
+        session['carrito'] = {
+            str(self.producto.id): {
+                'producto_id': self.producto.id,
+                'nombre': self.producto.nombre,
+                'precio': 25000,
+                'cantidad': 1,
+                'precio_total': 25000,
+                'peso': 0.4
+            }
+        }
+        session.save()
+
+        # Cotizar en API cumpliendo monto (>= 19.990) -> $0 y permite_gratis_rm=True
+        response = self.client.get('/api/cotizar-envio/?comuna=Santiago&tipo_entrega=GRATIS_RM')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data['success'])
+        self.assertTrue(data['permite_gratis_rm'])
+        self.assertEqual(data['costo_envio'], 0)
+        self.assertEqual(data['tipo_entrega'], 'GRATIS_RM')
+
+        # 2. Crear pedido con GRATIS_RM
+        pedido_gratis = Pedido.objects.create(
+            nombre_completo='Cliente Gratis RM',
+            rut='18.999.888-7',
+            email='gratis_rm@example.com',
+            telefono='911223344',
+            tipo_entrega='GRATIS_RM',
+            direccion='Av. Providencia 1234',
+            ciudad='Providencia',
+            comuna='Providencia',
+            region='Región Metropolitana de Santiago',
+            costo_envio=0,
+            estado='PAGADO',
+            pagado=True,
+            empresa_transporte='Blue Express'
+        )
+
+        # 3. Verificar filtro y visualización en el Panel de Pedidos
+        self.client.login(username='admin_bx', password='adminpassword123')
+        resp_panel = self.client.get('/panel/pedidos/?tipo_entrega=GRATIS_RM')
+        self.assertEqual(resp_panel.status_code, 200)
+        self.assertContains(resp_panel, 'Cliente Gratis RM')
+        self.assertContains(resp_panel, 'Gratis RM')
+
+        # 4. Verificar detalle de pedido
+        resp_detalle = self.client.get(f'/panel/pedidos/{pedido_gratis.id}/')
+        self.assertEqual(resp_detalle.status_code, 200)
+        self.assertContains(resp_detalle, 'Envío Gratis RM')
+
+        # 5. Verificar exportación masiva de Blue Express incluye GRATIS_RM
+        resp_export = self.client.get('/panel/pedidos/exportar-blue-express/?todos=1')
+        self.assertEqual(resp_export.status_code, 200)
+        self.assertIn('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', resp_export['Content-Type'])
+        import io, openpyxl
+        wb = openpyxl.load_workbook(io.BytesIO(resp_export.content))
+        ws = wb.active
+        nombres_en_planilla = [ws.cell(r, 4).value for r in range(6, ws.max_row + 1)]
+        self.assertIn('Cliente Gratis RM', nombres_en_planilla)
+
+
 
 
 

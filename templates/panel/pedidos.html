@@ -7,11 +7,14 @@
         <h1 style="margin: 0; color: #333;"><i class="fa-solid fa-truck-fast"></i> Gestión de Pedidos</h1>
         
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <button type="button" onclick="descargarCargaMasivaBlueExpress(this, '{% url 'exportar_pedidos_blue_express' %}')" style="background: linear-gradient(135deg, #002093, #0056b3); color: white; padding: 10px 18px; border: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,32,147,0.25); cursor: pointer; font-size: 0.95rem; font-family: inherit;">
-                <i class="fa-solid fa-truck-fast"></i> Carga Masiva Blue Express (.xlsx)
+            <button type="button" onclick="descargarCargaMasivaBlueExpress(this, '{% url 'exportar_pedidos_blue_express' %}')" style="background: linear-gradient(135deg, #002093, #0056b3); color: white; padding: 10px 18px; border: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,32,147,0.25); cursor: pointer; font-size: 0.92rem; font-family: inherit;">
+                <i class="fa-solid fa-truck-fast"></i> Carga Masiva Domicilio (.xlsx)
             </button>
-            <a href="{% url 'exportar_pedidos_excel' %}" style="background-color: #27ae60; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-file-excel"></i> Exportar Pedidos a Excel
+            <button type="button" onclick="descargarCargaMasivaBlueExpress(this, '{% url 'exportar_pedidos_puntos_blue' %}')" style="background: linear-gradient(135deg, #7e22ce, #9333ea); color: white; padding: 10px 18px; border: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(126,34,206,0.25); cursor: pointer; font-size: 0.92rem; font-family: inherit;">
+                <i class="fa-solid fa-location-dot"></i> Planilla Puntos Blue (.xlsx)
+            </button>
+            <a href="{% url 'exportar_pedidos_excel' %}" style="background-color: #27ae60; color: white; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; font-size: 0.92rem;">
+                <i class="fa-solid fa-file-excel"></i> Exportar Todo
             </a>
         </div>
     </div>
@@ -35,6 +38,8 @@
             <select name="tipo_entrega" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.88rem; box-sizing: border-box; background: white; cursor: pointer;">
                 <option value="">Todas las Entregas</option>
                 <option value="ENVIO" {% if tipo_entrega_filtro == 'ENVIO' %}selected{% endif %}>🚚 Despacho a Domicilio</option>
+                <option value="GRATIS_RM" {% if tipo_entrega_filtro == 'GRATIS_RM' %}selected{% endif %}>🎁 Envío Gratis RM</option>
+                <option value="PUNTO_BLUE" {% if tipo_entrega_filtro == 'PUNTO_BLUE' %}selected{% endif %}>📍 Punto Blue Express</option>
                 <option value="RETIRO" {% if tipo_entrega_filtro == 'RETIRO' %}selected{% endif %}>🏪 Retiro en Local</option>
             </select>
         </div>
@@ -99,6 +104,19 @@
                         <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;">
                             <i class="fa-solid fa-store"></i> Retiro en Local
                         </span>
+                    {% elif p.tipo_entrega == 'GRATIS_RM' %}
+                        <span style="background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fa-solid fa-gift"></i> Gratis RM
+                        </span>
+                    {% elif p.tipo_entrega == 'PUNTO_BLUE' %}
+                        <span style="background: #f3e8ff; color: #6b21a8; padding: 4px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;" title="{{ p.punto_entrega_nombre }}">
+                            <i class="fa-solid fa-location-dot"></i> Punto Blue
+                        </span>
+                        {% if p.punto_entrega_nombre %}
+                        <div style="font-size: 0.78rem; color: #7e22ce; margin-top: 4px; max-width: 170px; line-height: 1.2;">
+                            {{ p.punto_entrega_nombre }}
+                        </div>
+                        {% endif %}
                     {% else %}
                         <span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 800; display: inline-flex; align-items: center; gap: 5px;">
                             <i class="fa-solid fa-truck"></i> Despacho

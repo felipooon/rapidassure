@@ -22,6 +22,7 @@ from ..deseos import Deseos
 from ..comunas_chile import (
     calcular_costo_envio,
     obtener_region_de_comuna,
+    obtener_puntos_blue_por_comuna,
     REGIONES_Y_COMUNAS,
     UMBRAL_ENVIO_GRATIS,
     determinar_talla_peso
@@ -395,12 +396,15 @@ def procesar_pedido(request):
     
     peso_carrito = obtener_peso_total_carrito(carrito)
     talla_carrito = determinar_talla_peso(peso_carrito)
-    costo_envio_default = calcular_costo_envio('Santiago', subtotal_descuento, peso_carrito)
-    total_final_default = subtotal_descuento + costo_envio_default
-
+    
     datos_previos = request.POST if request.method == 'POST' else {}
     comuna_previa = datos_previos.get('comuna') or datos_previos.get('ciudad') or 'Santiago'
     region_previa = datos_previos.get('region') or 'Región Metropolitana de Santiago'
+    
+    permite_gratis_rm_inicial = (region_previa == "Región Metropolitana de Santiago" and subtotal_descuento >= UMBRAL_ENVIO_GRATIS)
+    tipo_entrega_default = datos_previos.get('tipo_entrega') or ('GRATIS_RM' if permite_gratis_rm_inicial else 'ENVIO')
+    costo_envio_default = calcular_costo_envio(comuna_previa, subtotal_descuento, peso_carrito, tipo_entrega=tipo_entrega_default)
+    total_final_default = subtotal_descuento + costo_envio_default
 
     def _build_checkout_context(extra_dict=None):
         ctx = {
@@ -415,6 +419,8 @@ def procesar_pedido(request):
             'regiones_comunas': REGIONES_Y_COMUNAS,
             'regiones_comunas_json': json.dumps(REGIONES_Y_COMUNAS),
             'umbral_envio_gratis': UMBRAL_ENVIO_GRATIS,
+            'permite_gratis_rm': permite_gratis_rm_inicial,
+            'tipo_entrega_default': tipo_entrega_default,
             'datos_previos': datos_previos,
             'comuna_previa': comuna_previa,
             'region_previa': region_previa,
@@ -431,6 +437,8 @@ def procesar_pedido(request):
         direccion = request.POST.get('direccion', '').strip()
         region = request.POST.get('region', '').strip() or 'Región Metropolitana de Santiago'
         comuna = request.POST.get('comuna', '').strip() or request.POST.get('ciudad', '').strip() or 'Santiago'
+        punto_entrega_id = request.POST.get('punto_entrega_id', '').strip()
+        punto_entrega_nombre = request.POST.get('punto_entrega_nombre', '').strip()
 
         if tipo_entrega == 'RETIRO':
             costo_envio = 0
@@ -438,10 +446,18 @@ def procesar_pedido(request):
                 direccion = "Retiro en Local - San Diego 174 local 8"
             comuna = "Santiago"
             region = "Región Metropolitana de Santiago"
+        elif tipo_entrega == 'GRATIS_RM':
+            if not direccion:
+                direccion = "Dirección no especificada"
+            costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega='GRATIS_RM')
+        elif tipo_entrega == 'PUNTO_BLUE':
+            costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega='PUNTO_BLUE')
+            if not direccion and punto_entrega_nombre:
+                direccion = f"Punto Blue Express: {punto_entrega_nombre}"
         else:
             if not direccion:
                 direccion = "Dirección no especificada"
-            costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito)
+            costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega='ENVIO')
 
         total_final = max(0, subtotal_descuento + costo_envio)
 
@@ -481,12 +497,14 @@ def procesar_pedido(request):
             email=request.POST.get('email'),
             telefono=normalizar_telefono_chile(request.POST.get('telefono')),
             tipo_entrega=tipo_entrega,
+            punto_entrega_id=punto_entrega_id,
+            punto_entrega_nombre=punto_entrega_nombre,
             direccion=direccion,
             ciudad=comuna,
             region=region,
             comuna=comuna,
             costo_envio=costo_envio,
-            empresa_transporte='Blue Express' if tipo_entrega == 'ENVIO' else '',
+            empresa_transporte='Blue Express' if tipo_entrega in ('ENVIO', 'PUNTO_BLUE', 'GRATIS_RM') else '',
             cupon=cupon_obj,
             descuento_aplicado=descuento_aplicado,
             requiere_factura=requiere_factura,
@@ -602,27 +620,35 @@ https://rapidassure.cl/panel/
 
 def api_cotizar_envio(request):
     """
-    Endpoint AJAX para cotizar el despacho Blue Express según la comuna seleccionada.
+    Endpoint AJAX para cotizar el despacho Blue Express según comuna y tipo de entrega (ENVIO, PUNTO_BLUE, RETIRO).
     """
     carrito = Carrito(request)
     comuna = request.GET.get('comuna') or request.POST.get('comuna') or 'Santiago'
     comuna = comuna.strip()
+    tipo_entrega = request.GET.get('tipo_entrega') or request.POST.get('tipo_entrega') or 'ENVIO'
+    tipo_entrega = tipo_entrega.strip()
+
     total_bruto = carrito.get_total()
     cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto)
     subtotal_descuento = max(0, total_bruto - descuento_aplicado)
 
     peso_carrito = obtener_peso_total_carrito(carrito)
     talla_carrito = determinar_talla_peso(peso_carrito)
-    costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito)
+    region_comuna = obtener_region_de_comuna(comuna)
+    permite_gratis_rm = (region_comuna == "Región Metropolitana de Santiago" and subtotal_descuento >= UMBRAL_ENVIO_GRATIS)
+
+    costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega=tipo_entrega)
     total_final = subtotal_descuento + costo_envio
 
     return JsonResponse({
         'success': True,
         'comuna': comuna,
-        'region': obtener_region_de_comuna(comuna),
+        'tipo_entrega': tipo_entrega,
+        'region': region_comuna,
         'costo_envio': costo_envio,
         'costo_envio_formateado': f"${costo_envio:,}".replace(',', '.') if costo_envio > 0 else "GRATIS",
         'es_gratis': (costo_envio == 0),
+        'permite_gratis_rm': permite_gratis_rm,
         'talla': talla_carrito,
         'peso_total': round(peso_carrito, 2),
         'subtotal': total_bruto,
@@ -630,6 +656,20 @@ def api_cotizar_envio(request):
         'total_final': total_final,
         'total_final_formateado': f"${total_final:,}".replace(',', '.'),
         'umbral_envio_gratis': UMBRAL_ENVIO_GRATIS
+    })
+
+
+def api_puntos_blue_express(request):
+    """
+    Endpoint AJAX para obtener los Puntos Blue Express habilitados para retiro en una comuna.
+    """
+    comuna = request.GET.get('comuna') or request.POST.get('comuna') or ''
+    puntos = obtener_puntos_blue_por_comuna(comuna.strip())
+    return JsonResponse({
+        'success': True,
+        'comuna': comuna.strip(),
+        'total': len(puntos),
+        'puntos': puntos
     })
 
 

@@ -168,7 +168,15 @@ function ejecutarCopiaPedidoModal() {
 
             <div>
                 <h4 style="margin: 0 0 10px 0; color: #002093; font-size: 0.95rem;">
-                    {% if pedido.tipo_entrega == 'RETIRO' %}<i class="fa-solid fa-store"></i> Retiro en Tienda{% else %}<i class="fa-solid fa-truck"></i> Despacho a Domicilio{% endif %}
+                    {% if pedido.tipo_entrega == 'RETIRO' %}
+                        <i class="fa-solid fa-store"></i> Retiro en Tienda
+                    {% elif pedido.tipo_entrega == 'GRATIS_RM' %}
+                        <i class="fa-solid fa-gift" style="color: #10b981;"></i> Envío Gratis RM (Compras +$19.990)
+                    {% elif pedido.tipo_entrega == 'PUNTO_BLUE' %}
+                        <i class="fa-solid fa-location-dot"></i> Punto Blue Express (Pick-up / Copec)
+                    {% else %}
+                        <i class="fa-solid fa-truck"></i> Despacho a Domicilio (Blue Express)
+                    {% endif %}
                 </h4>
                 
                 {% if pedido.tipo_entrega == 'RETIRO' %}
@@ -179,6 +187,26 @@ function ejecutarCopiaPedidoModal() {
                         <span style="color: #78350f; font-size: 0.85rem; display: block;">
                             Local Principal: San Diego 174 local 8, Santiago
                         </span>
+                    </div>
+                {% elif pedido.tipo_entrega == 'GRATIS_RM' %}
+                    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 12px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="color: #047857; font-weight: 800; font-size: 0.88rem; display: block; margin-bottom: 2px;">
+                            <i class="fa-solid fa-circle-check"></i> Beneficio Envío Gratis RM
+                        </span>
+                        <span style="color: #065f46; font-size: 0.85rem; display: block;">
+                            Despacho a Domicilio sin costo por compra sobre $19.990 en Región Metropolitana.
+                        </span>
+                    </div>
+                {% elif pedido.tipo_entrega == 'PUNTO_BLUE' %}
+                    <div style="background: #faf5ff; border: 1px solid #e9d5ff; padding: 12px; border-radius: 10px; margin-bottom: 10px;">
+                        <span style="color: #6b21a8; font-weight: 800; font-size: 0.88rem; display: block; margin-bottom: 2px;">
+                            <i class="fa-solid fa-location-dot"></i> Punto Blue Express: {{ pedido.punto_entrega_nombre|default:"Agencia de Retiro" }}
+                        </span>
+                        {% if pedido.punto_entrega_id %}
+                        <span style="color: #7e22ce; font-size: 0.82rem; font-weight: 700; display: block;">
+                            Código Agencia: #{{ pedido.punto_entrega_id }}
+                        </span>
+                        {% endif %}
                     </div>
                 {% endif %}
 
@@ -268,7 +296,7 @@ function ejecutarCopiaPedidoModal() {
             </div>
             {% endif %}
             <div style="color: #475569; font-size: 0.95rem;">
-                Despacho ({% if pedido.tipo_entrega == 'RETIRO' %}Retiro en Local{% else %}Blue Express{% endif %}): 
+                Despacho ({% if pedido.tipo_entrega == 'RETIRO' %}Retiro en Local{% elif pedido.tipo_entrega == 'GRATIS_RM' %}Envío Gratis RM{% else %}Blue Express{% endif %}): 
                 {% if pedido.costo_envio == 0 %}
                     <strong style="color: #10b981;">GRATIS</strong>
                 {% else %}

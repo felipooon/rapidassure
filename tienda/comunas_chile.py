@@ -308,17 +308,28 @@ def obtener_tarifa_blue_express(comuna_nombre, peso_kg=0.40):
     talla = determinar_talla_peso(peso_kg)
     return TARIFAS_BLUE_EXPRESS.get(talla, TARIFAS_BLUE_EXPRESS['XS'])[zona]
 
+def obtener_tarifa_blue_express_punto(comuna_nombre, peso_kg=0.40):
+    """Tarifa reducida para entrega fuera de casa en Punto Blue Express / Copec."""
+    region = obtener_region_de_comuna(comuna_nombre)
+    zona = obtener_zona_blue_express(region)
+    talla = determinar_talla_peso(peso_kg)
+    return TARIFAS_BLUE_EXPRESS_PUNTO.get(talla, TARIFAS_BLUE_EXPRESS_PUNTO['XS'])[zona]
+
 def obtener_tarifa_base_comuna(comuna_nombre):
     """Alias compatible con la tarifa base estándar (Talla XS)"""
     return obtener_tarifa_blue_express(comuna_nombre, 0.40)
 
-def calcular_costo_envio(comuna_nombre, total_carrito=0, peso_kg=0.40):
+def calcular_costo_envio(comuna_nombre, total_carrito=0, peso_kg=0.40, tipo_entrega='ENVIO'):
     """
-    Calcula el costo final de envío considerando el beneficio de Envío Gratis.
-    IMPORTANTE: El envío gratis para compras >= $19.990 aplica ÚNICAMENTE
-    dentro de la Región Metropolitana de Santiago.
-    Para todas las demás regiones, siempre se cobra la tarifa de Blue Express.
+    Calcula el costo final de envío considerando las alternativas disponibles:
+    1. RETIRO: Siempre $0 (Retiro en Local).
+    2. GRATIS_RM: $0 si cumple condiciones (Región Metropolitana y compra >= $19.990).
+    3. PUNTO_BLUE: Tarifa reducida oficial Punto Blue Express / Copec.
+    4. ENVIO: Tarifa oficial entrega a domicilio Blue Express según peso y zona.
     """
+    if tipo_entrega == 'RETIRO':
+        return 0
+
     try:
         total = int(total_carrito)
     except (ValueError, TypeError):
@@ -326,10 +337,58 @@ def calcular_costo_envio(comuna_nombre, total_carrito=0, peso_kg=0.40):
 
     region = obtener_region_de_comuna(comuna_nombre)
 
-    # Envío gratis exclusivo para la Región Metropolitana sobre el umbral
-    if region == "Región Metropolitana de Santiago" and total >= UMBRAL_ENVIO_GRATIS:
-        return 0
+    if tipo_entrega == 'GRATIS_RM':
+        if region == "Región Metropolitana de Santiago" and total >= UMBRAL_ENVIO_GRATIS:
+            return 0
+        return obtener_tarifa_blue_express(comuna_nombre, peso_kg)
+
+    if tipo_entrega == 'PUNTO_BLUE':
+        return obtener_tarifa_blue_express_punto(comuna_nombre, peso_kg)
 
     return obtener_tarifa_blue_express(comuna_nombre, peso_kg)
+
+
+# Cache en memoria para puntos Blue Express
+_CACHE_PUNTOS_BLUE = None
+
+def cargar_puntos_blue_express():
+    """Carga y agrupa por comuna normalizada los puntos de retiro Blue Express desde el archivo local JSON."""
+    global _CACHE_PUNTOS_BLUE
+    if _CACHE_PUNTOS_BLUE is not None:
+        return _CACHE_PUNTOS_BLUE
+
+    import os
+    import json
+    from django.conf import settings
+
+    json_path = os.path.join(settings.BASE_DIR, 'tienda', 'data', 'puntos_blue_express.json')
+    if not os.path.exists(json_path):
+        _CACHE_PUNTOS_BLUE = {}
+        return _CACHE_PUNTOS_BLUE
+
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            lista = json.load(f)
+    except Exception:
+        lista = []
+
+    agrupados = {}
+    for p in lista:
+        c_norm = normalizar_texto(p.get('comuna', ''))
+        if c_norm not in agrupados:
+            agrupados[c_norm] = []
+        agrupados[c_norm].append(p)
+
+    _CACHE_PUNTOS_BLUE = agrupados
+    return _CACHE_PUNTOS_BLUE
+
+def obtener_puntos_blue_por_comuna(comuna_nombre):
+    """Retorna la lista de Puntos Blue Express habilitados para la comuna indicada."""
+    if not comuna_nombre:
+        return []
+    puntos_map = cargar_puntos_blue_express()
+    c_norm = normalizar_texto(comuna_nombre)
+    return puntos_map.get(c_norm, [])
+
 
 
