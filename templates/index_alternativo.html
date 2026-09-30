@@ -1206,7 +1206,7 @@
           {% csrf_token %}
           <div style="margin-bottom: 14px;">
             <label
-              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre</label>
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre Completo <span style="color: #ef4444;">*</span></label>
             <input type="text" name="nombre" id="contacto-nombre" required placeholder="Tu nombre completo"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
@@ -1214,8 +1214,16 @@
 
           <div style="margin-bottom: 14px;">
             <label
-              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto / Email</label>
-            <input type="text" name="asunto_email" id="contacto-asunto-email" required placeholder="Ej: Cotización Smart POS / correo@empresa.cl"
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Correo Electrónico <span style="color: #ef4444;">*</span></label>
+            <input type="email" name="email" id="contacto-email" required placeholder="tu.correo@empresa.cl"
+              style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
+              onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <label
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto / Motivo <span style="color: #ef4444;">*</span></label>
+            <input type="text" name="asunto" id="contacto-asunto" required placeholder="Ej: Cotización Smart POS / Consulta técnica"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
           </div>
@@ -1424,7 +1432,8 @@
     try {
       const formData = new FormData(form);
       const nombreEnviado = formData.get('nombre') || '';
-      const asuntoEnviado = formData.get('asunto_email') || '';
+      const emailEnviado = formData.get('email') || '';
+      const asuntoEnviado = formData.get('asunto') || '';
 
       const response = await fetch('/api/contacto/', {
         method: 'POST',
@@ -1440,7 +1449,8 @@
         if (typeof window.abrirModalContactoExito === 'function') {
           window.abrirModalContactoExito({
             nombre: nombreEnviado,
-            asunto_email: asuntoEnviado
+            email: emailEnviado,
+            asunto: asuntoEnviado
           });
         } else if (feedback) {
           feedback.style.display = 'block';

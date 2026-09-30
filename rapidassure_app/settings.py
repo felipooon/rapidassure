@@ -276,17 +276,19 @@ LOGGING = {
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD', '')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() in ('true', '1', 't')
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False').lower() in ('true', '1', 't')
+EMAIL_TIMEOUT = int(os.environ.get('EMAIL_TIMEOUT', 5))
 
-if not EMAIL_HOST_USER or not EMAIL_HOST_PASSWORD or DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'Rapidassure Retail <soporte@rapidassure.cl>'
+# Si EMAIL_USER y EMAIL_PASSWORD están configurados en el entorno, usar SMTP real:
+if EMAIL_HOST_USER and EMAIL_HOST_PASSWORD:
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+    DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', f"Rapidassure Retail <{EMAIL_HOST_USER}>")
 else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_TIMEOUT = 3  # Timeout de 3 segundos para que nunca bloquee al worker de Gunicorn
-    DEFAULT_FROM_EMAIL = f"Rapidassure Retail <{EMAIL_HOST_USER}>"
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+    DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Rapidassure Retail <soporte@rapidassure.cl>')
 
 # Correo institucional de recepción para formularios de contacto y consultas web
 CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'contacto@rapidassure.cl')

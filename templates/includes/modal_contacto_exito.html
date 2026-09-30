@@ -44,10 +44,20 @@
 
       <div class="rapida-modal-card-row">
         <div class="rapida-modal-card-icon" style="color: #0284c7;">
-          <i class="fa-solid fa-envelope-open-text"></i>
+          <i class="fa-solid fa-at"></i>
         </div>
         <div class="rapida-modal-card-info">
-          <span class="rapida-modal-card-label">Asunto / Contacto</span>
+          <span class="rapida-modal-card-label">Tu Correo (Respuesta directa)</span>
+          <span id="modal-contacto-email-display" class="rapida-modal-card-val">—</span>
+        </div>
+      </div>
+
+      <div class="rapida-modal-card-row">
+        <div class="rapida-modal-card-icon" style="color: #6366f1;">
+          <i class="fa-solid fa-file-lines"></i>
+        </div>
+        <div class="rapida-modal-card-info">
+          <span class="rapida-modal-card-label">Asunto / Motivo</span>
           <span id="modal-contacto-asunto-display" class="rapida-modal-card-val">—</span>
         </div>
       </div>
@@ -384,13 +394,17 @@ window.abrirModalContactoExito = function(datos) {
   if (!modal) return;
 
   const nombreEl = document.getElementById('modal-contacto-nombre-display');
+  const emailEl = document.getElementById('modal-contacto-email-display');
   const asuntoEl = document.getElementById('modal-contacto-asunto-display');
 
   if (nombreEl) {
     nombreEl.textContent = (datos && datos.nombre) ? datos.nombre : 'Cliente Rapidassure';
   }
+  if (emailEl) {
+    emailEl.textContent = (datos && datos.email) ? datos.email : '—';
+  }
   if (asuntoEl) {
-    asuntoEl.textContent = (datos && datos.asunto_email) ? datos.asunto_email : 'Consulta comercial';
+    asuntoEl.textContent = (datos && datos.asunto) ? datos.asunto : ((datos && datos.asunto_email) ? datos.asunto_email : 'Consulta comercial');
   }
 
   modal.style.display = 'flex';

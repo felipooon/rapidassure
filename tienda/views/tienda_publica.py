@@ -1,9 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
 import json
+import logging
+import re
+
+logger = logging.getLogger(__name__)
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db import models
@@ -343,12 +348,17 @@ def api_destacados_random(request):
     return JsonResponse({'productos': data})
 
 
+@csrf_exempt
 @require_POST
 def api_enviar_contacto(request):
     """
     Recibe el formulario de contacto del index y envía un correo
     a la casilla corporativa configurada (contacto@rapidassure.cl).
+    Exige obligatoriamente el correo del cliente para fijarlo en Reply-To.
     """
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+
     if request.content_type == 'application/json':
         try:
             data = json.loads(request.body.decode('utf-8'))
@@ -358,21 +368,44 @@ def api_enviar_contacto(request):
         data = request.POST
 
     nombre = data.get('nombre', '').strip()
-    asunto_email = data.get('asunto_email', '').strip()
+    email = data.get('email', '').strip()
+    asunto = data.get('asunto', '').strip()
     mensaje = data.get('mensaje', '').strip()
 
-    if not nombre or not asunto_email or not mensaje:
-        return JsonResponse({
-            'status': 'error',
-            'mensaje': 'Por favor completa todos los campos requeridos.'
-        }, status=400)
+    # Retrocompatibilidad por si llega asunto_email combinado
+    if not email and data.get('asunto_email'):
+        emails_encontrados = re.findall(r'[\w\.-]+@[\w\.-]+\.\w+', data.get('asunto_email', ''))
+        if emails_encontrados:
+            email = emails_encontrados[0]
+            asunto = asunto or data.get('asunto_email', '').replace(email, '').strip(' -/')
+
+    if not asunto and data.get('asunto_email'):
+        asunto = data.get('asunto_email', '').strip()
+
+    if not nombre:
+        return JsonResponse({'status': 'error', 'mensaje': 'Por favor ingresa tu nombre completo.'}, status=400)
+
+    if not email:
+        return JsonResponse({'status': 'error', 'mensaje': 'El correo electrónico es obligatorio para poder responderte.'}, status=400)
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        return JsonResponse({'status': 'error', 'mensaje': 'Por favor ingresa un correo electrónico válido (ejemplo: nombre@empresa.cl).'}, status=400)
+
+    if not asunto:
+        asunto = "Consulta General Web"
+
+    if not mensaje:
+        return JsonResponse({'status': 'error', 'mensaje': 'Por favor escribe tu mensaje o consulta.'}, status=400)
 
     destinatario = getattr(settings, 'CONTACT_EMAIL', 'contacto@rapidassure.cl')
-    asunto_correo = f"[Contacto Web Rapidassure] Mensaje de {nombre}"
+    asunto_correo = f"[Contacto Web Rapidassure] {asunto} - {nombre}"
     cuerpo_correo = (
         f"Has recibido un nuevo mensaje desde el formulario de contacto web de Rapidassure:\n\n"
         f"Nombre: {nombre}\n"
-        f"Asunto / Email del remitente: {asunto_email}\n\n"
+        f"Correo del cliente: {email}\n"
+        f"Asunto: {asunto}\n\n"
         f"Mensaje:\n"
         f"--------------------------------------------------\n"
         f"{mensaje}\n"
@@ -381,18 +414,22 @@ def api_enviar_contacto(request):
     )
 
     try:
-        send_mail(
-            asunto_correo,
-            cuerpo_correo,
-            getattr(settings, 'DEFAULT_FROM_EMAIL', 'Rapidassure Retail <soporte@rapidassure.cl>'),
-            [destinatario],
-            fail_silently=False,
+        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Rapidassure Retail <soporte@rapidassure.cl>')
+        email_msg = EmailMessage(
+            subject=asunto_correo,
+            body=cuerpo_correo,
+            from_email=from_email,
+            to=[destinatario],
+            reply_to=[email],
         )
+        resultado = email_msg.send(fail_silently=False)
+        logger.info(f"Correo de contacto enviado exitosamente a {destinatario} (resultado={resultado}, backend={settings.EMAIL_BACKEND}, reply_to={email})")
         return JsonResponse({
             'status': 'success',
             'mensaje': '¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito.'
         })
     except Exception as e:
+        logger.error(f"Error al enviar correo de contacto a {destinatario}: {e}", exc_info=True)
         return JsonResponse({
             'status': 'error',
             'mensaje': 'No se pudo enviar el correo en este momento. Por favor contáctanos directamente a contacto@rapidassure.cl'
