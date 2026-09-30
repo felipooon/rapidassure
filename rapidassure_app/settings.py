@@ -288,6 +288,9 @@ else:
     EMAIL_TIMEOUT = 3  # Timeout de 3 segundos para que nunca bloquee al worker de Gunicorn
     DEFAULT_FROM_EMAIL = f"Rapidassure Retail <{EMAIL_HOST_USER}>"
 
+# Correo institucional de recepción para formularios de contacto y consultas web
+CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL', 'contacto@rapidassure.cl')
+
 CORS_ALLOWED_ORIGINS = [
     "https://rapidassure.cl",
     "https://www.rapidassure.cl",

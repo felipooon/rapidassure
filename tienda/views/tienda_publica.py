@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
+import json
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db import models
@@ -338,3 +341,59 @@ def api_destacados_random(request):
             'badge': f"-{p.porcentaje_descuento}% OFF" if p.tiene_descuento else badges_pool[idx % len(badges_pool)]
         })
     return JsonResponse({'productos': data})
+
+
+@require_POST
+def api_enviar_contacto(request):
+    """
+    Recibe el formulario de contacto del index y envía un correo
+    a la casilla corporativa configurada (contacto@rapidassure.cl).
+    """
+    if request.content_type == 'application/json':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+        except Exception:
+            data = {}
+    else:
+        data = request.POST
+
+    nombre = data.get('nombre', '').strip()
+    asunto_email = data.get('asunto_email', '').strip()
+    mensaje = data.get('mensaje', '').strip()
+
+    if not nombre or not asunto_email or not mensaje:
+        return JsonResponse({
+            'status': 'error',
+            'mensaje': 'Por favor completa todos los campos requeridos.'
+        }, status=400)
+
+    destinatario = getattr(settings, 'CONTACT_EMAIL', 'contacto@rapidassure.cl')
+    asunto_correo = f"[Contacto Web Rapidassure] Mensaje de {nombre}"
+    cuerpo_correo = (
+        f"Has recibido un nuevo mensaje desde el formulario de contacto web de Rapidassure:\n\n"
+        f"Nombre: {nombre}\n"
+        f"Asunto / Email del remitente: {asunto_email}\n\n"
+        f"Mensaje:\n"
+        f"--------------------------------------------------\n"
+        f"{mensaje}\n"
+        f"--------------------------------------------------\n\n"
+        f"Enviado desde https://rapidassure.cl\n"
+    )
+
+    try:
+        send_mail(
+            asunto_correo,
+            cuerpo_correo,
+            getattr(settings, 'DEFAULT_FROM_EMAIL', 'Rapidassure Retail <soporte@rapidassure.cl>'),
+            [destinatario],
+            fail_silently=False,
+        )
+        return JsonResponse({
+            'status': 'success',
+            'mensaje': '¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito.'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'mensaje': 'No se pudo enviar el correo en este momento. Por favor contáctanos directamente a contacto@rapidassure.cl'
+        }, status=500)

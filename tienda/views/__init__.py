@@ -13,6 +13,7 @@ from .tienda_publica import (
     agregar_resena,
     api_destacados_random,
     index_alternativo,
+    api_enviar_contacto,
 )
 
 from .checkout_pagos import (

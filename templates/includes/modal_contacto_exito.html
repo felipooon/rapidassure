@@ -1,0 +1,422 @@
+<!-- ==========================================
+     MODAL DE CONFIRMACIÓN PROPIO RAPIDASSURE
+     (Contacto Web Enviado con Éxito)
+========================================== -->
+<div id="modal-contacto-exito" class="rapida-modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-contacto-title">
+  <div class="rapida-modal-backdrop" onclick="cerrarModalContactoExito()"></div>
+  
+  <div class="rapida-modal-dialog">
+    <!-- Botón cerrar (X) -->
+    <button type="button" class="rapida-modal-close" onclick="cerrarModalContactoExito()" aria-label="Cerrar modal">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <!-- Ícono Ilustrativo con Animación -->
+    <div class="rapida-modal-icon-wrapper">
+      <div class="rapida-modal-icon-ring"></div>
+      <div class="rapida-modal-icon-box">
+        <i class="fa-solid fa-paper-plane"></i>
+      </div>
+    </div>
+
+    <!-- Etiqueta corporativa -->
+    <div class="rapida-modal-badge">
+      <i class="fa-solid fa-shield-halved"></i> Rapidassure Retail
+    </div>
+
+    <!-- Título y subtítulo -->
+    <h3 id="modal-contacto-title" class="rapida-modal-title">¡Mensaje Enviado con Éxito!</h3>
+    <p class="rapida-modal-subtitle">
+      Tu mensaje ya está en camino a nuestro equipo comercial y de soporte técnico.
+    </p>
+
+    <!-- Ficha Resumen del Envío -->
+    <div class="rapida-modal-card">
+      <div class="rapida-modal-card-row">
+        <div class="rapida-modal-card-icon" style="color: #002093;">
+          <i class="fa-solid fa-user-check"></i>
+        </div>
+        <div class="rapida-modal-card-info">
+          <span class="rapida-modal-card-label">Remitente</span>
+          <span id="modal-contacto-nombre-display" class="rapida-modal-card-val">Cliente</span>
+        </div>
+      </div>
+
+      <div class="rapida-modal-card-row">
+        <div class="rapida-modal-card-icon" style="color: #0284c7;">
+          <i class="fa-solid fa-envelope-open-text"></i>
+        </div>
+        <div class="rapida-modal-card-info">
+          <span class="rapida-modal-card-label">Asunto / Contacto</span>
+          <span id="modal-contacto-asunto-display" class="rapida-modal-card-val">—</span>
+        </div>
+      </div>
+
+      <div class="rapida-modal-card-row">
+        <div class="rapida-modal-card-icon" style="color: #10b981;">
+          <i class="fa-solid fa-inbox"></i>
+        </div>
+        <div class="rapida-modal-card-info">
+          <span class="rapida-modal-card-label">Entregado en casilla oficial</span>
+          <span class="rapida-modal-card-val" style="color: #002093; font-weight: 700;">contacto@rapidassure.cl</span>
+        </div>
+      </div>
+
+      <div class="rapida-modal-card-footer">
+        <i class="fa-solid fa-clock"></i> Tiempo estimado de respuesta: <strong>Menos de 2 hrs hábiles</strong>
+      </div>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="rapida-modal-actions">
+      <button type="button" class="rapida-modal-btn-primary" onclick="cerrarModalContactoExito()">
+        <i class="fa-solid fa-check"></i> Entendido, gracias
+      </button>
+
+      <a href="https://wa.me/56929789628?text=Hola%20Rapidassure,%20acabo%20de%20enviar%20un%20mensaje%20por%20la%20web%20y%20necesito%20atenci%C3%B3n"
+         target="_blank" class="rapida-modal-btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> ¿Urgente? Escríbenos al WhatsApp
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* ==========================================
+   ESTILOS MODAL CONTACTO RAPIDASSURE
+========================================== */
+.rapida-modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s;
+}
+
+.rapida-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.rapida-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 14, 31, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.rapida-modal-dialog {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-radius: 26px;
+  width: 100%;
+  max-width: 480px;
+  padding: 34px 28px 28px;
+  text-align: center;
+  box-shadow: 0 25px 65px -12px rgba(0, 32, 147, 0.35), 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transform: scale(0.92) translateY(14px);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Open Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+.rapida-modal-overlay.active .rapida-modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+/* Botón cerrar X */
+.rapida-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rapida-modal-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: rotate(90deg);
+}
+
+/* Ícono ilustrativo */
+.rapida-modal-icon-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rapida-modal-icon-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0) 70%);
+  animation: rapidaPulseRing 2.4s infinite ease-out;
+}
+
+.rapida-modal-icon-box {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  font-size: 1.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.35);
+  animation: rapidaBounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes rapidaBounceIn {
+  0% { transform: scale(0.3) rotate(-20deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes rapidaPulseRing {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.25); opacity: 0.2; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+/* Badge corporativo */
+.rapida-modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eef2ff;
+  color: #002093;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+}
+
+/* Título */
+.rapida-modal-title {
+  margin: 0 0 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #000E1F;
+  letter-spacing: -0.3px;
+}
+
+.rapida-modal-subtitle {
+  margin: 0 0 20px;
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* Tarjeta informativa resumen */
+.rapida-modal-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.rapida-modal-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.rapida-modal-card-row:last-of-type {
+  border-bottom: none;
+}
+
+.rapida-modal-card-icon {
+  font-size: 1.15rem;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rapida-modal-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rapida-modal-card-label {
+  display: block;
+  font-size: 0.74rem;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.rapida-modal-card-val {
+  display: block;
+  font-size: 0.9rem;
+  color: #1e293b;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rapida-modal-card-footer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #cbd5e1;
+  font-size: 0.8rem;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rapida-modal-card-footer i {
+  color: #002093;
+}
+
+/* Botones de acción */
+.rapida-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rapida-modal-btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #002093, #3230C2);
+  color: #ffffff;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 18px rgba(0, 32, 147, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rapida-modal-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 32, 147, 0.42);
+}
+
+.rapida-modal-btn-whatsapp {
+  width: 100%;
+  background: #ffffff;
+  color: #128c7e;
+  border: 1.5px solid #25D366;
+  padding: 11px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: 'Montserrat', sans-serif;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.rapida-modal-btn-whatsapp:hover {
+  background: #25D366;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+}
+
+@media (max-width: 480px) {
+  .rapida-modal-dialog {
+    padding: 28px 20px 22px;
+  }
+  .rapida-modal-title {
+    font-size: 1.25rem;
+  }
+}
+</style>
+
+<script>
+/* ==========================================
+   CONTROLADOR JS DEL MODAL PROPIO RAPIDASSURE
+========================================== */
+window.abrirModalContactoExito = function(datos) {
+  const modal = document.getElementById('modal-contacto-exito');
+  if (!modal) return;
+
+  const nombreEl = document.getElementById('modal-contacto-nombre-display');
+  const asuntoEl = document.getElementById('modal-contacto-asunto-display');
+
+  if (nombreEl) {
+    nombreEl.textContent = (datos && datos.nombre) ? datos.nombre : 'Cliente Rapidassure';
+  }
+  if (asuntoEl) {
+    asuntoEl.textContent = (datos && datos.asunto_email) ? datos.asunto_email : 'Consulta comercial';
+  }
+
+  modal.style.display = 'flex';
+  // Permitir reflujo para animación
+  requestAnimationFrame(() => {
+    modal.classList.add('active');
+  });
+
+  document.addEventListener('keydown', handleEscapeModalContacto);
+};
+
+window.cerrarModalContactoExito = function() {
+  const modal = document.getElementById('modal-contacto-exito');
+  if (!modal) return;
+
+  modal.classList.remove('active');
+  document.removeEventListener('keydown', handleEscapeModalContacto);
+
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 280);
+};
+
+function handleEscapeModalContacto(e) {
+  if (e.key === 'Escape' || e.keyCode === 27) {
+    cerrarModalContactoExito();
+  }
+}
+</script>

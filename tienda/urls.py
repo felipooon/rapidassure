@@ -55,6 +55,7 @@ urlpatterns = [
 
     # API Búsqueda en vivo y Cupones
     path('api/buscar-productos/', views.api_buscar_productos, name='api_buscar_productos'),
+    path('api/contacto/', views.api_enviar_contacto, name='api_enviar_contacto'),
     path('carrito/aplicar-cupon/', views.aplicar_cupon, name='aplicar_cupon'),
     path('carrito/quitar-cupon/', views.quitar_cupon, name='quitar_cupon'),
 

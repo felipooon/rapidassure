@@ -1238,13 +1238,62 @@ class BlueExpressIntegrationTests(TestCase):
         self.assertEqual(p_retiro.estado, 'EN_PREPARACION')
 
 
+class ContactoFormTests(TestCase):
+    def test_api_contacto_exitoso_form_data(self):
+        """Verifica que el formulario de contacto envíe un correo a contacto@rapidassure.cl."""
+        from django.core import mail
+        resp = self.client.post('/api/contacto/', {
+            'nombre': 'Carlos Pérez',
+            'asunto_email': 'carlos@tiendachile.cl / Cotización POS',
+            'mensaje': 'Hola, necesito cotizar 5 terminales Smart POS para mi local en Santiago.'
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['status'], 'success')
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[0]
+        self.assertIn('contacto@rapidassure.cl', email.to)
+        self.assertIn('Carlos Pérez', email.subject)
+        self.assertIn('carlos@tiendachile.cl', email.body)
+        self.assertIn('Cotización POS', email.body)
+        self.assertIn('5 terminales Smart POS', email.body)
 
+    def test_api_contacto_exitoso_json(self):
+        """Verifica que el endpoint también procese payloads JSON."""
+        import json
+        from django.core import mail
+        resp = self.client.post(
+            '/api/contacto/',
+            data=json.dumps({
+                'nombre': 'Andrea Gómez',
+                'asunto_email': 'andrea@supermercado.cl',
+                'mensaje': 'Consulta sobre antenas RFID.'
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data['status'], 'success')
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('contacto@rapidassure.cl', mail.outbox[0].to)
 
+    def test_api_contacto_validacion_campos_requeridos(self):
+        """Rechaza peticiones con campos vacíos."""
+        from django.core import mail
+        resp = self.client.post('/api/contacto/', {
+            'nombre': '',
+            'asunto_email': 'correo@test.cl',
+            'mensaje': ''
+        })
+        self.assertEqual(resp.status_code, 400)
+        data = resp.json()
+        self.assertEqual(data['status'], 'error')
+        self.assertEqual(len(mail.outbox), 0)
 
-
-
-
-
-
-
-
+    def test_index_contiene_modal_contacto_propio(self):
+        """Verifica que el index cargue el modal propio de confirmación de contacto."""
+        resp = self.client.get('/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'id="modal-contacto-exito"')
+        self.assertContains(resp, 'contacto@rapidassure.cl')
+        self.assertContains(resp, 'abrirModalContactoExito')

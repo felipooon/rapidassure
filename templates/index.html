@@ -764,10 +764,11 @@
         </p>
 
         <form id="form-contacto-rapida" onsubmit="enviarMensajeContacto(event)">
+          {% csrf_token %}
           <div style="margin-bottom: 14px;">
             <label
               style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre</label>
-            <input type="text" required placeholder="Tu nombre completo"
+            <input type="text" name="nombre" id="contacto-nombre" required placeholder="Tu nombre completo"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
           </div>
@@ -776,7 +777,7 @@
             <label
               style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto
               / Email</label>
-            <input type="text" required placeholder="Ej: Cotización Smart POS / correo@empresa.cl"
+            <input type="text" name="asunto_email" id="contacto-asunto-email" required placeholder="Ej: Cotización Smart POS / correo@empresa.cl"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
           </div>
@@ -784,10 +785,12 @@
           <div style="margin-bottom: 18px;">
             <label
               style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Mensaje</label>
-            <textarea required rows="3" placeholder="Escribe tu mensaje o consulta aquí..."
+            <textarea name="mensaje" id="contacto-mensaje" required rows="3" placeholder="Escribe tu mensaje o consulta aquí..."
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; resize: vertical; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
           </div>
+
+          <div id="contacto-status-feedback" style="display: none; margin-bottom: 14px; padding: 10px 14px; border-radius: 10px; font-size: 0.88rem; font-family: 'Open Sans', sans-serif;"></div>
 
           <button type="submit" id="btn-enviar-contacto"
             style="width: 100%; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 32, 147, 0.3); transition: transform 0.2s, box-shadow 0.2s;"
@@ -925,21 +928,78 @@
 </section>
 
 <script>
-  function enviarMensajeContacto(e) {
+  async function enviarMensajeContacto(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-enviar-contacto');
+    const form = document.getElementById('form-contacto-rapida');
+    const feedback = document.getElementById('contacto-status-feedback');
+
     if (btn) {
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
       btn.disabled = true;
     }
-    setTimeout(() => {
-      alert('¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito. Un ejecutivo de Rapidassure se pondrá en contacto contigo a la brevedad.');
-      document.getElementById('form-contacto-rapida').reset();
+    if (feedback) {
+      feedback.style.display = 'none';
+    }
+
+    try {
+      const formData = new FormData(form);
+      const nombreEnviado = formData.get('nombre') || '';
+      const asuntoEnviado = formData.get('asunto_email') || '';
+
+      const response = await fetch('/api/contacto/', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+      });
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        form.reset();
+        if (typeof window.abrirModalContactoExito === 'function') {
+          window.abrirModalContactoExito({
+            nombre: nombreEnviado,
+            asunto_email: asuntoEnviado
+          });
+        } else if (feedback) {
+          feedback.style.display = 'block';
+          feedback.style.background = '#e8f8f5';
+          feedback.style.color = '#116b47';
+          feedback.style.border = '1px solid #a3e4d7';
+          feedback.innerHTML = '<i class="fa-solid fa-circle-check" style="margin-right:6px;"></i> ' + (data.mensaje || '¡Mensaje enviado con éxito!');
+        } else {
+          alert('¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito.');
+        }
+      } else {
+        if (feedback) {
+          feedback.style.display = 'block';
+          feedback.style.background = '#fdf2f2';
+          feedback.style.color = '#9b2c2c';
+          feedback.style.border = '1px solid #f8b4b4';
+          feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="margin-right:6px;"></i> ' + (data.mensaje || 'Ocurrió un error al enviar tu mensaje.');
+        } else {
+          alert(data.mensaje || 'Ocurrió un error al enviar.');
+        }
+      }
+    } catch (err) {
+      console.error('Error enviando contacto:', err);
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.background = '#fdf2f2';
+        feedback.style.color = '#9b2c2c';
+        feedback.style.border = '1px solid #f8b4b4';
+        feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="margin-right:6px;"></i> Error de conexión. Puedes escribirnos a contacto@rapidassure.cl';
+      } else {
+        alert('Error de conexión al enviar el mensaje.');
+      }
+    } finally {
       if (btn) {
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Mensaje';
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane" style="margin-right: 6px;"></i> Enviar Mensaje';
         btn.disabled = false;
       }
-    }, 800);
+    }
   }
 </script>
 
@@ -1147,5 +1207,7 @@
     startAuto();
   })();
 </script>
+
+{% include "includes/modal_contacto_exito.html" %}
 
 {% endblock %}
