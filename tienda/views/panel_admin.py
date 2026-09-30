@@ -9,7 +9,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.http import require_POST
 from django.db import models, transaction
 from django.utils import timezone
 
@@ -1276,7 +1277,63 @@ def panel_configuracion(request):
             return redirect('panel_configuracion')
     else:
         form = ConfiguracionSitioForm(instance=config)
-    return render(request, "panel/configuracion.html", {"form": form, "config": config})
+
+    # Estadísticas del archivo local de Puntos Blue Express
+    from datetime import datetime
+    import json
+    json_path = os.path.join(settings.BASE_DIR, 'tienda', 'data', 'puntos_blue_express.json')
+    total_puntos_blue = 0
+    fecha_mod_puntos_blue = None
+    if os.path.exists(json_path):
+        try:
+            mtime = os.path.getmtime(json_path)
+            fecha_mod_puntos_blue = datetime.fromtimestamp(mtime).strftime('%d/%m/%Y a las %H:%M')
+            with open(json_path, 'r', encoding='utf-8') as f:
+                total_puntos_blue = len(json.load(f))
+        except Exception:
+            pass
+
+    return render(request, "panel/configuracion.html", {
+        "form": form,
+        "config": config,
+        "total_puntos_blue": total_puntos_blue,
+        "fecha_mod_puntos_blue": fecha_mod_puntos_blue,
+    })
+
+
+@staff_member_required(login_url='login')
+@require_POST
+def sincronizar_puntos_blue(request):
+    """
+    Ejecuta el comando para actualizar los puntos pick-up y agencias de Blue Express
+    directamente desde su API oficial.
+    """
+    from django.core.management import call_command
+    from ..comunas_chile import invalidar_cache_puntos_blue
+    import json
+
+    try:
+        call_command('actualizar_puntos_blue')
+        invalidar_cache_puntos_blue()
+        
+        json_path = os.path.join(settings.BASE_DIR, 'tienda', 'data', 'puntos_blue_express.json')
+        total = 0
+        if os.path.exists(json_path):
+            with open(json_path, 'r', encoding='utf-8') as f:
+                total = len(json.load(f))
+
+        mensaje = f"¡Catálogo actualizado con éxito! Se sincronizaron {total:,} Puntos Blue Express habilitados en Chile."
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'success', 'mensaje': mensaje, 'total': total})
+        
+        messages.success(request, mensaje)
+    except Exception as e:
+        mensaje_error = f"Ocurrió un error al sincronizar con Blue Express: {str(e)}"
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'error', 'mensaje': mensaje_error}, status=500)
+        messages.error(request, mensaje_error)
+
+    return redirect('panel_configuracion')
 
 
 @staff_member_required(login_url='login')

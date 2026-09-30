@@ -1320,3 +1320,18 @@ class ContactoFormTests(TestCase):
         self.assertContains(resp, 'id="modal-contacto-exito"')
         self.assertContains(resp, 'contacto@rapidassure.cl')
 
+    def test_panel_configuracion_muestra_stats_blue(self):
+        """Verifica que panel de configuración muestre el card de Puntos Blue y requiera login."""
+        from django.contrib.auth.models import User
+        user = User.objects.create_superuser('admin_sync_blue', 'admin@test.cl', 'pass123')
+        self.client.login(username='admin_sync_blue', password='pass123')
+        resp = self.client.get('/panel/configuracion/')
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Catálogo de Puntos Blue Express')
+        self.assertContains(resp, 'Sincronizar Puntos Blue Express con la API')
+
+    def test_sincronizar_puntos_blue_requiere_staff(self):
+        """Usuarios no autenticados no pueden llamar a la sincronización."""
+        resp = self.client.post('/panel/configuracion/sincronizar-puntos-blue/')
+        self.assertEqual(resp.status_code, 302)
+        self.assertIn('login', resp.url)

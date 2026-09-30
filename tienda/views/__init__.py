@@ -67,6 +67,7 @@ from .panel_admin import (
     exportar_pedidos_retiro_local,
     exportar_stock_excel,
     panel_configuracion,
+    sincronizar_puntos_blue,
     panel_blog,
     crear_blog_post,
     editar_blog_post,

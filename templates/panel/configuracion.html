@@ -44,7 +44,65 @@
         </form>
     </div>
 
+    <!-- Sincronización de Puntos Blue Express -->
+    <div style="background: white; border-radius: 16px; padding: 30px; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.04); margin-top: 30px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 18px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: #f3e8ff; color: #7e22ce; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+                <div>
+                    <h2 style="font-family: 'Montserrat', sans-serif; font-size: 1.25rem; font-weight: 800; color: #000E1F; margin: 0 0 2px 0;">
+                        Catálogo de Puntos Blue Express
+                    </h2>
+                    <span style="font-size: 0.84rem; color: #64748b; font-family: 'Open Sans', sans-serif;">
+                        Red oficial de agencias pick-up, Copec y puntos de entrega en todo Chile.
+                    </span>
+                </div>
+            </div>
+            
+            <div style="background: #eef2ff; color: #002093; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 800; font-family: 'Montserrat', sans-serif; border: 1px solid #c7d2fe;">
+                <i class="fa-solid fa-circle-check" style="color: #10b981; margin-right: 4px;"></i> {{ total_puntos_blue|default:"0" }} Puntos Activos
+            </div>
+        </div>
+
+        <p style="font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #475569; line-height: 1.5; margin-bottom: 20px;">
+            Este catálogo permite a los clientes elegir un punto pick-up o Copec cercano en el checkout. La red de Blue Express incorpora nuevos locales y actualiza horarios periódicamente. Puedes sincronizar la base de datos local con la API oficial con un solo clic.
+        </p>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: #64748b;">
+                <i class="fa-solid fa-clock-rotate-left" style="color: #002093; font-size: 1.1rem;"></i>
+                <span>Última sincronización local: <strong style="color: #1e293b;">{{ fecha_mod_puntos_blue|default:"Reciente" }}</strong></span>
+            </div>
+            <span style="font-size: 0.8rem; background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 6px; font-family: monospace;">
+                puntos_blue_express.json
+            </span>
+        </div>
+
+        <form method="post" action="{% url 'sincronizar_puntos_blue' %}" id="form-sync-blue" onsubmit="iniciarSyncBlue(event)">
+            {% csrf_token %}
+            <button type="submit" id="btn-sync-blue" style="background: linear-gradient(135deg, #7e22ce, #9333ea); color: white; border: none; padding: 13px 22px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; width: 100%; cursor: pointer; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 14px rgba(126, 34, 206, 0.25); display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+                <i class="fa-solid fa-arrows-rotate" id="icon-sync-blue"></i> <span>Sincronizar Puntos Blue Express con la API</span>
+            </button>
+        </form>
+    </div>
+
 </div>
+
+<script>
+function iniciarSyncBlue(e) {
+    const btn = document.getElementById('btn-sync-blue');
+    const icon = document.getElementById('icon-sync-blue');
+    if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.85';
+        btn.style.cursor = 'not-allowed';
+        if (icon) icon.classList.add('fa-spin');
+        btn.querySelector('span').textContent = 'Descargando y actualizando catálogo desde Blue Express API...';
+    }
+}
+</script>
 
 <style>
 /* Swtich CSS Animation */

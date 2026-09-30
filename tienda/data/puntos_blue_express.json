@@ -18662,20 +18662,6 @@
     "lng": -72.23185
   },
   {
-    "id": 8257,
-    "nombre": "Punto Blue Express TecelPC",
-    "tipo": "Punto Blue Express",
-    "calle": "El llano",
-    "numero": "1815",
-    "comuna": "Villarrica",
-    "region": "Región de La Araucanía",
-    "direccion_completa": "El llano 1815",
-    "horario": "Lun a Sab: 10:00 - 22:00",
-    "es_24_7": false,
-    "lat": -39.302055,
-    "lng": -72.2309
-  },
-  {
     "id": 9046,
     "nombre": "Punto Blue Express BOCANADA GROWSTORE",
     "tipo": "Punto Blue Express",

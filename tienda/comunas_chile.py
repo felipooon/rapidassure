@@ -391,4 +391,10 @@ def obtener_puntos_blue_por_comuna(comuna_nombre):
     return puntos_map.get(c_norm, [])
 
 
+def invalidar_cache_puntos_blue():
+    """Limpia el caché en memoria para forzar la recarga del archivo JSON."""
+    global _CACHE_PUNTOS_BLUE
+    _CACHE_PUNTOS_BLUE = None
+
+
 

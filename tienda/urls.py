@@ -83,6 +83,7 @@ urlpatterns = [
 
     # Panel Admin - Configuración, Blog, Reseñas, Banners y Guía
     path('panel/configuracion/', views.panel_configuracion, name='panel_configuracion'),
+    path('panel/configuracion/sincronizar-puntos-blue/', views.sincronizar_puntos_blue, name='sincronizar_puntos_blue'),
     path('panel/blog/', views.panel_blog, name='panel_blog'),
     path('panel/blog/crear/', views.crear_blog_post, name='crear_blog_post'),
     path('panel/blog/editar/<int:id>/', views.editar_blog_post, name='editar_blog_post'),
