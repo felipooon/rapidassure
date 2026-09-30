@@ -7,6 +7,7 @@ from django.conf import settings
 import json
 import logging
 import re
+import os
 
 logger = logging.getLogger(__name__)
 from django.core.paginator import Paginator
@@ -348,6 +349,83 @@ def api_destacados_random(request):
     return JsonResponse({'productos': data})
 
 
+def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email):
+    """
+    Despacha el correo de contacto:
+    1. Si se define RESEND_API_KEY o BREVO_API_KEY en variables de entorno, envía vía API HTTPS (puerto 443).
+       Esto permite enviar correos en Render.com (plan gratuito) donde los puertos SMTP 25, 465 y 587 están bloqueados por firewall.
+    2. En caso contrario, usa el backend estándar de Django (SMTP o console).
+    """
+    resend_key = os.environ.get('RESEND_API_KEY', '').strip()
+    brevo_key = os.environ.get('BREVO_API_KEY', '').strip()
+
+    if resend_key:
+        import urllib.request
+        import urllib.error
+        resend_from = os.environ.get('RESEND_FROM_EMAIL', 'Rapidassure <contacto@rapidassure.cl>').strip()
+        payload = {
+            "from": resend_from,
+            "to": [destinatario],
+            "subject": asunto,
+            "text": cuerpo,
+            "reply_to": [reply_to] if reply_to else None,
+        }
+        req = urllib.request.Request(
+            "https://api.resend.com/emails",
+            data=json.dumps(payload).encode('utf-8'),
+            headers={
+                "Authorization": f"Bearer {resend_key}",
+                "Content-Type": "application/json",
+                "User-Agent": "RapidassureApp/1.0"
+            },
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data_resp = json.loads(resp.read().decode('utf-8'))
+                logger.info(f"Correo enviado exitosamente vía Resend API HTTPS: {data_resp}")
+                return True
+        except urllib.error.HTTPError as he:
+            err_body = he.read().decode('utf-8')
+            logger.error(f"Error respuesta HTTP de Resend ({he.code}): {err_body}")
+            raise Exception(f"Resend error ({he.code}): {err_body}")
+
+    if brevo_key:
+        import urllib.request
+        sender_email = os.environ.get('BREVO_SENDER_EMAIL', 'contacto@rapidassure.cl').strip()
+        payload = {
+            "sender": {"name": "Rapidassure Retail", "email": sender_email},
+            "to": [{"email": destinatario}],
+            "subject": asunto,
+            "textContent": cuerpo,
+            "replyTo": {"email": reply_to} if reply_to else None,
+        }
+        req = urllib.request.Request(
+            "https://api.brevo.com/v3/smtp/email",
+            data=json.dumps(payload).encode('utf-8'),
+            headers={
+                "api-key": brevo_key,
+                "Content-Type": "application/json",
+            },
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data_resp = json.loads(resp.read().decode('utf-8'))
+            logger.info(f"Correo enviado exitosamente vía Brevo API HTTPS: {data_resp}")
+            return True
+
+    # Backend estándar Django (SMTP / Console)
+    email_msg = EmailMessage(
+        subject=asunto,
+        body=cuerpo,
+        from_email=from_email,
+        to=[destinatario],
+        reply_to=[reply_to] if reply_to else None,
+    )
+    email_msg.send(fail_silently=False)
+    return True
+
+
 @csrf_exempt
 @require_POST
 def api_enviar_contacto(request):
@@ -415,15 +493,8 @@ def api_enviar_contacto(request):
 
     try:
         from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Rapidassure Retail <soporte@rapidassure.cl>')
-        email_msg = EmailMessage(
-            subject=asunto_correo,
-            body=cuerpo_correo,
-            from_email=from_email,
-            to=[destinatario],
-            reply_to=[email],
-        )
-        resultado = email_msg.send(fail_silently=False)
-        logger.info(f"Correo de contacto enviado exitosamente a {destinatario} (resultado={resultado}, backend={settings.EMAIL_BACKEND}, reply_to={email})")
+        _despachar_email_contacto(asunto_correo, cuerpo_correo, destinatario, email, from_email)
+        logger.info(f"Correo de contacto procesado exitosamente a {destinatario} (reply_to={email})")
         return JsonResponse({
             'status': 'success',
             'mensaje': '¡Gracias por contactarnos! Tu mensaje ha sido enviado con éxito.'
