@@ -6,152 +6,252 @@
 {% block content %}
 <!-- ==========================================
      HERO ULTRA-MODERNO (ESTÉTICA RAPIDASSURE.CL)
+========================================== -<!-- ==========================================
+     HERO SLIDER MASTER: MUNDO DIGITAL + RETAIL IMPACTO
 ========================================== -->
-<!-- ==========================================
-     HERO BANNER IMPACTO RETAIL & EMPRESAS
-========================================== -->
-<section id="inicio" class="hero-banner-section hero-scene-bg">
+<section id="inicio" class="hero-master-slider-section" aria-label="Banners Principales">
 
-  <!-- Badge flotante Blueexpress ubicado en la esquina superior derecha extrema del Hero -->
-  <div class="hero-bluexpress-floating-card">
-    <div class="bx-left-section">
-      <span class="bx-tag">TRABAJAMOS CON</span>
-      <div class="bx-brand-row">
-        <img src="{% static 'img/logo_bluexpress_white.png' %}" alt="Blue Express Logo" class="bx-logo-img">
-        <strong class="bx-brand">Blue Express</strong>
+  <div class="hero-slider-viewport">
+    <div class="hero-slider-track" id="heroSliderTrack">
+
+      <!-- SLIDE 1: MUNDO DIGITAL (ESCENA LIMPIA + FOTOGRAFÍA + BADGES TRANSPARENTES) -->
+      <div class="hero-slide-item" data-index="0">
+        <div class="hero-md-container">
+          <div class="hero-md-live-stage"
+            style="background-image: url('{% static 'img/hero_tech_desk_clean_bg.jpg' %}');">
+
+            <!-- Tarjeta Flotante Blue Express Semitransparente (Esquina Superior Derecha)
+            <div class="hero-md-top-bx">
+              <div class="hero-md-live-bx-top">
+                <span class="bx-tag-mini">ENVIOS A TODO CHILE</span>
+                <img src="{% static 'img/logo_bluexpress.png' %}?v=transp" alt="Blue Express" class="bx-logo-mini">
+              </div>
+              <p class="hero-md-live-bx-text">Despacho exprés seguro a todas las regiones de Chile.</p>
+            </div> -->
+
+            <!-- Distribución Horizontal: Logo + Separador + Titular (Directo en la Imagen) -->
+            <div class="hero-md-center-wrapper">
+              <div class="hero-md-lockup">
+                <img src="{% static 'img/Logo_basic.png' %}" alt="Rapidassure Retail" class="hero-md-lockup-logo">
+
+                <div class="hero-md-lockup-divider" aria-hidden="true"></div>
+
+                <div class="hero-md-lockup-content">
+                  <h1 class="hero-md-lockup-title">
+                    <span class="hero-md-title-line">Tecnología y Accesorios</span>
+                    <span class="hero-md-title-line">para tu <span class="highlight-mundo-digital">Mundo
+                        Digital</span></span>
+                  </h1>
+                </div>
+              </div>
+            </div>
+
+            <!-- Badges Inferiores de Categorías: Grandes, Semitransparentes, Informativos -->
+            <div class="hero-md-badges-container">
+
+              <!-- Badge 1: Audífonos -->
+              <div class="hero-md-badge-item">
+                <div class="hero-md-badge-icon">
+                  <i class="fa-solid fa-headphones"></i>
+                </div>
+                <div class="hero-md-badge-texts">
+                  <span class="hero-md-badge-title">Audífonos</span>
+                  <span class="hero-md-badge-sub">Sonido que te conecta</span>
+                </div>
+              </div>
+
+              <!-- Badge 2: Teclados -->
+              <div class="hero-md-badge-item">
+                <div class="hero-md-badge-icon">
+                  <i class="fa-regular fa-keyboard"></i>
+                </div>
+                <div class="hero-md-badge-texts">
+                  <span class="hero-md-badge-title">Teclados</span>
+                  <span class="hero-md-badge-sub">Rendimiento en cada tecla</span>
+                </div>
+              </div>
+
+              <!-- Badge 3: Mouse -->
+              <div class="hero-md-badge-item">
+                <div class="hero-md-badge-icon">
+                  <i class="fa-solid fa-computer-mouse"></i>
+                </div>
+                <div class="hero-md-badge-texts">
+                  <span class="hero-md-badge-title">Mouse</span>
+                  <span class="hero-md-badge-sub">Precisión en cada movimiento</span>
+                </div>
+              </div>
+
+              <!-- Badge 4: Mousepads -->
+              <div class="hero-md-badge-item">
+                <div class="hero-md-badge-icon">
+                  <i class="fa-regular fa-square"></i>
+                </div>
+                <div class="hero-md-badge-texts">
+                  <span class="hero-md-badge-title">Mousepads</span>
+                  <span class="hero-md-badge-sub">Control en cada partida</span>
+                </div>
+              </div>
+
+              <!-- Badge 5: Slogan Destacado Semitransparente -->
+              <div class="hero-md-badge-highlight">
+                <div class="hero-md-badge-texts text-right">
+                  <span class="hero-md-highlight-main">La mejor tecnología,</span>
+                  <span class="hero-md-highlight-sub">en un solo lugar <span
+                      class="hero-md-tag-stripes">//</span></span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="bx-vertical-divider"></div>
+      <!-- SLIDE 2: HERO IMPACTO RETAIL & EMPRESAS -->
+      <div class="hero-slide-item" data-index="1">
+        <div class="hero-banner-section hero-scene-bg"
+          style="width: 100%; min-height: 100%; margin: 0; box-sizing: border-box;">
 
-    <div class="bx-right-section">
-      <p class="bx-text">Envíos rápidos y seguros a todo Chile con Bluexpress.</p>
+          <!-- Badge flotante Blueexpress -->
+          <div class="hero-bluexpress-floating-card">
+            <div class="bx-left-section">
+              <span class="bx-tag">TRABAJAMOS CON</span>
+              <div class="bx-brand-row">
+                <img src="{% static 'img/logo_bluexpress_white.png' %}" alt="Blue Express Logo" class="bx-logo-img">
+                <strong class="bx-brand">Blue Express</strong>
+              </div>
+            </div>
+            <div class="bx-vertical-divider"></div>
+            <div class="bx-right-section">
+              <p class="bx-text">Envíos rápidos y seguros a todo Chile con Bluexpress.</p>
+            </div>
+          </div>
+
+          <div class="hero-fluid-container">
+            <div class="hero-card-grid">
+
+              <!-- Columna Izquierda: Información, Badges y Botón -->
+              <div class="hero-left-content">
+                <div class="hero-title-glass-card">
+                  <div class="hero-yellow-badge">
+                    <span class="badge-icon-box"><i class="fa-solid fa-store"></i></span>
+                    <span>VENTA PARA EMPRESAS Y CLIENTES FINALES</span>
+                  </div>
+                  <h2 class="hero-main-heading">
+                    TECNOLOGÍA QUE<br>
+                    <span class="heading-blue-highlight">IMPULSA TU MUNDO</span>
+                  </h2>
+                  <p class="hero-description-text">
+                    Productos tecnológicos de calidad, con la mejor atención, precios competitivos y despacho a todo
+                    Chile.
+                  </p>
+                </div>
+
+                <div class="hero-features-glass-card">
+                  <div class="hero-key-features-row">
+                    <div class="key-feature-item">
+                      <div class="feature-icon"><i class="fa-regular fa-file-lines"></i></div>
+                      <span>Cotizaciones personalizadas</span>
+                    </div>
+                    <div class="key-feature-item">
+                      <div class="feature-icon"><i class="fa-solid fa-receipt"></i></div>
+                      <span>Facturación y boletas para empresas y personas</span>
+                    </div>
+                    <div class="key-feature-item">
+                      <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                      <span>Precios especiales y descuentos</span>
+                    </div>
+                    <div class="key-feature-item">
+                      <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
+                      <span>Asesoría profesional antes y después de tu compra</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="hero-cta-wrapper">
+                  <a href="#contacto" class="btn-hero-blue-pill">
+                    <i class="fa-solid fa-paper-plane"></i> Solicita tu cotización <i
+                      class="fa-solid fa-arrow-right"></i>
+                  </a>
+                  <div class="hero-handwritten-note">
+                    <span>¡Tu tecnología en buenas manos!</span>
+                    <svg class="handwritten-underline" viewBox="0 0 140 12" fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 8C35 3 105 2 138 9" stroke="#0038FF" stroke-width="2.5" stroke-linecap="round" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Tira de Beneficios -->
+            <div class="hero-bottom-benefits-strip">
+              <div class="benefit-strip-item">
+                <div class="benefit-direct-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                <div class="benefit-info">
+                  <h4>Envío rápido</h4>
+                  <p>para la Región Metropolitana</p>
+                  <div class="badge-free-yellow">GRATIS desde $19.990</div>
+                </div>
+              </div>
+              <div class="benefit-strip-item">
+                <div class="benefit-direct-icon">
+                  <img src="{% static 'img/logo_bluexpress.png' %}?v=transp" alt="Bluexpress" class="benefit-bx-icon">
+                </div>
+                <div class="benefit-info">
+                  <h4>Envíos a todo Chile <span class="subtext-bx">con Blue Express</span></h4>
+                  <p>Confiables, rápidos y seguros.</p>
+                </div>
+              </div>
+              <div class="benefit-strip-item">
+                <div class="benefit-direct-icon"><i class="fa-regular fa-credit-card"></i></div>
+                <div class="benefit-info">
+                  <h4>Medios de pago seguros</h4>
+                  <div class="payment-logos-wrapper">
+                    <img src="{% static 'img/payment_brands_row.svg' %}"
+                      alt="Medios de pago Transbank, VISA, Mastercard, Magna, Redcompra" class="payment-brands-row-img">
+                  </div>
+                </div>
+              </div>
+              <div class="benefit-strip-item no-border">
+                <div class="benefit-direct-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="benefit-info">
+                  <h4>Compra segura</h4>
+                  <p>Tus datos están protegidos</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Cinta Azul Inferior -->
+          <div class="hero-ticker-ribbon">
+            <span>TECNOLOGÍA</span> ·
+            <span>COMPUTACIÓN</span> ·
+            <span>ACCESORIOS</span> ·
+            <span>TODO EN UN SOLO LUGAR</span>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="hero-fluid-container">
+  <!-- Controles del Slider: Flechas de Desplazamiento y Paginadores -->
+  <button type="button" class="hero-slider-nav hero-slider-prev" id="heroPrevBtn" aria-label="Slide anterior">
+    <i class="fa-solid fa-chevron-left"></i>
+  </button>
+  <button type="button" class="hero-slider-nav hero-slider-next" id="heroNextBtn" aria-label="Siguiente slide">
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
 
-    <div class="hero-card-grid">
-
-      <!-- Columna Izquierda: Información, Badges y Botón -->
-      <div class="hero-left-content">
-
-        <!-- Tarjeta Principal Glassmorphism para Titular y Descripción -->
-        <div class="hero-title-glass-card">
-          <!-- Badge Superior: Venta a Todo Público y Empresas -->
-          <div class="hero-yellow-badge">
-            <span class="badge-icon-box"><i class="fa-solid fa-store"></i></span>
-            <span>VENTA PARA EMPRESAS Y CLIENTES FINALES</span>
-          </div>
-
-          <!-- Titular Principal -->
-          <h1 class="hero-main-heading">
-            TECNOLOGÍA QUE<br>
-            <span class="heading-blue-highlight">IMPULSA TU MUNDO</span>
-          </h1>
-
-          <!-- Subtítulo -->
-          <p class="hero-description-text">
-            Productos tecnológicos de calidad, con la mejor atención, precios competitivos y despacho a todo Chile.
-          </p>
-        </div>
-
-        <!-- Tarjeta Glassmorphism para 4 Características Clave -->
-        <div class="hero-features-glass-card">
-          <div class="hero-key-features-row">
-            <div class="key-feature-item">
-              <div class="feature-icon"><i class="fa-regular fa-file-lines"></i></div>
-              <span>Cotizaciones personalizadas</span>
-            </div>
-            <div class="key-feature-item">
-              <div class="feature-icon"><i class="fa-solid fa-receipt"></i></div>
-              <span>Facturación y boletas para empresas y personas</span>
-            </div>
-            <div class="key-feature-item">
-              <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
-              <span>Precios especiales y descuentos</span>
-            </div>
-            <div class="key-feature-item">
-              <div class="feature-icon"><i class="fa-solid fa-headset"></i></div>
-              <span>Asesoría profesional antes y después de tu compra</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Botón CTA + Frase Manuscrita -->
-        <div class="hero-cta-wrapper">
-          <a href="#contacto" class="btn-hero-blue-pill">
-            <i class="fa-solid fa-paper-plane"></i> Solicita tu cotización <i class="fa-solid fa-arrow-right"></i>
-          </a>
-
-          <div class="hero-handwritten-note">
-            <span>¡Tu tecnología en buenas manos!</span>
-            <svg class="handwritten-underline" viewBox="0 0 140 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 8C35 3 105 2 138 9" stroke="#0038FF" stroke-width="2.5" stroke-linecap="round" />
-            </svg>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Tira Unificada de 4 Beneficios en la parte inferior del Hero -->
-    <div class="hero-bottom-benefits-strip">
-
-      <!-- Beneficio 1: Envío RM gratis -->
-      <div class="benefit-strip-item">
-        <div class="benefit-direct-icon"><i class="fa-solid fa-truck-fast"></i></div>
-        <div class="benefit-info">
-          <h4>Envío rápido</h4>
-          <p>para la Región Metropolitana</p>
-          <div class="badge-free-yellow">GRATIS desde $19.990</div>
-        </div>
-      </div>
-
-      <!-- Beneficio 2: Envíos Bluexpress -->
-      <div class="benefit-strip-item">
-        <div class="benefit-direct-icon">
-          <img src="{% static 'img/logo_bluexpress.png' %}?v=transp" alt="Bluexpress" class="benefit-bx-icon">
-        </div>
-        <div class="benefit-info">
-          <h4>Envíos a todo Chile <span class="subtext-bx">con Blue Express</span></h4>
-          <p>Confiables, rápidos y seguros.</p>
-        </div>
-      </div>
-
-      <!-- Beneficio 3: Medios de Pago Transbank -->
-      <div class="benefit-strip-item">
-        <div class="benefit-direct-icon"><i class="fa-regular fa-credit-card"></i></div>
-        <div class="benefit-info">
-          <h4>Medios de pago seguros</h4>
-          <div class="payment-logos-wrapper">
-            <img src="{% static 'img/payment_brands_row.svg' %}"
-              alt="Medios de pago Transbank, VISA, Mastercard, Magna, Redcompra" class="payment-brands-row-img">
-          </div>
-        </div>
-      </div>
-
-      <!-- Beneficio 4: Compra segura -->
-      <div class="benefit-strip-item no-border">
-        <div class="benefit-direct-icon"><i class="fa-solid fa-shield-halved"></i></div>
-        <div class="benefit-info">
-          <h4>Compra segura</h4>
-          <p>Tus datos están protegidos</p>
-        </div>
-      </div>
-
-    </div>
-
+  <div class="hero-slider-pagination" id="heroSliderDots" aria-label="Paginación de diapositivas">
+    <button type="button" class="hero-slider-dot is-active" data-slide="0" aria-label="Ver slide 1"></button>
+    <button type="button" class="hero-slider-dot" data-slide="1" aria-label="Ver slide 2"></button>
   </div>
 
-  <!-- Cinta Azul Inferior -->
-  <div class="hero-ticker-ribbon">
-    <span>TECNOLOGÍA</span> ·
-    <span>COMPUTACIÓN</span> ·
-    <span>ACCESORIOS</span> ·
-    <span>TODO EN UN SOLO LUGAR</span>
-  </div>
 </section>
 
 
@@ -915,6 +1015,97 @@
       }, 200);
     }
   }
+
+  // ==========================================
+  // Slider de Heroes: Desplazamiento y Alternancia Suave
+  // ==========================================
+  (function initHeroSlider() {
+    const track = document.getElementById('heroSliderTrack');
+    const prevBtn = document.getElementById('heroPrevBtn');
+    const nextBtn = document.getElementById('heroNextBtn');
+    const dots = document.querySelectorAll('.hero-slider-dot');
+    if (!track) return;
+
+    let currentSlide = 0;
+    const totalSlides = 2;
+    let autoTimer = null;
+    const slideDuration = 6500; // 6.5 segundos
+
+    function goToSlide(index) {
+      currentSlide = (index + totalSlides) % totalSlides;
+      track.style.transform = `translateX(-${currentSlide * 50}%)`;
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('is-active', idx === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    function startAuto() {
+      stopAuto();
+      autoTimer = setInterval(nextSlide, slideDuration);
+    }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        startAuto();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        startAuto();
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const target = parseInt(dot.getAttribute('data-slide'), 10);
+        goToSlide(target);
+        startAuto();
+      });
+    });
+
+    const masterSection = document.querySelector('.hero-master-slider-section');
+    if (masterSection) {
+      masterSection.addEventListener('mouseenter', stopAuto);
+      masterSection.addEventListener('mouseleave', startAuto);
+
+      // Gestos de Desplazamiento Táctil (Swipe en Móviles)
+      let touchStartX = 0;
+      masterSection.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAuto();
+      }, { passive: true });
+
+      masterSection.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 45) {
+          if (diff > 0) nextSlide();
+          else prevSlide();
+        }
+        startAuto();
+      }, { passive: true });
+    }
+
+    startAuto();
+  })();
 </script>
 
 {% endblock %}

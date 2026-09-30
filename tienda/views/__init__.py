@@ -12,6 +12,7 @@ from .tienda_publica import (
     evaluar_producto_directo,
     agregar_resena,
     api_destacados_random,
+    index_alternativo,
 )
 
 from .checkout_pagos import (
