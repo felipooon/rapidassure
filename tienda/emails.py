@@ -118,14 +118,14 @@ def _obtener_url_rastreo(empresa, seguimiento):
     emp = str(empresa or '').strip().lower()
 
     if 'blue' in emp:
-        return f"https://seguimiento.bluex.cl/tracking?os={cod}"
+        return f"https://www.blue.cl/enviar/seguimiento?n_seguimiento={cod}"
     elif 'chilexpress' in emp:
         return f"https://www.chilexpress.cl/seguimiento-envio?numero={cod}"
     elif 'starken' in emp:
         return f"https://www.starken.cl/seguimiento?codigo={cod}"
     elif 'correos' in emp:
         return f"https://www.correos.cl/seguimiento-en-linea?envio={cod}"
-    return "https://www.bluex.cl/"
+    return f"https://www.blue.cl/enviar/seguimiento?n_seguimiento={cod}"
 
 
 def _generar_texto_plano_cliente(pedido, items, total_final, subtotal):

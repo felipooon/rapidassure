@@ -43,9 +43,12 @@
         </form>
 
         {% if pedido.numero_seguimiento %}
-        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #eee; display: flex; justify-content: space-between; align-items: center;">
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <span style="color: #555; font-size: 0.95rem;">
-                <i class="fa-solid fa-box"></i> <strong>{{ pedido.empresa_transporte|default:"Courier" }}:</strong> {{ pedido.numero_seguimiento }}
+                <i class="fa-solid fa-box"></i> <strong>{{ pedido.empresa_transporte|default:"Courier" }}:</strong> 
+                <a href="https://www.blue.cl/enviar/seguimiento?n_seguimiento={{ pedido.numero_seguimiento }}" target="_blank" style="color: #002093; font-weight: 700; text-decoration: underline; margin-left: 4px;" title="Abrir seguimiento en Blue Express">
+                    {{ pedido.numero_seguimiento }} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.8rem;"></i>
+                </a>
             </span>
             <a href="{% url 'enviar_seguimiento_email' pedido.id %}" style="background: #27ae60; color: white; text-decoration: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-paper-plane"></i> Enviar Correo de Seguimiento al Cliente
