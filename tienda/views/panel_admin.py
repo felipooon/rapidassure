@@ -409,6 +409,8 @@ def actualizar_estado_pedido(request, id):
         
         if nuevo_estado == 'PAGADO' and not pedido.pagado:
             pedido.confirmar_pago()
+            from ..emails import enviar_alerta_compra_confirmada
+            enviar_alerta_compra_confirmada(pedido, async_send=True)
         else:
             pedido.save()
 
@@ -439,41 +441,11 @@ def enviar_seguimiento_email(request, id):
         return redirect('detalle_pedido', id=id)
 
     try:
-        asunto = f"Tu pedido #{pedido.codigo_orden} de Rapidassure Retail ya va en camino"
-        mensaje = f"""Hola {pedido.nombre_completo},
-
-¡Te tenemos excelentes noticias! Tu pedido #{pedido.codigo_orden} ha sido enviado.
-
-Detalles del despacho:
-- Transporte: {pedido.empresa_transporte or 'Empresa de Envíos'}
-- Código / Nº de Seguimiento: {pedido.numero_seguimiento}
-
-Puedes realizar el seguimiento de tu paquete directamente en el sitio web del transporte.
-
-¡Muchas gracias por comprar en Rapidassure Retail!
-"""
-        send_mail(
-            asunto,
-            mensaje,
-            settings.DEFAULT_FROM_EMAIL,
-            [pedido.email],
-            fail_silently=False
-        )
-
-        usuario_log = request.user if request.user.is_authenticated else None
-        LogPedido.objects.create(
-            pedido_id=pedido.id,
-            codigo_orden=pedido.codigo_orden,
-            cliente_nombre=pedido.nombre_completo,
-            cliente_email=pedido.email,
-            accion='SEGUIMIENTO',
-            usuario=usuario_log,
-            detalles=f"Correo de despacho enviado a {pedido.email} | Transporte: {pedido.empresa_transporte or 'No especificado'} | Nº Seguimiento: {pedido.numero_seguimiento}"
-        )
-
-        messages.success(request, f"Correo con número de seguimiento enviado a {pedido.email}.")
+        from ..emails import enviar_correo_seguimiento_despacho
+        enviar_correo_seguimiento_despacho(pedido, request_user=request.user)
+        messages.success(request, f"Correo con número de seguimiento enviado a {pedido.email} desde contacto@rapidassure.cl.")
     except Exception as e:
-        messages.error(request, f"No se pudo enviar el correo: {e}")
+        messages.error(request, f"No se pudo enviar el correo de seguimiento: {e}")
 
     return redirect('detalle_pedido', id=id)
 
@@ -526,6 +498,9 @@ def confirmar_pago_pedido(request, id):
             pedido.confirmar_pago()
             pedido.estado = 'PAGADO'
             pedido.save()
+
+            from ..emails import enviar_alerta_compra_confirmada
+            enviar_alerta_compra_confirmada(pedido, async_send=True)
 
             usuario_log = request.user if request.user.is_authenticated else None
             LogPedido.objects.create(

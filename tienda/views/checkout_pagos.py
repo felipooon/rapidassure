@@ -814,37 +814,9 @@ def webpay_retorno(request):
             # Autorizamos la vista de pedido confirmado
             request.session['pedido_autorizado'] = str(pedido.id)
 
-            # Enviamos el correo de confirmación de pago al cliente
-            asunto = f'¡Pago Confirmado! Pedido #{pedido.codigo_orden} - Rapidassure Retail'
-            mensaje = f'''¡Hola {pedido.nombre_completo}!
-
-Confirmamos que hemos recibido exitosamente el pago de tu pedido #{pedido.codigo_orden} a través de Transbank Webpay Plus.
-
-COMPROBANTE DE PAGO WEBPAY:
-----------------------------------------
-Orden de Compra: #{pedido.codigo_orden}
-Código de Autorización: {auth_code}
-Medio de Pago: {tipo_pago}
-Tarjeta: **** **** **** {tarjeta_ultimos}
-Total Pagado: ${pedido.get_total_final()}
-----------------------------------------
-
-DATOS DE ENTREGA:
-Tipo: {pedido.get_tipo_entrega_display()}
-Dirección: {pedido.direccion}, {pedido.ciudad}
-
-Estamos preparando tus productos de inmediato. En cuanto sean despachados te contactaremos por WhatsApp ({pedido.telefono_display}).
-
-¡Muchas gracias por tu compra en Rapidassure Retail!
-https://rapidassure.cl
-'''
-            # Enviamos el correo de confirmación de forma asíncrona para que la respuesta al cliente sea instantánea
-            if getattr(settings, 'EMAIL_HOST_USER', None):
-                threading.Thread(
-                    target=enviar_correo_asincrono,
-                    args=(asunto, mensaje, pedido.email),
-                    daemon=True
-                ).start()
+            # Enviamos el correo de confirmación de pago al cliente y alerta a contacto@rapidassure.cl
+            from ..emails import enviar_alerta_compra_confirmada
+            enviar_alerta_compra_confirmada(pedido, async_send=True)
 
             return redirect(f"{reverse('pedido_confirmado', kwargs={'pedido_id': pedido.id})}?token={token_ws}")
         else:
@@ -943,35 +915,9 @@ def webhook_mercadopago(request):
                                 )
                                 print(f"✅ ¡ÉXITO! Pedido #{pedido.id} pagado y stock descontado.")
 
-                                asunto = f'¡Pago Recibido! Tu pedido #{pedido.codigo_orden} de Rapidassure Retail está confirmado'
-                                mensaje = f'''¡Hola {pedido.nombre_completo}!
-
-Te escribimos de Rapidassure Retail para contarte que hemos recibido el pago de tu pedido #{pedido.codigo_orden} con éxito a través de Mercado Pago.
-
-¿Qué viene ahora?
-Estamos preparando tu equipamiento corporativo con la mayor eficiencia para su despacho. 
-
-Destino: {pedido.direccion}, {pedido.ciudad}.
-
-En cuanto realicemos el envío, te contactaremos por WhatsApp al {pedido.telefono_display} para enviarte el comprobante y el número de seguimiento.
-
-¡Gracias por confiar en Rapidassure Retail!
-
-Un cordial saludo,
-El equipo de Rapidassure Retail.
-https://rapidassure.cl
-'''
-                                try:
-                                    send_mail(
-                                        asunto,
-                                        mensaje,
-                                        settings.DEFAULT_FROM_EMAIL,
-                                        [pedido.email],
-                                        fail_silently=False,
-                                    )
-                                    print(f"✅ Webhook: Pago procesado y correo enviado a {pedido.email}")
-                                except Exception as mail_error:
-                                    print(f"⚠️ Webhook: Pago OK pero falló el correo: {mail_error}")
+                                # Enviamos el correo de confirmación de pago al cliente y alerta a contacto@rapidassure.cl
+                                from ..emails import enviar_alerta_compra_confirmada
+                                enviar_alerta_compra_confirmada(pedido, async_send=True)
                             elif pedido and pedido.pagado:
                                 print(f"ℹ️ Webhook duplicado ignorado para pedido #{pedido.id}.")
                     elif payment and payment.get("status") != "approved":

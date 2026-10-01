@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Pedido Confirmado #{{ pedido.codigo_orden }}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0f172a; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0f172a; padding: 30px 10px;">
+        <tr>
+            <td align="center">
+                <!-- Contenedor Principal -->
+                <table role="presentation" width="100%" style="max-width: 620px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    
+                    <!-- Header Alerta Admin -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 26px 28px; border-bottom: 3px solid #38bdf8;">
+                            <table width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>
+                                        <span style="background-color: #0284c7; color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">ALERTA DE PEDIDO</span>
+                                        <h1 style="margin: 8px 0 0 0; color: #ffffff; font-size: 22px; font-weight: 800;">
+                                            🔔 Nuevo Pedido Confirmado #{{ pedido.codigo_orden }}
+                                        </h1>
+                                    </td>
+                                    <td align="right" valign="top">
+                                        <span style="color: #38bdf8; font-size: 20px; font-weight: 800;">
+                                            ${{ total_final }} CLP
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Contenido Central -->
+                    <tr>
+                        <td style="padding: 24px 28px;">
+
+                            <!-- Botón Principal Ir al Panel -->
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <a href="{{ link_panel }}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
+                                    👉 Gestionar Pedido en el Panel Admin
+                                </a>
+                                <p style="margin: 6px 0 0 0; font-size: 11px; color: #94a3b8;">
+                                    Link directo: <a href="{{ link_panel }}" style="color: #2563eb;">{{ link_panel }}</a>
+                                </p>
+                            </div>
+
+                            <!-- Tabla Datos Básicos -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td colspan="2" style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase;">
+                                        👤 Datos del Cliente
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b; width: 35%;">Cliente:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a; font-weight: 600;">{{ pedido.nombre_completo }}</td>
+                                </tr>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">RUT:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a;">{{ pedido.rut }}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">Email:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #2563eb;">
+                                        <a href="mailto:{{ pedido.email }}" style="color: #2563eb; text-decoration: none;">{{ pedido.email }}</a>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">Teléfono:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a; font-weight: 600;">
+                                        {{ pedido.telefono_display }} 
+                                        {% if pedido.telefono_wa %}
+                                        (<a href="https://wa.me/{{ pedido.telefono_wa }}" style="color: #16a34a; text-decoration: none;" target="_blank">Abrir WhatsApp</a>)
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Tabla Datos Despacho y Pago -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td colspan="2" style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase;">
+                                        🚚 Despacho y Pago
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b; width: 35%;">Modalidad:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a; font-weight: 600;">{{ pedido.get_tipo_entrega_display }}</td>
+                                </tr>
+                                {% if pedido.tipo_entrega == 'PUNTO_BLUE' and pedido.punto_entrega_nombre %}
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">Agencia Blue:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a;">{{ pedido.punto_entrega_nombre }} (ID: {{ pedido.punto_entrega_id }})</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">Dirección:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a;">{{ pedido.direccion }}, {{ pedido.comuna }}, {{ pedido.region }}</td>
+                                </tr>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">Medio de Pago:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a;">
+                                        <strong>{{ pedido.metodo_pago }}</strong> 
+                                        {% if pedido.codigo_autorizacion %}(Aut: {{ pedido.codigo_autorizacion }}){% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #64748b;">Tipo Documento:</td>
+                                    <td style="padding: 8px 14px; font-size: 13px; color: #0f172a;">
+                                        {% if pedido.requiere_factura %}
+                                        <span style="color: #dc2626; font-weight: 700;">⚠️ FACTURA SOLICITADA</span><br>
+                                        <strong>Razón Social:</strong> {{ pedido.razon_social }}<br>
+                                        <strong>RUT Empresa:</strong> {{ pedido.rut_empresa }}<br>
+                                        <strong>Giro:</strong> {{ pedido.giro_comercial }}
+                                        {% else %}
+                                        Boleta Electrónica
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Detalle Ítems Comprados -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                                <thead>
+                                    <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                        <th align="left" style="padding: 10px 14px; font-size: 12px; color: #64748b; text-transform: uppercase;">Ítem</th>
+                                        <th align="center" style="padding: 10px 14px; font-size: 12px; color: #64748b; text-transform: uppercase;">Cant.</th>
+                                        <th align="right" style="padding: 10px 14px; font-size: 12px; color: #64748b; text-transform: uppercase;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in items %}
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 10px 14px; font-size: 13px; color: #1e293b;">
+                                            {{ item.producto.nombre }}
+                                        </td>
+                                        <td align="center" style="padding: 10px 14px; font-size: 13px; color: #475569;">
+                                            {{ item.cantidad }}
+                                        </td>
+                                        <td align="right" style="padding: 10px 14px; font-size: 13px; color: #0f172a; font-weight: 600;">
+                                            ${{ item.get_costo }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr style="background-color: #f8fafc;">
+                                        <td colspan="2" style="padding: 8px 14px; font-size: 13px; color: #64748b;">Costo Despacho:</td>
+                                        <td align="right" style="padding: 8px 14px; font-size: 13px; color: #334155; font-weight: 600;">${{ pedido.costo_envio }}</td>
+                                    </tr>
+                                    <tr style="background-color: #0f172a;">
+                                        <td colspan="2" style="padding: 10px 14px; font-size: 14px; color: #ffffff; font-weight: 700;">TOTAL PEDIDO:</td>
+                                        <td align="right" style="padding: 10px 14px; font-size: 15px; color: #38bdf8; font-weight: 800;">${{ total_final }} CLP</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px 28px; text-align: center;">
+                            <p style="margin: 0; font-size: 12px; color: #64748b;">
+                                Alerta automática enviada a <strong>contacto@rapidassure.cl</strong> desde el sistema de Rapidassure Retail.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1335,3 +1335,134 @@ class ContactoFormTests(TestCase):
         resp = self.client.post('/panel/configuracion/sincronizar-puntos-blue/')
         self.assertEqual(resp.status_code, 302)
         self.assertIn('login', resp.url)
+
+    def test_alerta_compra_confirmada_envia_correos_cliente_y_admin(self):
+        """Alerta de compra confirmada envía email al cliente con aviso de seguimiento y a contacto@rapidassure.cl con link al panel."""
+        from django.core import mail
+        from tienda.emails import enviar_alerta_compra_confirmada
+        from tienda.models import LogPedido, Categoria, Producto
+
+        mail.outbox = []
+
+        cat = Categoria.objects.create(nombre='POS Hardware', slug='pos-hw')
+        prod = Producto.objects.create(
+            categoria=cat,
+            nombre='Impresora Térmica 80mm',
+            precio=65000,
+            stock=10,
+            disponible=True
+        )
+
+        pedido = Pedido.objects.create(
+            nombre_completo='Andrés Morales',
+            rut='16.789.123-4',
+            email='andres@empresa.cl',
+            telefono='911223344',
+            tipo_entrega='ENVIO',
+            direccion='Moneda 1120, Of 402',
+            comuna='Santiago',
+            ciudad='Santiago',
+            region='Metropolitana de Santiago',
+            costo_envio=3500,
+            metodo_pago='WEBPAY',
+            codigo_autorizacion='998877',
+            pagado=True,
+            estado='PAGADO'
+        )
+        ItemPedido.objects.create(
+            pedido=pedido,
+            producto=prod,
+            precio=65000,
+            cantidad=1
+        )
+
+        enviar_alerta_compra_confirmada(pedido, async_send=False)
+
+        # Se deben enviar al menos 2 correos (cliente y admin)
+        self.assertGreaterEqual(len(mail.outbox), 2)
+
+        # Correo cliente
+        email_cliente = next(m for m in mail.outbox if 'andres@empresa.cl' in m.to)
+        self.assertIn('Compra Confirmada', email_cliente.subject)
+        self.assertIn(pedido.codigo_orden, email_cliente.subject)
+        self.assertIn('Pronto recibirás el número de seguimiento de tu envío', email_cliente.body)
+        self.assertEqual(email_cliente.reply_to, ['contacto@rapidassure.cl'])
+
+        # Correo admin
+        email_admin = next(m for m in mail.outbox if any('contacto@rapidassure.cl' in d for d in m.to))
+        self.assertIn('Nuevo Pedido Confirmado', email_admin.subject)
+        self.assertIn(pedido.codigo_orden, email_admin.subject)
+        self.assertIn('Andrés Morales', email_admin.body)
+        self.assertIn(f'/panel/pedidos/{pedido.id}/', email_admin.body)
+
+        # Verificar que NO se use el dominio con una sola 's'
+        for m in mail.outbox:
+            for dest in m.to:
+                self.assertNotIn('rapidasure.cl', dest)
+
+        # Verificar LogPedido
+        log = LogPedido.objects.filter(pedido_id=pedido.id, accion='CORREO_CONFIRMACION').first()
+        self.assertIsNotNone(log)
+        self.assertIn('andres@empresa.cl', log.detalles)
+
+    def test_enviar_seguimiento_email_desde_contacto_rapidassure(self):
+        """El botón del panel envía correo de seguimiento al cliente desde contacto@rapidassure.cl."""
+        from django.core import mail
+        from django.contrib.auth.models import User
+        from tienda.models import Categoria, Producto, LogPedido
+
+        mail.outbox = []
+
+        user = User.objects.create_superuser('admin_seguimiento', 'admin@test.cl', 'pass123')
+        self.client.login(username='admin_seguimiento', password='pass123')
+
+        cat = Categoria.objects.create(nombre='Lectores', slug='lectores')
+        prod = Producto.objects.create(
+            categoria=cat,
+            nombre='Lector Código Barras 2D',
+            precio=45000,
+            stock=5,
+            disponible=True
+        )
+
+        pedido = Pedido.objects.create(
+            nombre_completo='Valeria Castro',
+            rut='17.654.321-0',
+            email='valeria@retail.cl',
+            telefono='922334455',
+            tipo_entrega='ENVIO',
+            direccion='Ahumada 341, Local 12',
+            comuna='Santiago',
+            ciudad='Santiago',
+            region='Metropolitana de Santiago',
+            empresa_transporte='Blue Express',
+            numero_seguimiento='BX-99887766',
+            pagado=True,
+            estado='ENVIADO'
+        )
+        ItemPedido.objects.create(
+            pedido=pedido,
+            producto=prod,
+            precio=45000,
+            cantidad=1
+        )
+
+        resp = self.client.get(f'/panel/pedidos/enviar-seguimiento/{pedido.id}/')
+        self.assertRedirects(resp, f'/panel/pedidos/{pedido.id}/')
+
+        # Verificar que se envió un correo
+        self.assertEqual(len(mail.outbox), 1)
+        email_seg = mail.outbox[0]
+        self.assertEqual(email_seg.to, ['valeria@retail.cl'])
+        self.assertIn('ya va en camino', email_seg.subject)
+        self.assertIn('BX-99887766', email_seg.body)
+        self.assertIn('contacto@rapidassure.cl', email_seg.from_email)
+        self.assertEqual(email_seg.reply_to, ['contacto@rapidassure.cl'])
+
+        # Verificar log
+        log = LogPedido.objects.filter(pedido_id=pedido.id, accion='SEGUIMIENTO').first()
+        self.assertIsNotNone(log)
+        self.assertIn('BX-99887766', log.detalles)
+        self.assertIn('contacto@rapidassure.cl', log.detalles)
+
+

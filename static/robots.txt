@@ -14,4 +14,3 @@ Disallow: /login/
 Disallow: /logout/
 
 Sitemap: https://rapidassure.cl/sitemap.xml
-
