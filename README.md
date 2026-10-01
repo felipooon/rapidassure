@@ -1,14 +1,14 @@
 # Rapidassure Retail 2.0 (Retail Pro Edition)
 
-Plataforma e-commerce corporativa y centro de operaciones logísticas desarrollado a medida con **Python y Django**. Diseñada específicamente para la comercialización de equipamiento tecnológico, computación, terminales de punto de venta (POS), audio, gaming, periféricos y soluciones operacionales para empresas, PyMEs y clientes particulares en todo Chile.
+Plataforma e-commerce corporativa y centro de operaciones logísticas desarrollado a medida con **Python y Django**. Diseñada específicamente para la comercialización de equipamiento tecnológico, computación, soluciones de cobro digital, audio, gaming, periféricos y soluciones operacionales para empresas, PyMEs y clientes particulares en todo Chile.
 
 > **Evolución 2.0:** Reemplazo integral de una tienda anterior en WordPress, logrando una plataforma rápida, segura, sin dependencias de plugins costosos, con experiencia visual premium (*glassmorphism*, responsive móvil optimizado) y automatización logística avanzada para couriers.
 
 ---
 
-## 🚀 Características Principales
+## Características Principales
 
-### 🛒 Tienda y Experiencia de Usuario (Frontend & CRO)
+### Tienda y Experiencia de Usuario (Frontend & CRO)
 - **Hero Slider Dinámico**: Portada con carrusel de alto impacto visual (*Mundo Digital* y *Retail & Empresas*), optimizado para escritorio y dispositivos móviles sin deformaciones.
 - **Catálogo Tecnológico Dinámico**: Filtrado por categorías, búsqueda en tiempo real, ordenamiento por precio y novedades, con indicadores de stock e inventario en vivo.
 - **Carrito de Compras Corporativo**: Persistencia en sesión, cálculo de descuentos mediante cupones (`RAPIDA10`) y desglose de subtotales en vivo.
@@ -22,34 +22,34 @@ Plataforma e-commerce corporativa y centro de operaciones logísticas desarrolla
 
 ---
 
-### 🚚 Arquitectura Logística Omnicanal
+### Arquitectura Logística Omnicanal
 
 La plataforma cuenta con 4 modalidades de entrega totalmente integradas en el checkout y en el backend:
 
-1. **🚚 Despacho a Domicilio Blue Express (Estándar):**
+1. **Despacho a Domicilio Blue Express (Estándar):**
    - Cotización en tiempo real basada en la tabla tarifaria oficial de Blue Express para todas las regiones y comunas de Chile.
-2. **🎁 Envío Gratis RM (Compras +$19.990):**
+2. **Envío Gratis RM (Compras +$19.990):**
    - Método condicional que se activa automáticamente al cumplirse: destino en la Región Metropolitana y subtotal de productos $\ge \$19.990$.
    - Costo de envío bonificado ($0) y retorno automático a tarifa estándar si el cliente cambia de región.
-3. **📍 Puntos de Retiro Pick-up Blue Express / Copec:**
+3. **Puntos de Retiro Pick-up Blue Express / Copec:**
    - Base de datos local georreferenciada con **más de 1.000 puntos pick-up y agencias Copec** en todo Chile (`tienda/data/puntos_blue_express.json`).
    - Selector reactivo en checkout con filtrado instantáneo por comuna, mostrando dirección exacta, nombre de la agencia y horarios de atención.
-4. **🏪 Retiro en Tienda / Local:**
+4. **Retiro en Tienda / Local:**
    - Opción 100% gratuita para retiro en el local comercial de San Diego 174, Santiago Centro.
 
 ---
 
-### 🧑‍💻 Panel de Control y Operaciones Logísticas (`/panel/`)
+### Panel de Control y Operaciones Logísticas (`/panel/`)
 
 Un centro de mando administrativo pensado para agilizar el despacho y la gestión diaria del negocio:
 
 - **Dashboard de Ventas**: Métricas mensuales, ingresos, pedidos pendientes y ranking de ventas.
 - **Suite de Planillas Excel (.xlsx) por Canal de Entrega**:
-  - **`🚚 Carga Domicilio`**: Generación masiva con el formato oficial del portal Blue Express PyME (27 columnas) para subida directa sin trabajo manual.
-  - **`🎁 Gratis RM`**: Planilla especializada con cabecera verde esmeralda para la flota de reparto local o courier en la Región Metropolitana.
-  - **`📍 Puntos Blue`**: Planilla con cabecera morada para la gestión individual de paquetes destinados a agencias Copec / Blue Express.
-  - **`🏪 Retiro en Local`**: Hoja de picking y comprobante con espacio para fecha de retiro, RUT y **firma de conformidad del cliente en mesón**.
-  - **`📊 Exportar Todo`**: Reporte global maestro de auditoría de ventas.
+  - **`Carga Domicilio`**: Generación masiva con el formato oficial del portal Blue Express PyME (27 columnas) para subida directa sin trabajo manual.
+  - **`Gratis RM`**: Planilla especializada con cabecera verde esmeralda para la flota de reparto local o courier en la Región Metropolitana.
+  - **`Puntos Blue`**: Planilla con cabecera morada para la gestión individual de paquetes destinados a agencias Copec / Blue Express.
+  - **`Retiro en Local`**: Hoja de picking y comprobante con espacio para fecha de retiro, RUT y **firma de conformidad del cliente en mesón**.
+  - **`Exportar Todo`**: Reporte global maestro de auditoría de ventas.
 - **Gestión de Pedidos**: Control de estados (*Pendiente, Pagado, En Preparación, Enviado, Entregado, Cancelado*), asignación de tracking (OT) y envío de correos de seguimiento al cliente.
 - **Gestión de Inventario & Stock**: Catálogo de productos, control de existencias y exportación completa a Excel.
 - **Gestión de Cupones**: Administración de descuentos por porcentaje o monto fijo.
@@ -57,7 +57,7 @@ Un centro de mando administrativo pensado para agilizar el despacho y la gestió
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 | Capa | Tecnologías |
 | :--- | :--- |
@@ -66,11 +66,11 @@ Un centro de mando administrativo pensado para agilizar el despacho y la gestió
 | **Integraciones** | Transbank Webpay Plus, Blue Express API / Dataset local, Mercado Pago SDK |
 | **Exportación & Datos** | OpenPyXL (generación y formateo de planillas Excel avanzadas) |
 | **Recursos & Fuentes** | Font Awesome 6, Google Fonts (Montserrat, Open Sans, Nunito) |
-| **Testing** | Django Test Suite (45 pruebas unitarias automatizadas con 100% de éxito) |
+| **Testing** | Django Test Suite (54 pruebas unitarias automatizadas con 100% de éxito) |
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 rapidasure/
@@ -92,7 +92,7 @@ rapidasure/
 │   ├── comunas_chile.py       # Tarifario oficial y cálculo logístico por región
 │   ├── models.py              # Modelos: Pedido, Producto, Cupon, LogPedido, etc.
 │   ├── urls.py                # Enrutamiento de URLs públicas y de administración
-│   ├── tests.py               # 45 pruebas unitarias automatizadas
+│   ├── tests.py               # 54 pruebas unitarias automatizadas
 │   ├── data/
 │   │   └── puntos_blue_express.json # Base de datos local de puntos pick-up
 │   ├── management/commands/
@@ -106,7 +106,7 @@ rapidasure/
 
 ---
 
-## ⚙️ Puesta en Marcha Local
+## Puesta en Marcha Local
 
 1. **Clonar el repositorio**:
    ```bash
@@ -152,6 +152,6 @@ rapidasure/
 
 ---
 
-## 📄 Licencia y Derechos
+## Licencia y Derechos
 
 © Rapidassure Retail — Todos los derechos reservados. Desarrollado como plataforma e-commerce de alto rendimiento.

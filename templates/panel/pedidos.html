@@ -43,18 +43,18 @@
         <div style="min-width: 150px;">
             <select name="tipo_entrega" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.88rem; box-sizing: border-box; background: white; cursor: pointer;">
                 <option value="">Todas las Entregas</option>
-                <option value="ENVIO" {% if tipo_entrega_filtro == 'ENVIO' %}selected{% endif %}>🚚 Despacho a Domicilio</option>
-                <option value="GRATIS_RM" {% if tipo_entrega_filtro == 'GRATIS_RM' %}selected{% endif %}>🎁 Envío Gratis RM</option>
-                <option value="PUNTO_BLUE" {% if tipo_entrega_filtro == 'PUNTO_BLUE' %}selected{% endif %}>📍 Punto Blue Express</option>
-                <option value="RETIRO" {% if tipo_entrega_filtro == 'RETIRO' %}selected{% endif %}>🏪 Retiro en Local</option>
+                <option value="ENVIO" {% if tipo_entrega_filtro == 'ENVIO' %}selected{% endif %}>Despacho a Domicilio</option>
+                <option value="GRATIS_RM" {% if tipo_entrega_filtro == 'GRATIS_RM' %}selected{% endif %}>Envío Gratis RM</option>
+                <option value="PUNTO_BLUE" {% if tipo_entrega_filtro == 'PUNTO_BLUE' %}selected{% endif %}>Punto Blue Express</option>
+                <option value="RETIRO" {% if tipo_entrega_filtro == 'RETIRO' %}selected{% endif %}>Retiro en Local</option>
             </select>
         </div>
 
         <div style="min-width: 150px;">
             <select name="tipo_doc" style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.88rem; box-sizing: border-box; background: white; cursor: pointer;">
                 <option value="">Todos los Documentos</option>
-                <option value="BOLETA" {% if tipo_doc_filtro == 'BOLETA' %}selected{% endif %}>🧾 Boleta</option>
-                <option value="FACTURA" {% if tipo_doc_filtro == 'FACTURA' %}selected{% endif %}>📄 Factura Electrónica</option>
+                <option value="BOLETA" {% if tipo_doc_filtro == 'BOLETA' %}selected{% endif %}>Boleta</option>
+                <option value="FACTURA" {% if tipo_doc_filtro == 'FACTURA' %}selected{% endif %}>Factura Electrónica</option>
             </select>
         </div>
 

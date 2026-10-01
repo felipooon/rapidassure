@@ -153,7 +153,7 @@ Confirmamos que tu compra en Rapidassure Retail ha sido procesada y confirmada c
 ORDEN DE COMPRA: #{pedido.codigo_orden}
 ============================================================
 
-📦 AVISO IMPORTANTE SOBRE TU DESPACHO:
+[INFORMACIÓN DE DESPACHO]
 Pronto recibirás el número de seguimiento de tu envío.
 Estamos preparando tus productos en bodega. En cuanto tu paquete sea entregado a la empresa de transporte, te enviaremos tu código de rastreo para que puedas seguir su trayecto en todo momento.
 
@@ -190,7 +190,7 @@ def _generar_texto_plano_admin(pedido, items, total_final, link_panel):
     if pedido.requiere_factura:
         info_factura = f"FACTURA: Razón Social: {pedido.razon_social} | RUT: {pedido.rut_empresa} | Giro: {pedido.giro_comercial}"
 
-    return f"""🔔 ALERTA DE NUEVO PEDIDO CONFIRMADO
+    return f"""[ALERTA DE NUEVO PEDIDO CONFIRMADO]
 ============================================================
 Orden: #{pedido.codigo_orden} (ID BD: #{pedido.id})
 Total Pagado: ${total_final:,} CLP
@@ -215,7 +215,7 @@ DOCUMENTO TRIBUTARIO:
 ÍTEMS COMPRADOS:
 {items_str}
 
-👉 GESTIONAR EN EL PANEL:
+ENLACE PARA GESTIONAR EN EL PANEL:
 {link_panel}
 """
 
@@ -306,7 +306,7 @@ def _ejecutar_envio_correos_confirmacion(pedido_id):
         destinatarios_admin = _construir_destinatarios_admin()
         if destinatarios_admin:
             try:
-                asunto_admin = f"🔔 Nuevo Pedido Confirmado #{pedido.codigo_orden} - ${total_final:,} CLP - {pedido.nombre_completo}"
+                asunto_admin = f"[Nuevo Pedido Confirmado] #{pedido.codigo_orden} - ${total_final:,} CLP - {pedido.nombre_completo}"
                 html_admin = render_to_string('emails/admin_nuevo_pedido.html', contexto)
                 texto_admin = _generar_texto_plano_admin(pedido, items, total_final, link_panel)
                 _despachar_email(

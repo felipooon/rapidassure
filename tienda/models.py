@@ -637,16 +637,16 @@ class ResenaProducto(models.Model):
         verbose_name_plural = 'Reseñas de Productos'
 
     def __str__(self):
-        return f"Reseña de {self.nombre_cliente} en {self.producto.nombre} ({self.calificacion}⭐)"
+        return f"Reseña de {self.nombre_cliente} en {self.producto.nombre} ({self.calificacion}/5)"
 
 
 class LogProducto(models.Model):
     ACCION_CHOICES = [
-        ('CREACION', '🟢 Creación'),
-        ('EDICION', '🔵 Edición'),
-        ('TOGGLE', '🟡 Cambio de Estado'),
-        ('VENTA', '🛍️ Venta Realizada'),
-        ('ELIMINACION', '🔴 Eliminación'),
+        ('CREACION', 'Creación'),
+        ('EDICION', 'Edición'),
+        ('TOGGLE', 'Cambio de Estado'),
+        ('VENTA', 'Venta Realizada'),
+        ('ELIMINACION', 'Eliminación'),
     ]
 
     producto_id = models.IntegerField(null=True, blank=True, help_text="ID del producto en la base de datos")
@@ -667,12 +667,12 @@ class LogProducto(models.Model):
 
 class LogPedido(models.Model):
     ACCION_CHOICES = [
-        ('CREACION', '🟢 Pedido Creado'),
-        ('PAGO_OK', '✅ Pago Confirmado'),
-        ('ESTADO_CAMBIO', '🚚 Cambio de Estado'),
-        ('SEGUIMIENTO', '📦 Datos de Seguimiento'),
-        ('ERROR', '⚠️ Error / Fallo de Pago'),
-        ('CANCELADO', '❌ Pedido Cancelado'),
+        ('CREACION', 'Pedido Creado'),
+        ('PAGO_OK', 'Pago Confirmado'),
+        ('ESTADO_CAMBIO', 'Cambio de Estado'),
+        ('SEGUIMIENTO', 'Datos de Seguimiento'),
+        ('ERROR', 'Error / Fallo de Pago'),
+        ('CANCELADO', 'Pedido Cancelado'),
     ]
 
     pedido_id = models.IntegerField(null=True, blank=True, help_text="ID del pedido en la base de datos")

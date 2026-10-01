@@ -204,7 +204,7 @@ class BannerPromocionalForm(forms.ModelForm):
         except Exception:
             pass
 
-        choices.append(('Opción Manual', (('custom', '✏️ Ingresar enlace personalizado manualmente...'),)))
+        choices.append(('Opción Manual', (('custom', 'Ingresar enlace personalizado manualmente...'),)))
 
         self.fields['url_destino_select'].choices = choices
         
