@@ -741,7 +741,10 @@
         if (punto) {
             if (inputId) inputId.value = punto.id;
             if (inputNom) inputNom.value = punto.nombre;
-            if (inputDir) inputDir.value = `${punto.direccion_completa} (${punto.nombre})`;
+            if (inputDir) {
+                inputDir.value = `${punto.direccion_completa} (${punto.nombre})`;
+                inputDir.dataset.esPuntoBlue = 'true';
+            }
 
             if (cardInfo) {
                 cardInfo.style.display = 'block';
@@ -830,6 +833,7 @@
         }
 
         const input = document.getElementById('tipo_entrega_input');
+        const tipoPrevio = input ? input.value : null;
         const btnGratis = document.getElementById('btn-entrega-gratis-rm');
         const btnEnvio = document.getElementById('btn-entrega-envio');
         const btnPunto = document.getElementById('btn-entrega-punto');
@@ -852,6 +856,18 @@
         const bannerRM = document.getElementById('banner-promo-rm');
 
         if (input) input.value = tipo;
+
+        // Si se cambia desde PUNTO_BLUE a otro método (a domicilio o retiro), limpiar el campo de dirección y datos del punto
+        if (tipo !== 'PUNTO_BLUE') {
+            const inputPuntoId = document.getElementById('punto_entrega_id_input');
+            const inputPuntoNom = document.getElementById('punto_entrega_nombre_input');
+            if (inputPuntoId) inputPuntoId.value = '';
+            if (inputPuntoNom) inputPuntoNom.value = '';
+            if (inputDir && (tipoPrevio === 'PUNTO_BLUE' || inputDir.dataset.esPuntoBlue === 'true' || inputDir.value.includes('(Punto Blue') || inputDir.value.includes('Punto Blue Express'))) {
+                inputDir.value = '';
+                inputDir.dataset.esPuntoBlue = 'false';
+            }
+        }
 
         // Reset active tabs
         if (btnGratis) btnGratis.classList.remove('active');
@@ -984,6 +1000,13 @@
         const terminosCheckbox = document.getElementById('terminos_checkbox');
         const hiddenTerminos = document.getElementById('hidden_terminos_input');
         const btnWebpay = document.getElementById('btn-webpay');
+        const inputDireccion = document.getElementById('direccion_input');
+
+        if (inputDireccion) {
+            inputDireccion.addEventListener('input', function() {
+                this.dataset.esPuntoBlue = 'false';
+            });
+        }
 
         if (terminosCheckbox && hiddenTerminos) {
             terminosCheckbox.addEventListener('change', function() {
