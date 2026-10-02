@@ -4937,7 +4937,8 @@ body.panel-body {
   width: 100%;
   overflow: hidden;
   position: relative;
-  height: clamp(520px, calc(100vh - 165px), 740px);
+  min-height: 590px;
+  height: clamp(610px, calc(100vh - 120px), 780px);
 }
 
 .hero-slider-track {
@@ -4977,6 +4978,8 @@ body.panel-body {
   width: 100%;
   max-width: 100%;
   margin: 0;
+  background-position: center bottom !important;
+  background-size: cover !important;
 }
 
 .hero-slide-item .hero-banner-section {
@@ -4990,11 +4993,34 @@ body.panel-body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(1.2rem, 2vw, 2.2rem) clamp(1.2rem, 4vw, 4rem) 0 !important;
+  padding: clamp(0.9rem, 1.8vw, 1.8rem) clamp(1.2rem, 3.5vw, 3.5rem) 0 !important;
+  background-position: right bottom !important;
+  background-size: cover !important;
 }
 
 .hero-slide-item .hero-card-grid {
-  margin-bottom: clamp(0.5rem, 1.5vw, 1.2rem) !important;
+  margin-bottom: clamp(0.5rem, 1.5vh, 1.2rem) !important;
+}
+
+.hero-slide-item .hero-yellow-badge {
+  margin-bottom: clamp(0.4rem, 1vh, 0.8rem) !important;
+}
+
+.hero-slide-item .hero-main-heading {
+  font-size: clamp(1.65rem, 2.9vw, 2.7rem) !important;
+  line-height: 1.15 !important;
+  margin-bottom: clamp(0.4rem, 1vh, 0.8rem) !important;
+}
+
+.hero-slide-item .hero-description-text {
+  font-size: clamp(0.9rem, 1.15vw, 1.05rem) !important;
+  line-height: 1.5 !important;
+  margin-bottom: clamp(0.5rem, 1.2vh, 1.1rem) !important;
+}
+
+.hero-slide-item .hero-features-glass-card .hero-key-features-row {
+  margin-bottom: clamp(0.5rem, 1.4vh, 1.3rem) !important;
+  gap: clamp(8px, 1.2vw, 12px) clamp(14px, 2vw, 28px) !important;
 }
 
 .hero-slide-item .hero-fluid-container {
@@ -5007,7 +5033,13 @@ body.panel-body {
 
 .hero-slide-item .hero-bottom-benefits-strip {
   margin-top: auto !important;
-  margin-bottom: 0.8rem !important;
+  margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem) !important;
+  padding: clamp(10px, 1.1vw, 16px) clamp(12px, 1.4vw, 20px) !important;
+}
+
+.hero-slide-item .hero-ticker-ribbon {
+  margin-top: 0.35rem !important;
+  padding: 8px 1rem !important;
 }
 
 /* Flechas Flotantes Glassmorphism */
@@ -5050,22 +5082,23 @@ body.panel-body {
   box-shadow: 0 8px 26px rgba(0, 56, 255, 0.45);
 }
 
-/* Paginación con Píldoras Activas */
+/* Paginación con Píldoras Activas (Flotando limpia arriba de la tira de beneficios/badges) */
 .hero-slider-pagination {
   position: absolute;
-  bottom: 24px;
+  bottom: clamp(120px, 16vh, 144px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 35;
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(0, 14, 31, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 14, 31, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 6px 14px;
   border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 20, 60, 0.25);
 }
 
 .hero-slider-dot {
@@ -5085,6 +5118,59 @@ body.panel-body {
   border-radius: 12px;
   background: #38bdf8;
   box-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+}
+
+@media (max-width: 1200px) {
+  .hero-slider-viewport {
+    min-height: 610px;
+    height: clamp(630px, calc(100vh - 100px), 760px);
+  }
+  .hero-slider-pagination {
+    bottom: clamp(140px, 18vh, 165px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-slider-viewport {
+    min-height: 630px;
+    height: clamp(650px, calc(100vh - 80px), 780px);
+  }
+  .hero-slider-pagination {
+    bottom: clamp(165px, 22vh, 195px);
+  }
+}
+
+@media (max-height: 760px) {
+  .hero-slider-viewport {
+    min-height: 560px;
+    height: 570px;
+  }
+  .hero-slider-pagination {
+    bottom: 105px;
+  }
+  .hero-slide-item .hero-card-grid {
+    margin-bottom: 0.35rem !important;
+  }
+  .hero-slide-item .hero-main-heading {
+    font-size: 1.55rem !important;
+    margin-bottom: 0.3rem !important;
+  }
+  .hero-slide-item .hero-description-text {
+    font-size: 0.86rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+  .hero-slide-item .hero-features-glass-card .hero-key-features-row {
+    margin-bottom: 0.4rem !important;
+    gap: 6px 16px !important;
+  }
+  .hero-slide-item .hero-bottom-benefits-strip {
+    padding: 8px 14px !important;
+    margin-bottom: 0.25rem !important;
+  }
+  .hero-slide-item .hero-ticker-ribbon {
+    padding: 6px 1rem !important;
+    font-size: 0.78rem !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -5598,7 +5684,7 @@ body.panel-body {
   /* Slide 2: Adaptación fluida sin deformación */
   .hero-slide-item .hero-banner-section.hero-scene-bg {
     padding: 1rem 0.9rem 0.5rem !important;
-    background-position: 65% center !important;
+    background-position: 65% bottom !important;
     background-size: cover !important;
     justify-content: flex-start !important;
     gap: 8px !important;
