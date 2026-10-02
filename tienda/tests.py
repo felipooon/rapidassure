@@ -1321,6 +1321,11 @@ class ContactoFormTests(TestCase):
         self.assertEqual(email.reply_to, ['carlos@tiendachile.cl'])
         self.assertIn('carlos@tiendachile.cl', email.body)
         self.assertIn('5 terminales Smart POS', email.body)
+        self.assertEqual(len(email.alternatives), 1)
+        self.assertEqual(email.alternatives[0][1], 'text/html')
+        self.assertIn('Carlos Pérez', email.alternatives[0][0])
+        self.assertIn('Cotización POS', email.alternatives[0][0])
+        self.assertIn('Nueva Consulta Web', email.alternatives[0][0])
 
     def test_api_contacto_exitoso_json(self):
         """Verifica que el endpoint procese payloads JSON con email separado."""

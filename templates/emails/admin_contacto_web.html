@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Mensaje de Contacto - {{ asunto }}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0f172a; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0f172a; padding: 30px 10px;">
+        <tr>
+            <td align="center">
+                <!-- Contenedor Principal -->
+                <table role="presentation" width="100%" style="max-width: 620px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                    
+                    <!-- Header Alerta Admin -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 26px 28px; border-bottom: 3px solid #38bdf8;">
+                            <table width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>
+                                        <span style="background-color: #0284c7; color: #ffffff; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">FORMULARIO DE CONTACTO</span>
+                                        <h1 style="margin: 8px 0 0 0; color: #ffffff; font-size: 22px; font-weight: 800;">
+                                            <span style="display:inline-block; vertical-align:middle; margin-right:6px;">
+                                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                                </svg>
+                                            </span>Nueva Consulta Web
+                                        </h1>
+                                        <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px;">Enviado desde el portal principal Rapidassure Retail</p>
+                                    </td>
+                                    <td align="right" valign="top">
+                                        <span style="display: inline-block; background-color: #1e293b; color: #38bdf8; border: 1px solid #334155; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 6px;">
+                                            WEB LEAD
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Contenido Central -->
+                    <tr>
+                        <td style="padding: 24px 28px;">
+
+                            <!-- Botón Principal Responder al Cliente -->
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <a href="mailto:{{ email }}?subject={{ asunto_reply|default:'Re: Consulta Rapidassure Retail'|urlencode }}" style="display: inline-block; background-color: #2563eb; color: #ffffff; font-size: 15px; font-weight: 700; text-decoration: none; padding: 12px 26px; border-radius: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
+                                    <span style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                                            <polyline points="9 14 4 9 9 4"></polyline>
+                                            <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                                        </svg>
+                                    </span>Responder Directamente a {{ nombre }} &rarr;
+                                </a>
+                                <p style="margin: 6px 0 0 0; font-size: 12px; color: #64748b;">
+                                    Al presionar 'Responder' en tu cliente de correo, responderás automáticamente a <strong>{{ email }}</strong>
+                                </p>
+                            </div>
+
+                            <!-- Tabla Datos del Remitente -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 22px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td colspan="2" style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <span style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="12" cy="7" r="4"></circle>
+                                            </svg>
+                                        </span>Identificación del Interesado
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #64748b; width: 32%;">Nombre:</td>
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #0f172a; font-weight: 700;">{{ nombre }}</td>
+                                </tr>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #64748b;">Correo Electrónico:</td>
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #2563eb; font-weight: 600;">
+                                        <a href="mailto:{{ email }}" style="color: #2563eb; text-decoration: none;">{{ email }}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #64748b;">Asunto / Motivo:</td>
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #0f172a; font-weight: 600;">
+                                        <span style="background-color: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700;">
+                                            {{ asunto }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #f8fafc;">
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #64748b;">Fecha y Hora:</td>
+                                    <td style="padding: 10px 14px; font-size: 13px; color: #475569;">
+                                        {{ fecha|date:"d/m/Y H:i" }} hrs (Santiago de Chile)
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Mensaje del Cliente -->
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 10px 14px; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        <span style="display: inline-block; vertical-align: middle; margin-right: 5px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                            </svg>
+                                        </span>Mensaje o Consulta
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 16px 18px; background-color: #ffffff;">
+                                        <div style="background-color: #f8fafc; border-left: 4px solid #0284c7; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 6px; padding: 16px 18px; font-size: 14px; line-height: 1.6; color: #1e293b; white-space: pre-wrap; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">{{ mensaje }}</div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer Corporativo -->
+                    <tr>
+                        <td style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px 28px; text-align: center;">
+                            <p style="margin: 0 0 4px 0; font-size: 12px; color: #475569; font-weight: 700;">
+                                Rapidassure Retail &bull; Equipamiento y Soluciones Tecnológicas
+                            </p>
+                            <p style="margin: 0; font-size: 11px; color: #94a3b8;">
+                                Notificación automática enviada a <strong>{{ destinatario|default:"contacto@rapidassure.cl" }}</strong> desde <a href="https://rapidassure.cl" style="color: #2563eb; text-decoration: none;">rapidassure.cl</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

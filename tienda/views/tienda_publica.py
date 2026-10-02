@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils import timezone
 from django.conf import settings
 import json
 import logging
@@ -349,7 +351,7 @@ def api_destacados_random(request):
     return JsonResponse({'productos': data})
 
 
-def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email):
+def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email, cuerpo_html=None):
     """
     Despacha el correo de contacto:
     1. Si se define RESEND_API_KEY o BREVO_API_KEY en variables de entorno, envía vía API HTTPS (puerto 443).
@@ -370,6 +372,8 @@ def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email
             "text": cuerpo,
             "reply_to": [reply_to] if reply_to else None,
         }
+        if cuerpo_html:
+            payload["html"] = cuerpo_html
         req = urllib.request.Request(
             "https://api.resend.com/emails",
             data=json.dumps(payload).encode('utf-8'),
@@ -400,6 +404,8 @@ def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email
             "textContent": cuerpo,
             "replyTo": {"email": reply_to} if reply_to else None,
         }
+        if cuerpo_html:
+            payload["htmlContent"] = cuerpo_html
         req = urllib.request.Request(
             "https://api.brevo.com/v3/smtp/email",
             data=json.dumps(payload).encode('utf-8'),
@@ -414,14 +420,24 @@ def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email
             logger.info(f"Correo enviado exitosamente vía Brevo API HTTPS: {data_resp}")
             return True
 
-    # Backend estándar Django (SMTP / Console)
-    email_msg = EmailMessage(
-        subject=asunto,
-        body=cuerpo,
-        from_email=from_email,
-        to=[destinatario],
-        reply_to=[reply_to] if reply_to else None,
-    )
+    # Backend estándar Django (SMTP / Console / Locmem)
+    if cuerpo_html:
+        email_msg = EmailMultiAlternatives(
+            subject=asunto,
+            body=cuerpo,
+            from_email=from_email,
+            to=[destinatario],
+            reply_to=[reply_to] if reply_to else None,
+        )
+        email_msg.attach_alternative(cuerpo_html, "text/html")
+    else:
+        email_msg = EmailMessage(
+            subject=asunto,
+            body=cuerpo,
+            from_email=from_email,
+            to=[destinatario],
+            reply_to=[reply_to] if reply_to else None,
+        )
     email_msg.send(fail_silently=False)
     return True
 
@@ -491,9 +507,19 @@ def api_enviar_contacto(request):
         f"Enviado desde https://rapidassure.cl\n"
     )
 
+    cuerpo_html = render_to_string('emails/admin_contacto_web.html', {
+        'nombre': nombre,
+        'email': email,
+        'asunto': asunto,
+        'asunto_reply': f"Re: {asunto} - Rapidassure Retail",
+        'mensaje': mensaje,
+        'fecha': timezone.now(),
+        'destinatario': destinatario,
+    })
+
     try:
         from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'Rapidassure Retail <soporte@rapidassure.cl>')
-        _despachar_email_contacto(asunto_correo, cuerpo_correo, destinatario, email, from_email)
+        _despachar_email_contacto(asunto_correo, cuerpo_correo, destinatario, email, from_email, cuerpo_html=cuerpo_html)
         logger.info(f"Correo de contacto procesado exitosamente a {destinatario} (reply_to={email})")
         return JsonResponse({
             'status': 'success',
