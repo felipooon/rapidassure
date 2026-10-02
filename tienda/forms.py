@@ -5,6 +5,10 @@ from .models import Categoria
 class ProductoForm(forms.ModelForm):
     # Sobreescribimos el campo precio para recibirlo como texto primero
     precio = forms.CharField(widget=forms.TextInput(attrs={'type': 'text'}))
+    precio_oferta = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(attrs={'id': 'id_precio_oferta'})
+    )
     monto_descuento = forms.CharField(
         required=False,
         label="Monto de Descuento ($ CLP)",
@@ -26,6 +30,8 @@ class ProductoForm(forms.ModelForm):
             ahorro = self.instance.monto_ahorro
             if ahorro:
                 self.initial['monto_descuento'] = f"{ahorro:,}".replace(',', '.')
+            if self.instance.precio_oferta:
+                self.initial['precio_oferta'] = str(self.instance.precio_oferta)
 
         # Especificación Técnica Extendida obligatoria
         self.fields['tiene_ficha_especie'].widget = forms.HiddenInput()
@@ -76,26 +82,63 @@ class ProductoForm(forms.ModelForm):
         en_oferta = cleaned_data.get('en_oferta')
         porcentaje = cleaned_data.get('porcentaje_descuento') or 0
         monto_desc_raw = cleaned_data.get('monto_descuento')
+        precio_oferta_raw = cleaned_data.get('precio_oferta')
         precio_val = cleaned_data.get('precio')
 
+        precio_clean = 0
+        if precio_val:
+            try:
+                precio_clean = int(str(precio_val).replace('$', '').replace('.', '').replace(' ', '').strip())
+            except (ValueError, TypeError):
+                precio_clean = 0
+
+        monto_clean = None
+        if monto_desc_raw:
+            try:
+                m_str = str(monto_desc_raw).replace('$', '').replace('.', '').replace(' ', '').strip()
+                if m_str:
+                    monto_clean = int(m_str)
+            except (ValueError, TypeError):
+                pass
+
+        precio_oferta_clean = None
+        if precio_oferta_raw:
+            try:
+                po_str = str(precio_oferta_raw).replace('$', '').replace('.', '').replace(' ', '').strip()
+                if po_str:
+                    precio_oferta_clean = int(po_str)
+            except (ValueError, TypeError):
+                pass
+
         if en_oferta:
-            # Si viene en_oferta y monto_descuento pero no porcentaje (o se ingresó monto_descuento)
-            if monto_desc_raw and not porcentaje:
-                try:
-                    monto_clean = int(str(monto_desc_raw).replace('$', '').replace('.', '').replace(' ', '').strip())
-                    precio_clean = int(str(precio_val).replace('$', '').replace('.', '').replace(' ', '').strip()) if precio_val else 0
-                    if precio_clean > 0 and monto_clean > 0:
+            # Caso 1: Se especificó monto de descuento directo (ej: $30.000)
+            if monto_clean is not None and monto_clean > 0:
+                if precio_clean > 0:
+                    if monto_clean >= precio_clean:
+                        self.add_error('monto_descuento', 'El monto de descuento debe ser menor al precio regular.')
+                    else:
+                        precio_oferta_clean = precio_clean - monto_clean
                         porcentaje = min(99, max(1, int(round((monto_clean / precio_clean) * 100))))
-                except (ValueError, TypeError):
-                    pass
+            # Caso 2: Se especificó precio de oferta directo
+            elif precio_oferta_clean is not None and 0 < precio_oferta_clean < precio_clean:
+                monto_clean = precio_clean - precio_oferta_clean
+                porcentaje = min(99, max(1, int(round((monto_clean / precio_clean) * 100))))
+            # Caso 3: Solo se ingresó porcentaje (ej: 20%)
+            elif porcentaje and 0 < porcentaje < 100:
+                if precio_clean > 0:
+                    descuento = int(round((precio_clean * porcentaje) / 100.0))
+                    precio_oferta_clean = max(0, precio_clean - descuento)
+            else:
+                self.add_error('porcentaje_descuento', 'Debes ingresar un porcentaje o monto de descuento mayor a 0 para activar la oferta.')
+
+            if porcentaje >= 100:
+                self.add_error('porcentaje_descuento', 'El porcentaje de descuento debe ser menor al 100%.')
         else:
             porcentaje = 0
+            precio_oferta_clean = None
 
         cleaned_data['porcentaje_descuento'] = porcentaje
-        if en_oferta and porcentaje <= 0:
-            self.add_error('porcentaje_descuento', 'Debes ingresar un porcentaje o monto de descuento mayor a 0 para activar la oferta.')
-        if porcentaje >= 100:
-            self.add_error('porcentaje_descuento', 'El porcentaje de descuento debe ser menor al 100%.')
+        cleaned_data['precio_oferta'] = precio_oferta_clean
             
         return cleaned_data
 

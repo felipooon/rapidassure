@@ -674,6 +674,56 @@ class ControladorOfertasTests(TestCase):
         form = ProductoForm(instance=self.producto_oferta)
         self.assertEqual(form.initial.get('monto_descuento'), '20.000')
 
+    def test_descuento_monto_fijo_exacto_sin_desfase_redondeo(self):
+        """Validar que un descuento de $30.000 sobre $69.990 resulte en $39.990 exactos y no $39.894 (sin desfase de $96 pesos)."""
+        from tienda.forms import ProductoForm
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from tienda.carrito import Carrito
+        from django.test import RequestFactory
+        from django.contrib.sessions.middleware import SessionMiddleware
+
+        gif_bytes = b'GIF89a\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;'
+        imagen_dummy = SimpleUploadedFile("test.gif", gif_bytes, content_type="image/gif")
+
+        data = {
+            'nombre': 'Terminal POS Especial',
+            'categoria': self.categoria.id,
+            'marca': 'POSBrand',
+            'precio': '69.990',
+            'stock': '15',
+            'disponible': 'on',
+            'en_oferta': 'on',
+            'monto_descuento': '30.000',
+            'porcentaje_descuento': '43',
+            'especie_nombre_comun': 'Terminal POS',
+            'especie_habitat': 'Retail',
+            'especie_estado_conservacion': 'Garantía 24M',
+            'especie_dato_curioso': 'Batería de larga duración',
+        }
+        form = ProductoForm(data=data, files={'imagen': imagen_dummy})
+        self.assertTrue(form.is_valid(), form.errors)
+        producto = form.save()
+
+        # El precio final debe ser exactamente 39.990 (69.990 - 30.000)
+        self.assertEqual(producto.precio, 69990)
+        self.assertEqual(producto.precio_oferta, 39990)
+        self.assertEqual(producto.precio_final, 39990)
+        self.assertEqual(producto.monto_ahorro, 30000)
+        self.assertEqual(producto.porcentaje_descuento, 43)
+
+        # En el carrito debe registrar exactamente 39.990
+        factory = RequestFactory()
+        request = factory.get('/')
+        middleware = SessionMiddleware(lambda req: None)
+        middleware.process_request(request)
+        request.session.save()
+
+        carrito = Carrito(request)
+        carrito.agregar(producto, cantidad=1)
+        item = carrito.carrito[str(producto.id)]
+        self.assertEqual(item['precio'], '39990')
+        self.assertEqual(item['precio_original'], '69990')
+
 
 
 class WebpayPlusIntegrationTests(TestCase):

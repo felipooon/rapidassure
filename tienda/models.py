@@ -103,6 +103,7 @@ class Producto(models.Model):
     # Control de Ofertas y Descuentos
     en_oferta = models.BooleanField(default=False, help_text="Marcar para activar precio de oferta promocional")
     porcentaje_descuento = models.PositiveIntegerField(default=0, help_text="Porcentaje de descuento (ej: 15 para 15% OFF)")
+    precio_oferta = models.PositiveIntegerField(null=True, blank=True, verbose_name="Precio de Oferta ($ CLP)", help_text="Precio final de oferta en pesos CLP")
 
     # Datos para Cálculo de Envíos (Blue Express)
     alto = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True, verbose_name="Alto (cm)", help_text="Altura del paquete en cm para cálculo de envío Blue Express")
@@ -134,13 +135,20 @@ class Producto(models.Model):
 
     @property
     def tiene_descuento(self):
-        return bool(self.en_oferta and self.porcentaje_descuento and 0 < self.porcentaje_descuento < 100)
+        if not self.en_oferta:
+            return False
+        if self.precio_oferta is not None and 0 < self.precio_oferta < self.precio:
+            return True
+        return bool(self.porcentaje_descuento and 0 < self.porcentaje_descuento < 100)
 
     @property
     def precio_final(self):
         if self.tiene_descuento:
-            descuento = (self.precio * self.porcentaje_descuento) / 100.0
-            return int(round(self.precio - descuento))
+            if self.precio_oferta is not None and 0 < self.precio_oferta < self.precio:
+                return self.precio_oferta
+            if self.porcentaje_descuento and 0 < self.porcentaje_descuento < 100:
+                descuento = (self.precio * self.porcentaje_descuento) / 100.0
+                return int(round(self.precio - descuento))
         return self.precio
 
     @property
@@ -221,7 +229,20 @@ class Producto(models.Model):
         if self.stock == 0:
             self.disponible = False
 
-        # 2. Autogeneración de Slug único si no tiene uno asignado
+        # 2. Sincronización de Ofertas y Descuentos
+        if not self.en_oferta:
+            self.precio_oferta = None
+            self.porcentaje_descuento = 0
+        else:
+            if self.precio_oferta is not None and 0 < self.precio_oferta < self.precio:
+                if not self.porcentaje_descuento:
+                    self.porcentaje_descuento = min(99, max(1, int(round(((self.precio - self.precio_oferta) / self.precio) * 100))))
+            elif self.porcentaje_descuento and 0 < self.porcentaje_descuento < 100:
+                if self.precio_oferta is None:
+                    ahorro = int(round((self.precio * self.porcentaje_descuento) / 100.0))
+                    self.precio_oferta = max(0, self.precio - ahorro)
+
+        # 3. Autogeneración de Slug único si no tiene uno asignado
         if not self.slug:
             base_slug = slugify(self.nombre) or "producto"
             slug_candidate = base_slug

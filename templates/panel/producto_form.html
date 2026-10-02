@@ -525,6 +525,7 @@ function ejecutarCopiaFormModal() {
                                 {% endif %}
                             </div>
                         </div>
+                        {{ form.precio_oferta }}
 
                         <!-- Tarjeta de Resumen en Vivo del Precio Final -->
                         <div style="background: white; border-radius: 10px; border: 1px solid #fef08a; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
@@ -727,6 +728,7 @@ function ejecutarCopiaFormModal() {
             var enOfertaCheckbox = document.getElementById("id_en_oferta");
             var porcentajeInput = document.getElementById("id_porcentaje_descuento");
             var montoInput = document.getElementById("id_monto_descuento");
+            var precioOfertaInput = document.getElementById("id_precio_oferta");
             
             var prevRegular = document.getElementById("preview-precio-regular");
             var prevOferta = document.getElementById("preview-precio-oferta");
@@ -734,6 +736,7 @@ function ejecutarCopiaFormModal() {
             var prevAhorro = document.getElementById("preview-monto-ahorro");
 
             var isSyncing = false;
+            var ultimoModificado = null; // 'monto' o 'pct'
 
             function formatoCLP(valor) {
                 return "$" + Math.round(valor).toLocaleString('es-CL');
@@ -761,12 +764,28 @@ function ejecutarCopiaFormModal() {
                 var precio = getPrecioBase();
                 var enOferta = enOfertaCheckbox ? enOfertaCheckbox.checked : false;
                 var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
-                var ahorro = (precio > 0 && pct > 0) ? Math.round((precio * pct) / 100) : 0;
+                var monto = montoInput ? parseMonto(montoInput.value) : 0;
 
                 actualizarEstadoVisual(enOferta);
 
-                if (enOferta && pct > 0 && precio > 0) {
-                    var precioFinal = Math.max(0, precio - ahorro);
+                if (enOferta && precio > 0 && (pct > 0 || monto > 0)) {
+                    var ahorro = 0;
+                    var precioFinal = precio;
+
+                    if (ultimoModificado === 'monto' && monto > 0) {
+                        ahorro = Math.min(monto, precio > 0 ? precio - 1 : 0);
+                        precioFinal = Math.max(0, precio - ahorro);
+                    } else if (pct > 0) {
+                        ahorro = Math.round((precio * pct) / 100);
+                        precioFinal = Math.max(0, precio - ahorro);
+                    } else if (monto > 0) {
+                        ahorro = Math.min(monto, precio > 0 ? precio - 1 : 0);
+                        precioFinal = Math.max(0, precio - ahorro);
+                    }
+
+                    if (precioOfertaInput) {
+                        precioOfertaInput.value = precioFinal;
+                    }
 
                     if (prevRegular) {
                         prevRegular.style.display = "inline";
@@ -778,13 +797,15 @@ function ejecutarCopiaFormModal() {
                     }
                     if (prevBadge) {
                         prevBadge.style.display = "inline-block";
-                        prevBadge.textContent = "-" + pct + "% OFF";
+                        var badgePct = pct || (precio > 0 ? Math.round((ahorro / precio) * 100) : 0);
+                        prevBadge.textContent = "-" + badgePct + "% OFF";
                     }
                     if (prevAhorro) {
                         prevAhorro.style.display = "block";
                         prevAhorro.textContent = "El cliente ahorra " + formatoCLP(ahorro);
                     }
                 } else {
+                    if (precioOfertaInput) precioOfertaInput.value = "";
                     if (prevRegular) prevRegular.style.display = "none";
                     if (prevOferta) {
                         prevOferta.textContent = formatoCLP(precio);
@@ -799,6 +820,7 @@ function ejecutarCopiaFormModal() {
             function onPorcentajeInput() {
                 if (isSyncing) return;
                 isSyncing = true;
+                ultimoModificado = 'pct';
 
                 var precio = getPrecioBase();
                 var rawVal = porcentajeInput ? porcentajeInput.value : "";
@@ -829,6 +851,7 @@ function ejecutarCopiaFormModal() {
             function onMontoInput() {
                 if (isSyncing) return;
                 isSyncing = true;
+                ultimoModificado = 'monto';
 
                 var precio = getPrecioBase();
                 var monto = parseMonto(montoInput ? montoInput.value : "");
@@ -863,8 +886,18 @@ function ejecutarCopiaFormModal() {
                 if (isSyncing) return;
                 var precio = getPrecioBase();
                 var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
+                var monto = montoInput ? parseMonto(montoInput.value) : 0;
 
-                if (pct > 0 && precio > 0 && montoInput) {
+                if (ultimoModificado === 'monto' && monto > 0 && precio > 0) {
+                    isSyncing = true;
+                    if (monto >= precio) {
+                        monto = Math.max(1, precio - 1);
+                        montoInput.value = monto.toLocaleString('es-CL');
+                    }
+                    var newPct = Math.round((monto / precio) * 100);
+                    if (porcentajeInput) porcentajeInput.value = Math.min(99, Math.max(1, newPct));
+                    isSyncing = false;
+                } else if (pct > 0 && precio > 0 && montoInput) {
                     isSyncing = true;
                     var ahorro = Math.round((precio * pct) / 100);
                     montoInput.value = ahorro > 0 ? ahorro.toLocaleString('es-CL') : "";
@@ -907,12 +940,18 @@ function ejecutarCopiaFormModal() {
                 var pct = porcentajeInput ? (parseInt(porcentajeInput.value, 10) || 0) : 0;
                 var monto = parseMonto(montoInput ? montoInput.value : "");
 
-                if (pct > 0 && precio > 0 && monto === 0 && montoInput) {
-                    var ahorro = Math.round((precio * pct) / 100);
-                    montoInput.value = ahorro > 0 ? ahorro.toLocaleString('es-CL') : "";
-                } else if (monto > 0 && precio > 0 && pct === 0 && porcentajeInput) {
-                    var calcPct = Math.round((monto / precio) * 100);
-                    porcentajeInput.value = Math.min(99, Math.max(1, calcPct));
+                if (monto > 0) {
+                    ultimoModificado = 'monto';
+                    if (precio > 0 && pct === 0 && porcentajeInput) {
+                        var calcPct = Math.round((monto / precio) * 100);
+                        porcentajeInput.value = Math.min(99, Math.max(1, calcPct));
+                    }
+                } else if (pct > 0) {
+                    ultimoModificado = 'pct';
+                    if (precio > 0 && monto === 0 && montoInput) {
+                        var ahorro = Math.round((precio * pct) / 100);
+                        montoInput.value = ahorro > 0 ? ahorro.toLocaleString('es-CL') : "";
+                    }
                 }
 
                 actualizarPreview();
