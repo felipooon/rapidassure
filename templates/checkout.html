@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static l10n %}
 
 {% block title %}Finalizar Pedido — Rapidassure Retail{% endblock %}
 
@@ -363,7 +363,7 @@
                     <div style="display: flex; justify-content: space-between;">
                         <span id="label-resumen-despacho">{% if tipo_entrega_default == 'RETIRO' %}Recogida (Local):{% elif tipo_entrega_default == 'GRATIS_RM' %}Envío Gratis RM:{% elif tipo_entrega_default == 'PUNTO_BLUE' %}Punto Pick-up Blue Express:{% else %}Despacho Blue Express:{% endif %}</span>
                         <span id="valor-resumen-despacho" style="color: #002093; font-weight: 800;">
-                            {% if tipo_entrega_default == 'RETIRO' or tipo_entrega_default == 'GRATIS_RM' or costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}
+                            {% if tipo_entrega_default == 'RETIRO' or costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}
                         </span>
                     </div>
                 </div>
@@ -568,11 +568,11 @@
 
     // Maestro de Regiones y Comunas de Chile
     const REGIONES_DATA = {{ regiones_comunas_json|safe|default:'{}' }};
-    const UMBRAL_GRATIS = {{ umbral_envio_gratis|default:19990 }};
-    const subtotalBruto = {{ subtotal|default:0 }};
-    const descuentoNeto = {{ descuento|default:0 }};
+    const UMBRAL_GRATIS = {{ umbral_envio_gratis|unlocalize|default:19990 }};
+    const subtotalBruto = {{ subtotal|unlocalize|default:0 }};
+    const descuentoNeto = {{ descuento|unlocalize|default:0 }};
     const subtotalConDescuento = Math.max(0, subtotalBruto - descuentoNeto);
-    let costoEnvioActual = {{ costo_envio|default:0 }};
+    let costoEnvioActual = {{ costo_envio|unlocalize|default:0 }};
 
     function poblarComunas(regionNombre, comunaSeleccionada) {
         const comunaSelect = document.getElementById('comuna_select');
@@ -761,6 +761,10 @@
         }
 
         if (tipoActual === 'GRATIS_RM') {
+            if (!verificarCondicionGratisRM()) {
+                setTipoEntrega('ENVIO');
+                return;
+            }
             costoEnvioActual = 0;
             const badgeTarifa = document.getElementById('badge-tarifa-texto');
             const valorResumen = document.getElementById('valor-resumen-despacho');
@@ -820,6 +824,10 @@
     }
 
     function setTipoEntrega(tipo) {
+        if (tipo === 'GRATIS_RM' && !verificarCondicionGratisRM()) {
+            tipo = 'ENVIO';
+        }
+
         const input = document.getElementById('tipo_entrega_input');
         const btnGratis = document.getElementById('btn-entrega-gratis-rm');
         const btnEnvio = document.getElementById('btn-entrega-envio');

@@ -191,7 +191,7 @@ function ejecutarCopiaPedidoModal() {
                             Local Principal: San Diego 174 local 8, Santiago
                         </span>
                     </div>
-                {% elif pedido.tipo_entrega == 'GRATIS_RM' %}
+                {% elif pedido.tipo_entrega == 'GRATIS_RM' and pedido.costo_envio == 0 %}
                     <div style="background: #ecfdf5; border: 1px solid #a7f3d0; padding: 12px; border-radius: 10px; margin-bottom: 10px;">
                         <span style="color: #047857; font-weight: 800; font-size: 0.88rem; display: block; margin-bottom: 2px;">
                             <i class="fa-solid fa-circle-check"></i> Beneficio Envío Gratis RM
@@ -299,7 +299,7 @@ function ejecutarCopiaPedidoModal() {
             </div>
             {% endif %}
             <div style="color: #475569; font-size: 0.95rem;">
-                Despacho ({% if pedido.tipo_entrega == 'RETIRO' %}Retiro en Local{% elif pedido.tipo_entrega == 'GRATIS_RM' %}Envío Gratis RM{% else %}Blue Express{% endif %}): 
+                Despacho ({% if pedido.tipo_entrega == 'RETIRO' %}Retiro en Local{% elif pedido.tipo_entrega == 'GRATIS_RM' and pedido.costo_envio == 0 %}Envío Gratis RM{% else %}Blue Express{% endif %}): 
                 {% if pedido.costo_envio == 0 %}
                     <strong style="color: #10b981;">GRATIS</strong>
                 {% else %}

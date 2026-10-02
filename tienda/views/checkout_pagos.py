@@ -402,7 +402,10 @@ def procesar_pedido(request):
     region_previa = datos_previos.get('region') or 'Región Metropolitana de Santiago'
     
     permite_gratis_rm_inicial = (region_previa == "Región Metropolitana de Santiago" and subtotal_descuento >= UMBRAL_ENVIO_GRATIS)
-    tipo_entrega_default = datos_previos.get('tipo_entrega') or ('GRATIS_RM' if permite_gratis_rm_inicial else 'ENVIO')
+    tipo_solicitado = datos_previos.get('tipo_entrega')
+    if tipo_solicitado == 'GRATIS_RM' and not permite_gratis_rm_inicial:
+        tipo_solicitado = 'ENVIO'
+    tipo_entrega_default = tipo_solicitado or ('GRATIS_RM' if permite_gratis_rm_inicial else 'ENVIO')
     costo_envio_default = calcular_costo_envio(comuna_previa, subtotal_descuento, peso_carrito, tipo_entrega=tipo_entrega_default)
     total_final_default = subtotal_descuento + costo_envio_default
 
@@ -447,9 +450,14 @@ def procesar_pedido(request):
             comuna = "Santiago"
             region = "Región Metropolitana de Santiago"
         elif tipo_entrega == 'GRATIS_RM':
+            cumple_gratis_rm = (region == "Región Metropolitana de Santiago" and subtotal_descuento >= UMBRAL_ENVIO_GRATIS)
+            if not cumple_gratis_rm:
+                tipo_entrega = 'ENVIO'
+                costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega='ENVIO')
+            else:
+                costo_envio = 0
             if not direccion:
                 direccion = "Dirección no especificada"
-            costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega='GRATIS_RM')
         elif tipo_entrega == 'PUNTO_BLUE':
             costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega='PUNTO_BLUE')
             if not direccion and punto_entrega_nombre:
@@ -636,6 +644,8 @@ def api_cotizar_envio(request):
     talla_carrito = determinar_talla_peso(peso_carrito)
     region_comuna = obtener_region_de_comuna(comuna)
     permite_gratis_rm = (region_comuna == "Región Metropolitana de Santiago" and subtotal_descuento >= UMBRAL_ENVIO_GRATIS)
+    if tipo_entrega == 'GRATIS_RM' and not permite_gratis_rm:
+        tipo_entrega = 'ENVIO'
 
     costo_envio = calcular_costo_envio(comuna, subtotal_descuento, peso_carrito, tipo_entrega=tipo_entrega)
     total_final = subtotal_descuento + costo_envio

@@ -1100,6 +1100,7 @@ class BlueExpressIntegrationTests(TestCase):
         resp_invalido = self.client.get('/api/cotizar-envio/?comuna=Santiago&tipo_entrega=GRATIS_RM')
         self.assertEqual(resp_invalido.status_code, 200)
         self.assertFalse(resp_invalido.json()['permite_gratis_rm'])
+        self.assertEqual(resp_invalido.json()['tipo_entrega'], 'ENVIO')
 
         # Cargar carrito con $25.000 en sesión
         session = self.client.session
@@ -1236,6 +1237,67 @@ class BlueExpressIntegrationTests(TestCase):
         # Verificar actualización de estado a EN_PREPARACION
         p_retiro.refresh_from_db()
         self.assertEqual(p_retiro.estado, 'EN_PREPARACION')
+
+    def test_checkout_compra_menor_umbral_no_permite_gratis_rm(self):
+        """Verifica que compras menores a $19.990 no ofrezcan GRATIS_RM en checkout y que en el POST se normalice a ENVIO cobrando la tarifa."""
+        from unittest.mock import patch, MagicMock
+
+        # Crear producto de $50 y cargarlo en carrito
+        prod_50 = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Teclado Barato",
+            precio=50,
+            stock=10,
+            disponible=True
+        )
+        session = self.client.session
+        session['carrito'] = {
+            str(prod_50.id): {
+                'producto_id': prod_50.id,
+                'nombre': prod_50.nombre,
+                'precio': 50,
+                'cantidad': 1,
+                'precio_total': 50,
+                'peso': 0.4
+            }
+        }
+        session.save()
+
+        # 1. GET /checkout/ no debe permitir gratis RM ni formatear con puntos en JavaScript
+        resp_get = self.client.get('/checkout/')
+        self.assertEqual(resp_get.status_code, 200)
+        self.assertFalse(resp_get.context['permite_gratis_rm'])
+        self.assertEqual(resp_get.context['tipo_entrega_default'], 'ENVIO')
+        content = resp_get.content.decode('utf-8')
+        self.assertIn('const UMBRAL_GRATIS = 19990;', content)
+        self.assertNotIn('const UMBRAL_GRATIS = 19.990;', content)
+        self.assertIn('id="btn-entrega-gratis-rm"', content)
+        self.assertIn('display: none;', content)
+
+        # 2. POST /checkout/ forzando tipo_entrega='GRATIS_RM' debe normalizarse a 'ENVIO' y cobrar $3.100
+        mock_tx = MagicMock()
+        mock_tx.create.return_value = {'token': 'test_tok_123', 'url': 'https://webpay.test/pay'}
+
+        with patch('tienda.views.checkout_pagos.get_webpay_transaction', return_value=mock_tx):
+            post_data = {
+                'nombre_completo': 'Comprador Menor Umbral',
+                'rut': '12.345.678-5',
+                'email': 'menor@example.com',
+                'telefono': '911111111',
+                'tipo_entrega': 'GRATIS_RM',
+                'region': 'Región Metropolitana de Santiago',
+                'comuna': 'Santiago',
+                'direccion': 'Calle Falsa 123',
+                'terminos_aceptados': 'on'
+            }
+            resp_post = self.client.post('/checkout/', post_data)
+            self.assertEqual(resp_post.status_code, 200)
+
+        # Verificar que el pedido creado en la BD quedó con tipo_entrega='ENVIO' y costo_envio=3100
+        pedido = Pedido.objects.get(email='menor@example.com')
+        self.assertEqual(pedido.tipo_entrega, 'ENVIO')
+        self.assertEqual(pedido.costo_envio, 3100)
+        self.assertEqual(pedido.get_total_final(), 3150)
 
 
 class ContactoFormTests(TestCase):
