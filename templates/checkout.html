@@ -682,6 +682,7 @@
                     data.puntos.forEach((p, idx) => {
                         const opt = document.createElement('option');
                         opt.value = p.id;
+                        const esCopec = (p.tipo && p.tipo.toLowerCase().includes('copec')) || (p.nombre && p.nombre.toLowerCase().includes('copec'));
                         const prefijo = esCopec ? '[Copec]' : '[Agencia]';
                         const tag24 = p.es_24_7 ? ' [24/7]' : '';
                         opt.textContent = `${prefijo} ${p.nombre} - ${p.direccion_completa}${tag24}`;
