@@ -32,8 +32,9 @@ class ProductoAdmin(admin.ModelAdmin):
 # --- Configuración de Cupones ---
 @admin.register(Cupon)
 class CuponAdmin(admin.ModelAdmin):
-    list_display = ('codigo', 'descuento_porcentaje', 'descuento_monto', 'activo', 'usos_actuales', 'usos_maximos', 'fecha_expiracion')
+    list_display = ('codigo', 'descuento_porcentaje', 'descuento_monto', 'tope_descuento', 'monto_minimo_compra', 'excluir_ofertas', 'activo', 'usos_actuales', 'usos_maximos', 'fecha_expiracion')
     list_editable = ('activo',)
+    list_filter = ('activo', 'excluir_ofertas')
     search_fields = ('codigo',)
 
 # --- Configuración para agregar items directo en el pedido ---

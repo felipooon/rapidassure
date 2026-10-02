@@ -300,6 +300,12 @@ class Cupon(models.Model):
     codigo = models.CharField(max_length=50, unique=True, help_text="Código en mayúsculas (ej: RAPIDA10)")
     descuento_porcentaje = models.IntegerField(default=0, help_text="Porcentaje de descuento (0-100)")
     descuento_monto = models.IntegerField(default=0, help_text="Monto fijo de descuento en CLP")
+
+    # Restricciones y Condiciones
+    tope_descuento = models.PositiveIntegerField(null=True, blank=True, verbose_name="Tope de Descuento ($ CLP)", help_text="Monto máximo de descuento permitido en CLP. Dejar en blanco para sin tope.")
+    monto_minimo_compra = models.PositiveIntegerField(default=0, verbose_name="Monto Mínimo de Compra ($ CLP)", help_text="Monto mínimo de compra en CLP para que aplique el cupón. 0 para sin mínimo.")
+    excluir_ofertas = models.BooleanField(default=False, verbose_name="Excluir productos en oferta", help_text="No aplicar descuento sobre productos que ya tienen rebaja u oferta promocional.")
+
     activo = models.BooleanField(default=True)
     usos_maximos = models.PositiveIntegerField(null=True, blank=True, help_text="Dejar en blanco para ilimitado")
     usos_actuales = models.PositiveIntegerField(default=0)
@@ -308,7 +314,7 @@ class Cupon(models.Model):
     def __str__(self):
         return self.codigo
 
-    def es_valido(self):
+    def es_valido(self, total=None, total_elegible=None):
         if not self.activo:
             return False, "El cupón no está activo."
         if self.usos_maximos and self.usos_actuales >= self.usos_maximos:
@@ -317,14 +323,36 @@ class Cupon(models.Model):
             from django.utils import timezone
             if timezone.now() > self.fecha_expiracion:
                 return False, "El cupón ha expirado."
+        if self.monto_minimo_compra > 0 and total is not None:
+            if total < self.monto_minimo_compra:
+                minimo_fmt = f"${self.monto_minimo_compra:,}".replace(',', '.')
+                return False, f"El cupón requiere una compra mínima de {minimo_fmt} CLP."
+        if self.excluir_ofertas and total_elegible is not None:
+            if total_elegible <= 0:
+                return False, "Este cupón no es acumulable con productos que ya están en oferta."
         return True, "Cupón válido."
 
-    def calcular_descuento(self, total):
+    def calcular_descuento(self, total, total_elegible=None):
+        # Si se excluyen ofertas y se especifica el total elegible de productos a precio regular
+        if self.excluir_ofertas and total_elegible is not None:
+            monto_base = total_elegible
+        else:
+            monto_base = total
+
+        if monto_base <= 0:
+            return 0
+
+        descuento = 0
         if self.descuento_porcentaje > 0:
-            return int(total * (self.descuento_porcentaje / 100.0))
+            descuento = int(monto_base * (self.descuento_porcentaje / 100.0))
         elif self.descuento_monto > 0:
-            return min(total, self.descuento_monto)
-        return 0
+            descuento = min(monto_base, self.descuento_monto)
+
+        # Aplicar tope de descuento si está configurado
+        if self.tope_descuento and self.tope_descuento > 0:
+            descuento = min(descuento, self.tope_descuento)
+
+        return max(0, descuento)
 
     class Meta:
         verbose_name = 'Cupón'

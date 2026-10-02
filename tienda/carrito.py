@@ -114,6 +114,24 @@ class Carrito:
         """
         return sum(int(item['precio']) * item['cantidad'] for item in self.carrito.values())
 
+    def get_total_sin_oferta(self):
+        """
+        Calcula el subtotal sumando únicamente los productos que NO están en oferta.
+        """
+        return sum(int(item['precio']) * item['cantidad'] for item in self.carrito.values() if not item.get('en_oferta'))
+
+    def tiene_productos_en_oferta(self):
+        """
+        Retorna True si al menos un producto en el carrito está en oferta.
+        """
+        return any(item.get('en_oferta') for item in self.carrito.values())
+
+    def solo_productos_en_oferta(self):
+        """
+        Retorna True si todos los productos en el carrito están en oferta.
+        """
+        return bool(self.carrito) and all(item.get('en_oferta') for item in self.carrito.values())
+
     def get_total_items(self):
         """
         Calcula el número total de unidades acumuladas en el carrito.

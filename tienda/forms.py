@@ -170,9 +170,35 @@ from .models import Cupon
 class CuponForm(forms.ModelForm):
     class Meta:
         model = Cupon
-        fields = ["codigo", "descuento_porcentaje", "descuento_monto", "activo", "usos_maximos", "fecha_expiracion"]
+        fields = [
+            "codigo",
+            "descuento_porcentaje",
+            "descuento_monto",
+            "tope_descuento",
+            "monto_minimo_compra",
+            "excluir_ofertas",
+            "activo",
+            "usos_maximos",
+            "fecha_expiracion"
+        ]
         widgets = {
             'fecha_expiracion': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'tope_descuento': forms.NumberInput(attrs={'min': '0', 'placeholder': 'Ej: 15000 (Opcional)'}),
+            'monto_minimo_compra': forms.NumberInput(attrs={'min': '0', 'placeholder': 'Ej: 30000 (Opcional)'}),
+            'descuento_porcentaje': forms.NumberInput(attrs={'min': '0', 'max': '100', 'placeholder': 'Ej: 15'}),
+            'descuento_monto': forms.NumberInput(attrs={'min': '0', 'placeholder': 'Ej: 5000'}),
+            'usos_maximos': forms.NumberInput(attrs={'min': '1', 'placeholder': 'Ej: 100 (Opcional)'}),
+        }
+        labels = {
+            'codigo': 'Código del Cupón',
+            'descuento_porcentaje': '% Descuento',
+            'descuento_monto': 'Monto Fijo ($ CLP)',
+            'tope_descuento': 'Tope Máximo de Descuento ($ CLP)',
+            'monto_minimo_compra': 'Compra Mínima Requerida ($ CLP)',
+            'excluir_ofertas': 'No acumular con productos ya en oferta',
+            'usos_maximos': 'Usos Máximos Permitidos',
+            'fecha_expiracion': 'Fecha y Hora de Expiración',
+            'activo': 'Cupón Activo',
         }
 
     def clean_codigo(self):
@@ -180,6 +206,27 @@ class CuponForm(forms.ModelForm):
         if not codigo:
             raise forms.ValidationError("Ingresa un código de cupón válido.")
         return codigo
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pct = cleaned_data.get('descuento_porcentaje') or 0
+        monto = cleaned_data.get('descuento_monto') or 0
+        tope = cleaned_data.get('tope_descuento')
+        minimo = cleaned_data.get('monto_minimo_compra')
+
+        if pct <= 0 and monto <= 0:
+            raise forms.ValidationError("Debes ingresar al menos un porcentaje de descuento (% OFF) o un monto fijo en CLP.")
+
+        if pct > 100:
+            self.add_error('descuento_porcentaje', "El porcentaje de descuento no puede ser mayor al 100%.")
+
+        if tope is not None and tope < 0:
+            self.add_error('tope_descuento', "El tope de descuento no puede ser un número negativo.")
+
+        if minimo is not None and minimo < 0:
+            self.add_error('monto_minimo_compra', "El monto mínimo de compra no puede ser un número negativo.")
+
+        return cleaned_data
 
 
 from .models import BlogPost, ResenaProducto, ConfiguracionSitio, BannerPromocional

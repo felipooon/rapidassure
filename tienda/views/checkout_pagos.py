@@ -179,15 +179,20 @@ def validar_rut_chileno(rut):
     return dv_ingresado == dv_esperado
 
 
-def obtener_descuento_cupon(request, total_carrito):
+def obtener_descuento_cupon(request, total_carrito=None, carrito=None):
     codigo = request.session.get('cupon_codigo')
     if not codigo:
         return None, 0
     try:
         cupon = Cupon.objects.get(codigo__iexact=codigo)
-        valido, _ = cupon.es_valido()
+        if carrito is None:
+            carrito = Carrito(request)
+        total_bruto = total_carrito if total_carrito is not None else carrito.get_total()
+        total_elegible = carrito.get_total_sin_oferta() if cupon.excluir_ofertas else total_bruto
+
+        valido, _ = cupon.es_valido(total=total_bruto, total_elegible=total_elegible)
         if valido:
-            descuento = cupon.calcular_descuento(total_carrito)
+            descuento = cupon.calcular_descuento(total_bruto, total_elegible=total_elegible)
             return cupon, descuento
     except Cupon.DoesNotExist:
         pass
@@ -203,12 +208,19 @@ def aplicar_cupon(request):
         
         try:
             cupon = Cupon.objects.get(codigo__iexact=codigo)
-            valido, msg = cupon.es_valido()
+            carrito = Carrito(request)
+            total_bruto = carrito.get_total()
+            total_elegible = carrito.get_total_sin_oferta() if cupon.excluir_ofertas else total_bruto
+
+            valido, msg = cupon.es_valido(total=total_bruto, total_elegible=total_elegible)
             if not valido:
                 messages.error(request, msg)
             else:
                 request.session['cupon_codigo'] = cupon.codigo
-                messages.success(request, f"¡Cupón '{cupon.codigo}' aplicado exitosamente!")
+                if cupon.excluir_ofertas and carrito.tiene_productos_en_oferta():
+                    messages.success(request, f"¡Cupón '{cupon.codigo}' aplicado! (Nota: no aplica sobre productos que ya tienen oferta).")
+                else:
+                    messages.success(request, f"¡Cupón '{cupon.codigo}' aplicado exitosamente!")
         except Cupon.DoesNotExist:
             messages.error(request, "El código de cupón ingresado no existe.")
             
@@ -391,7 +403,7 @@ def procesar_pedido(request):
             return redirect('ver_carrito')
 
     total_bruto = carrito.get_total()
-    cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto)
+    cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto, carrito=carrito)
     subtotal_descuento = max(0, total_bruto - descuento_aplicado)
     
     peso_carrito = obtener_peso_total_carrito(carrito)
@@ -637,7 +649,7 @@ def api_cotizar_envio(request):
     tipo_entrega = tipo_entrega.strip()
 
     total_bruto = carrito.get_total()
-    cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto)
+    cupon_obj, descuento_aplicado = obtener_descuento_cupon(request, total_bruto, carrito=carrito)
     subtotal_descuento = max(0, total_bruto - descuento_aplicado)
 
     peso_carrito = obtener_peso_total_carrito(carrito)

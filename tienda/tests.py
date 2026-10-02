@@ -378,6 +378,98 @@ class CuponModelTests(TestCase):
         self.assertTrue(valido)
         self.assertEqual(cupon.calcular_descuento(10000), 1000)
 
+    def test_cupon_tope_descuento(self):
+        """Un cupón con tope_descuento no debe sobrepasar el monto máximo configurado."""
+        from tienda.models import Cupon
+        cupon = Cupon.objects.create(
+            codigo="SUPER20",
+            descuento_porcentaje=20,
+            tope_descuento=12000,
+            activo=True
+        )
+        # 20% de 100.000 es 20.000, pero el tope es 12.000
+        descuento = cupon.calcular_descuento(100000)
+        self.assertEqual(descuento, 12000)
+
+        # 20% de 40.000 es 8.000 (menor al tope de 12.000, se mantiene)
+        descuento_menor = cupon.calcular_descuento(40000)
+        self.assertEqual(descuento_menor, 8000)
+
+    def test_cupon_monto_minimo_compra(self):
+        """Un cupón con monto_minimo_compra solo es válido si el carrito alcanza el monto mínimo."""
+        from tienda.models import Cupon
+        cupon = Cupon.objects.create(
+            codigo="MINIMO30",
+            descuento_monto=5000,
+            monto_minimo_compra=30000,
+            activo=True
+        )
+        # Si el carrito tiene 25.000, no alcanza el mínimo de 30.000
+        valido_bajo, msg_bajo = cupon.es_valido(total=25000)
+        self.assertFalse(valido_bajo)
+        self.assertIn("compra mínima", msg_bajo)
+
+        # Si el carrito tiene 35.000, es válido
+        valido_ok, msg_ok = cupon.es_valido(total=35000)
+        self.assertTrue(valido_ok)
+        self.assertEqual(cupon.calcular_descuento(35000), 5000)
+
+    def test_cupon_excluir_productos_en_oferta(self):
+        """Un cupón que excluye ofertas no debe aplicar descuento sobre productos que ya tienen oferta."""
+        from tienda.models import Cupon, Categoria, Producto
+        from tienda.carrito import Carrito
+        from django.test import RequestFactory
+        from django.contrib.sessions.middleware import SessionMiddleware
+
+        cat = Categoria.objects.create(nombre="Hardware")
+        # Producto 1: Regular ($50.000)
+        p_normal = Producto.objects.create(
+            categoria=cat, nombre="Lector Normal", precio=50000, stock=5, disponible=True, en_oferta=False
+        )
+        # Producto 2: En oferta ($70.000 rebajado a $40.000)
+        p_oferta = Producto.objects.create(
+            categoria=cat, nombre="POS Oferta", precio=70000, precio_oferta=40000, stock=5, disponible=True, en_oferta=True, porcentaje_descuento=43
+        )
+
+        cupon = Cupon.objects.create(
+            codigo="SINOFERTAS10",
+            descuento_porcentaje=10,
+            excluir_ofertas=True,
+            activo=True
+        )
+
+        # Caso 1: Carrito solo con producto en oferta -> cupón no aplicable
+        factory = RequestFactory()
+        req1 = factory.get('/')
+        middleware = SessionMiddleware(lambda r: None)
+        middleware.process_request(req1)
+        req1.session.save()
+
+        c1 = Carrito(req1)
+        c1.agregar(p_oferta, cantidad=1)
+        total_elegible1 = c1.get_total_sin_oferta()
+        self.assertEqual(total_elegible1, 0)
+        valido1, msg1 = cupon.es_valido(total=c1.get_total(), total_elegible=total_elegible1)
+        self.assertFalse(valido1)
+        self.assertIn("no es acumulable", msg1)
+
+        # Caso 2: Carrito mixto ($50.000 normal + $40.000 oferta = $90.000 total)
+        req2 = factory.get('/')
+        middleware.process_request(req2)
+        req2.session.save()
+
+        c2 = Carrito(req2)
+        c2.agregar(p_normal, cantidad=1)
+        c2.agregar(p_oferta, cantidad=1)
+        self.assertEqual(c2.get_total(), 90000)
+        self.assertEqual(c2.get_total_sin_oferta(), 50000)
+
+        valido2, _ = cupon.es_valido(total=c2.get_total(), total_elegible=c2.get_total_sin_oferta())
+        self.assertTrue(valido2)
+        # El 10% solo se calcula sobre los $50.000 de productos regulares = $5.000 (y NO sobre los $90.000 = $9.000)
+        descuento2 = cupon.calcular_descuento(c2.get_total(), total_elegible=c2.get_total_sin_oferta())
+        self.assertEqual(descuento2, 5000)
+
 class ApiBusquedaTests(TestCase):
     def test_api_buscar_productos(self):
         """La API de búsqueda debe retornar coincidencias en formato JSON."""

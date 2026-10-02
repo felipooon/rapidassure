@@ -27,11 +27,57 @@
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #444;">% Descuento</label>
                 {{ form.descuento_porcentaje }}
+                {% if form.descuento_porcentaje.errors %}
+                    <small style="color: #e74c3c;">{{ form.descuento_porcentaje.errors.0 }}</small>
+                {% endif %}
             </div>
             <div>
-                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #444;">Monto Fijo (CLP)</label>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #444;">Monto Fijo ($ CLP)</label>
                 {{ form.descuento_monto }}
+                {% if form.descuento_monto.errors %}
+                    <small style="color: #e74c3c;">{{ form.descuento_monto.errors.0 }}</small>
+                {% endif %}
             </div>
+        </div>
+
+        <!-- RESTRICCIONES Y CONDICIONES DEL CUPÓN -->
+        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 18px; margin-bottom: 22px;">
+            <h4 style="margin: 0 0 14px 0; font-size: 0.95rem; font-weight: 800; color: #002093; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-sliders"></i> Restricciones y Condiciones
+            </h4>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #334155; font-size: 0.9rem;">
+                        Tope Máximo Descuento ($ CLP)
+                    </label>
+                    {{ form.tope_descuento }}
+                    <small style="color: #64748b; display: block; margin-top: 4px; font-size: 0.78rem;">Límite máx. de ahorro. Dejar vacío para sin tope.</small>
+                    {% if form.tope_descuento.errors %}
+                        <small style="color: #e74c3c;">{{ form.tope_descuento.errors.0 }}</small>
+                    {% endif %}
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #334155; font-size: 0.9rem;">
+                        Compra Mínima ($ CLP)
+                    </label>
+                    {{ form.monto_minimo_compra }}
+                    <small style="color: #64748b; display: block; margin-top: 4px; font-size: 0.78rem;">Aplica desde este precio en adelante (0 = sin mín).</small>
+                    {% if form.monto_minimo_compra.errors %}
+                        <small style="color: #e74c3c;">{{ form.monto_minimo_compra.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; display: flex; align-items: center; gap: 10px;">
+                {{ form.excluir_ofertas }}
+                <label for="id_excluir_ofertas" style="font-weight: 700; color: #1e293b; font-size: 0.88rem; cursor: pointer; user-select: none;">
+                    No acumular con productos ya en oferta
+                </label>
+            </div>
+            <small style="color: #64748b; display: block; margin-top: 6px; font-size: 0.78rem; margin-left: 2px;">
+                <i class="fa-solid fa-circle-info" style="color: #002093;"></i> Si está activo, el cupón no aplicará sobre productos que ya tienen precio promocional o rebaja.
+            </small>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
