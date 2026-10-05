@@ -65,7 +65,7 @@
         </p>
         
         <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-            <button type="button" onclick="abrirModalResenaPedido('{{ pedido.get_enlace_resena }}', '{{ pedido.nombre_completo|escapejs }}', '{{ pedido.telefono }}')" style="background: #002093; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;">
+            <button type="button" onclick="abrirModalResenaPedido('{{ pedido.get_enlace_resena }}', '{{ pedido.nombre_completo|escapejs }}', '{{ pedido.telefono_wa }}')" style="background: #002093; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;">
                 <i class="fa-solid fa-copy"></i> Copiar Link de Reseña
             </button>
             <a href="{% url 'enviar_resena_email' pedido.id %}" style="background: #3b82f6; color: white; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem;">
@@ -162,8 +162,8 @@ function ejecutarCopiaPedidoModal() {
                 <p style="margin: 5px 0;"><strong>RUT Personal:</strong> {{ pedido.rut }}</p>
                 <p style="margin: 5px 0;"><strong>Correo Electrónico:</strong> <a href="mailto:{{ pedido.email }}" style="color: #002093;">{{ pedido.email }}</a></p>
                 <p style="margin: 5px 0; display: flex; align-items: center; gap: 10px;">
-                    <strong>Teléfono:</strong> +56{{ pedido.telefono }}
-                    <a href="https://wa.me/56{{ pedido.telefono }}" target="_blank" style="text-decoration: none; background-color: #25D366; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                    <strong>Teléfono:</strong> {{ pedido.telefono_display }}
+                    <a href="https://wa.me/{{ pedido.telefono_wa }}" target="_blank" style="text-decoration: none; background-color: #25D366; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
                         <i class="fab fa-whatsapp"></i> WhatsApp
                     </a>
                 </p>
