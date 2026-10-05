@@ -104,7 +104,7 @@
                         </div>
                         <div class="cart-text-info">
                             <span style="font-size: 0.75rem; color: #64748b; display: block;">Tu carrito:</span>
-                            <strong class="cart-header-total" style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total|default:0 }}</strong>
+                            <strong class="cart-header-total" style="font-size: 0.95rem; color: #3230C2;">${{ carrito.get_total_formateado|default:"0" }}</strong>
                         </div>
                     </div>
                 </div>
@@ -668,7 +668,7 @@
         </div>
         <div class="floating-cart-info">
             <span class="floating-cart-tag">Tu carrito:</span>
-            <strong class="floating-cart-price">${{ carrito.get_total|default:0 }}</strong>
+            <strong class="floating-cart-price">${{ carrito.get_total_formateado|default:"0" }}</strong>
         </div>
     </div>
 
@@ -840,7 +840,9 @@
             }
 
             const totalItems = data.total_items !== undefined ? data.total_items : 0;
-            const totalMonto = data.total_raw !== undefined ? data.total_raw : (data.total_precio || 0);
+            const totalMonto = (data.total_precio !== undefined && data.total_precio !== null && data.total_precio !== '')
+                ? data.total_precio
+                : (data.total_raw !== undefined ? Number(data.total_raw).toLocaleString('es-CL') : '0');
 
             // 2. Actualizar contadores del carrito
             document.querySelectorAll('.cart-bubble-count, .floating-cart-bubble').forEach(function (el) {

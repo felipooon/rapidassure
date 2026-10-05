@@ -61,14 +61,14 @@
               </h3>
               <div style="margin: 0 0 16px 0;">
                 {% if item.en_oferta %}
-                  <span style="font-size: 0.85rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ item.precio_original }}</span>
+                  <span style="font-size: 0.85rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ item.precio_original|formato_miles }}</span>
                   <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-weight: 800; color: #b45309; font-size: 1.15rem;">${{ item.precio }}</span>
+                    <span style="font-weight: 800; color: #b45309; font-size: 1.15rem;">${{ item.precio|formato_miles }}</span>
                     <span style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 0.7rem; font-weight: 800; padding: 1px 6px; border-radius: 8px;">-{{ item.porcentaje_descuento }}%</span>
                   </div>
                 {% else %}
                   <p style="font-weight: 800; color: #3230C2; font-size: 1.15rem; margin: 0;">
-                    ${{ item.precio }}
+                    ${{ item.precio|formato_miles }}
                   </p>
                 {% endif %}
               </div>

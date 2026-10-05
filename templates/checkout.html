@@ -313,9 +313,9 @@
                     {% for item in carrito %}
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed #e2e8f0;">
                             <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 44px; height: 44px; background: #f8fafc; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0;">
+                                <div style="width: 44px; height: 44px; background: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #e2e8f0; flex-shrink: 0;">
                                     {% if item.producto_real.imagen %}
-                                        <img src="{{ item.producto_real.get_imagen_url_300 }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <img src="{{ item.producto_real.get_imagen_url_300 }}" alt="{{ item.nombre }}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; box-sizing: border-box;">
                                     {% else %}
                                         <i class="fa-solid fa-box" style="color: #cbd5e1;"></i>
                                     {% endif %}
@@ -326,7 +326,7 @@
                                 </div>
                             </div>
                             <span style="font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #002093;">
-                                ${{ item.precio_total }}
+                                ${{ item.precio_total_formateado }}
                             </span>
                         </div>
                     {% endfor %}
@@ -336,7 +336,7 @@
                 <div style="margin-bottom: 20px; background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0;">
                     {% if cupon %}
                         <div style="display: flex; justify-content: space-between; align-items: center; background: #e8f8f5; color: #116b47; padding: 10px 14px; border-radius: 10px; font-weight: 700; font-size: 0.88rem; border: 1px solid #a3e4d7;">
-                            <span><i class="fa-solid fa-ticket" style="margin-right: 4px;"></i> Cupón <strong>{{ cupon.codigo }}</strong> (-${{ descuento }})</span>
+                            <span><i class="fa-solid fa-ticket" style="margin-right: 4px;"></i> Cupón <strong>{{ cupon.codigo }}</strong> (-${{ descuento|formato_miles }})</span>
                             <a href="{% url 'quitar_cupon' %}" style="color: #ef4444; text-decoration: none; font-size: 0.82rem; font-weight: 800;">Quitar</a>
                         </div>
                     {% else %}
@@ -352,18 +352,18 @@
                 <div style="display: flex; flex-direction: column; gap: 8px; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; color: #475569; margin-bottom: 18px;">
                     <div style="display: flex; justify-content: space-between;">
                         <span>Subtotal Productos:</span>
-                        <strong style="color: #000E1F;">${{ carrito.get_total }}</strong>
+                        <strong style="color: #000E1F;">${{ carrito.get_total_formateado }}</strong>
                     </div>
                     {% if descuento > 0 %}
                         <div style="display: flex; justify-content: space-between; color: #10b981; font-weight: 700;">
                             <span>Descuento Aplicado:</span>
-                            <span>-${{ descuento }}</span>
+                            <span>-${{ descuento|formato_miles }}</span>
                         </div>
                     {% endif %}
                     <div style="display: flex; justify-content: space-between;">
                         <span id="label-resumen-despacho">{% if tipo_entrega_default == 'RETIRO' %}Recogida (Local):{% elif tipo_entrega_default == 'GRATIS_RM' %}Envío Gratis RM:{% elif tipo_entrega_default == 'PUNTO_BLUE' %}Punto Pick-up Blue Express:{% else %}Despacho Blue Express:{% endif %}</span>
                         <span id="valor-resumen-despacho" style="color: #002093; font-weight: 800;">
-                            {% if tipo_entrega_default == 'RETIRO' or costo_envio == 0 %}GRATIS{% else %}${{ costo_envio }}{% endif %}
+                            {% if tipo_entrega_default == 'RETIRO' or costo_envio == 0 %}GRATIS{% else %}${{ costo_envio|formato_miles }}{% endif %}
                         </span>
                     </div>
                 </div>
@@ -371,7 +371,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: baseline; background: #000E1F; color: white; padding: 16px 18px; border-radius: 14px;">
                     <span style="font-family: 'Montserrat', sans-serif; font-size: 1rem; font-weight: 800;">Total Final:</span>
                     <span id="display-total-final" style="font-family: 'Montserrat', sans-serif; font-size: 1.5rem; font-weight: 800; color: #FCBE00;">
-                        ${{ total_final }}
+                        ${{ total_final|formato_miles }}
                     </span>
                 </div>
 

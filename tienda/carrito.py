@@ -114,6 +114,16 @@ class Carrito:
         """
         return sum(int(item['precio']) * item['cantidad'] for item in self.carrito.values())
 
+    def get_total_formateado(self):
+        """
+        Calcula el precio total formateado con separador de miles chileno (ej: 5.841).
+        """
+        return f"{self.get_total():,}".replace(',', '.')
+
+    @property
+    def total_formateado(self):
+        return self.get_total_formateado()
+
     def get_total_sin_oferta(self):
         """
         Calcula el subtotal sumando únicamente los productos que NO están en oferta.
@@ -146,6 +156,12 @@ class Carrito:
         if total >= meta:
             return 0
         return meta - total
+
+    def get_falta_envio_gratis_formateado(self, meta=19990):
+        """
+        Devuelve el monto restante para alcanzar el envío gratuito con separador de miles.
+        """
+        return f"{self.get_falta_envio_gratis(meta):,}".replace(',', '.')
 
     def get_porcentaje_envio_gratis(self, meta=19990):
         """
@@ -184,4 +200,5 @@ class Carrito:
 
         for item in carrito_copia.values():
             item['precio_total'] = int(item['precio']) * item['cantidad']
+            item['precio_total_formateado'] = f"{item['precio_total']:,}".replace(',', '.')
             yield item

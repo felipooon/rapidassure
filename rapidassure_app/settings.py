@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
+    'django.contrib.humanize',
     'tienda',
     *(['cloudinary'] if USE_CLOUDINARY else []),
     'corsheaders',
@@ -110,6 +111,10 @@ TEMPLATES = [
                 'tienda.context_processors.configuracion_sitio',
                 'tienda.context_processors.categorias_global',
                 'tienda.context_processors.banners_global',
+            ],
+            'builtins': [
+                'django.contrib.humanize.templatetags.humanize',
+                'tienda.templatetags.imagen_tags',
             ],
         },
     },

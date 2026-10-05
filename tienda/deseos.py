@@ -79,4 +79,14 @@ class Deseos:
                 deseos_copia[key]['producto_real'] = producto
 
         for item in deseos_copia.values():
+            try:
+                item['precio_formateado'] = f"{int(item['precio']):,}".replace(',', '.')
+            except (ValueError, TypeError):
+                item['precio_formateado'] = str(item.get('precio', ''))
+
+            try:
+                item['precio_original_formateado'] = f"{int(item['precio_original']):,}".replace(',', '.')
+            except (ValueError, TypeError):
+                item['precio_original_formateado'] = str(item.get('precio_original', ''))
+
             yield item

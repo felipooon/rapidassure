@@ -284,6 +284,23 @@ class CarritoTests(TestCase):
         
         self.assertEqual(carrito.get_total(), 206000)
 
+    def test_formato_separador_miles_carrito(self):
+        """El total del carrito y falta para envío deben mostrar separador de miles con punto."""
+        request = self._get_request_con_sesion()
+        carrito = Carrito(request)
+        producto_barato = Producto.objects.create(
+            categoria=self.categoria, nombre="Adaptador", precio=5841, stock=10, disponible=True
+        )
+        carrito.agregar(producto_barato, 1)
+
+        self.assertEqual(carrito.get_total(), 5841)
+        self.assertEqual(carrito.get_total_formateado(), "5.841")
+        self.assertEqual(carrito.total_formateado, "5.841")
+        self.assertEqual(carrito.get_falta_envio_gratis_formateado(19990), "14.149")
+
+        items = list(iter(carrito))
+        self.assertEqual(items[0]['precio_total_formateado'], "5.841")
+
     def test_iter_no_contamina_sesion_json(self):
         """La iteración del carrito no debe inyectar objetos Producto en la sesión original."""
         request = self._get_request_con_sesion()
@@ -555,6 +572,32 @@ class DeseosTests(TestCase):
 
         self.assertEqual(len(deseos), 0)
         self.assertEqual(len(carrito), 1)
+
+    def test_deseos_precios_formateados(self):
+        """Verifica que los items en deseos tengan formato con punto de miles."""
+        from .deseos import Deseos
+        request = self.factory.get('/')
+        middleware = SessionMiddleware(lambda r: None)
+        middleware.process_request(request)
+        request.session.save()
+
+        deseos = Deseos(request)
+        prod_oferta = Producto.objects.create(
+            categoria=self.categoria,
+            nombre="Control Pro",
+            precio=69990,
+            precio_oferta=39990,
+            en_oferta=True,
+            porcentaje_descuento=43,
+            stock=5,
+            disponible=True
+        )
+        deseos.toggle(prod_oferta)
+
+        items = list(iter(deseos))
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0]['precio_formateado'], "39.990")
+        self.assertEqual(items[0]['precio_original_formateado'], "69.990")
 
     def test_deseos_context_processor_ids(self):
         """Verifica que deseos_global proporcione la lista de IDs para el estado de los corazones."""
