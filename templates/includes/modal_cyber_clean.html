@@ -1,0 +1,486 @@
+{% load static %}
+<!-- ==============================================================
+     MODAL CYBERDAYS & LANZAMIENTO - VERSIÓN CLEAN & MINIMALISTA
+     Estética Corporativa Rapidassure Retail (Diseño Limpio)
+============================================================== -->
+<div id="modal-cyber-clean" class="cyberclean-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="cyberclean-title">
+  <!-- Backdrop con desenfoque suave -->
+  <div class="cyberclean-backdrop" onclick="cerrarModalCyberClean()"></div>
+
+  <!-- Contenedor del Modal -->
+  <div class="cyberclean-card" role="document">
+    
+    <!-- Botón de Cierre minimalista -->
+    <button type="button" class="cyberclean-close" onclick="cerrarModalCyberClean()" aria-label="Cerrar modal" title="Cerrar">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="cyberclean-body">
+      
+      <!-- Top Bar: Logo y Badge sutil -->
+      <div class="cyberclean-topbar">
+        <img src="{% static 'img/Logo_Horizontal_white.png' %}" alt="Rapidassure" class="cyberclean-logo">
+        <div class="cyberclean-badge">
+          <span class="cyberclean-dot"></span>
+          <span>CYBERDAYS 2026</span>
+        </div>
+      </div>
+
+      <!-- Encabezado / Hero -->
+      <div class="cyberclean-header">
+        <span class="cyberclean-eyebrow">LANZAMIENTO OFICIAL TIENDA WEB</span>
+        <h2 id="cyberclean-title" class="cyberclean-title">
+          Celebramos con hasta <span class="cyberclean-highlight">40% OFF</span>
+        </h2>
+        <p class="cyberclean-desc">
+          Aprovecha ofertas exclusivas de apertura en tecnología y seguridad, con garantía directa Rapidassure y despacho a todo Chile.
+        </p>
+      </div>
+
+      <!-- Cuadrícula limpia de Beneficios (Estilo Monocromático Elegante) -->
+      <div class="cyberclean-grid">
+        
+        <div class="cyberclean-item">
+          <div class="cyberclean-item-icon">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="cyberclean-item-content">
+            <span class="cyberclean-item-title">Hasta 40% OFF</span>
+            <span class="cyberclean-item-sub">En marcas y catálogo seleccionado</span>
+          </div>
+        </div>
+
+        <div class="cyberclean-item">
+          <div class="cyberclean-item-icon">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <div class="cyberclean-item-content">
+            <span class="cyberclean-item-title">Envío Gratis RM</span>
+            <span class="cyberclean-item-sub">Por compras desde solo $19.990</span>
+          </div>
+        </div>
+
+        <div class="cyberclean-item">
+          <div class="cyberclean-item-icon">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div class="cyberclean-item-content">
+            <span class="cyberclean-item-title">Puntos Pick-Up</span>
+            <span class="cyberclean-item-sub">Retiro Blue Express o San Diego</span>
+          </div>
+        </div>
+
+        <div class="cyberclean-item">
+          <div class="cyberclean-item-icon">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+          <div class="cyberclean-item-content">
+            <span class="cyberclean-item-title">Boleta o Factura</span>
+            <span class="cyberclean-item-sub">Inmediata para personas y empresas</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Barra sutil de Pago Seguro -->
+      <div class="cyberclean-trustbar">
+        <div class="cyberclean-trust-left">
+          <i class="fa-solid fa-shield-check"></i>
+          <span>Pago seguro vía</span>
+        </div>
+        <img src="{% static 'img/logo_webpay_transbank.png' %}" alt="Webpay Transbank" class="cyberclean-webpay-img">
+        <div class="cyberclean-trust-cards">
+          <i class="fa-brands fa-cc-visa" title="Visa"></i>
+          <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+          <i class="fa-solid fa-credit-card" title="Redcompra / Débito"></i>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="cyberclean-actions">
+        <a href="#promociones" class="cyberclean-btn-cta" onclick="irAOfertasCyberClean(event)">
+          <span>Ver Ofertas de Lanzamiento</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <button type="button" class="cyberclean-btn-skip" onclick="cerrarModalCyberClean()">
+          Continuar navegando en el sitio
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ==============================================================
+     ESTILOS MODAL CLEAN & MINIMALISTA
+  ============================================================== */
+  .cyberclean-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cyberclean-overlay.activo {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cyberclean-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 8, 20, 0.76);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .cyberclean-card {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+    background: #000E1F;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    box-shadow: 
+      0 24px 60px -12px rgba(0, 0, 0, 0.8),
+      0 0 0 1px rgba(252, 190, 0, 0.15);
+    overflow: hidden;
+    transform: scale(0.94) translateY(16px);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+    box-sizing: border-box;
+  }
+
+  .cyberclean-overlay.activo .cyberclean-card {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Botón Cerrar Minimalista */
+  .cyberclean-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 5;
+  }
+
+  .cyberclean-close:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    transform: scale(1.05);
+  }
+
+  .cyberclean-body {
+    padding: 28px 28px 24px 28px;
+    box-sizing: border-box;
+  }
+
+  /* Top Bar */
+  .cyberclean-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-right: 36px;
+  }
+
+  .cyberclean-logo {
+    height: 24px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .cyberclean-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(252, 190, 0, 0.08);
+    border: 1px solid rgba(252, 190, 0, 0.25);
+    color: #FCBE00;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.68rem;
+    letter-spacing: 0.8px;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .cyberclean-dot {
+    width: 6px;
+    height: 6px;
+    background: #FCBE00;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #FCBE00;
+  }
+
+  /* Encabezado */
+  .cyberclean-header {
+    margin-bottom: 22px;
+  }
+
+  .cyberclean-eyebrow {
+    display: block;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+
+  .cyberclean-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.25;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.3px;
+  }
+
+  .cyberclean-highlight {
+    color: #FCBE00;
+  }
+
+  .cyberclean-desc {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.86rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Grid de Beneficios */
+  .cyberclean-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .cyberclean-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 10px 12px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cyberclean-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .cyberclean-item-icon {
+    color: #FCBE00;
+    font-size: 0.95rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .cyberclean-item-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .cyberclean-item-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    line-height: 1.25;
+  }
+
+  .cyberclean-item-sub {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    line-height: 1.25;
+    margin-top: 2px;
+  }
+
+  /* Barra de Confianza & Pagos */
+  .cyberclean-trustbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 8px 12px;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+  }
+
+  .cyberclean-trust-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.74rem;
+    color: #94a3b8;
+  }
+
+  .cyberclean-trust-left i {
+    color: #10b981;
+    font-size: 0.8rem;
+  }
+
+  .cyberclean-webpay-img {
+    height: 14px;
+    width: auto;
+    object-fit: contain;
+    background: #ffffff;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .cyberclean-trust-cards {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+
+  /* Botones de Acción */
+  .cyberclean-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cyberclean-btn-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    background: #FCBE00;
+    color: #000E1F;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+
+  .cyberclean-btn-cta:hover {
+    background: #ffd033;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(252, 190, 0, 0.25);
+    color: #000E1F;
+  }
+
+  .cyberclean-btn-skip {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 6px;
+    transition: color 0.2s;
+  }
+
+  .cyberclean-btn-skip:hover {
+    color: #f1f5f9;
+  }
+
+  @media (max-width: 576px) {
+    .cyberclean-body {
+      padding: 22px 18px 18px 18px;
+    }
+    .cyberclean-title {
+      font-size: 1.25rem;
+    }
+    .cyberclean-grid {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const overlayClean = document.getElementById('modal-cyber-clean');
+
+    function abrirModalClean() {
+      // Cerrar el otro si estuviera abierto
+      if (window.cerrarModalCyber) {
+        window.cerrarModalCyber();
+      }
+      if (!overlayClean) return;
+      overlayClean.style.display = 'flex';
+      void overlayClean.offsetWidth;
+      overlayClean.classList.add('activo');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModalClean() {
+      if (!overlayClean) return;
+      overlayClean.classList.remove('activo');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        overlayClean.style.display = 'none';
+      }, 300);
+    }
+
+    window.abrirModalCyberClean = function () {
+      abrirModalClean();
+    };
+
+    window.cerrarModalCyberClean = function () {
+      cerrarModalClean();
+    };
+
+    window.irAOfertasCyberClean = function (e) {
+      if (e) e.preventDefault();
+      cerrarModalClean();
+      setTimeout(() => {
+        const target = document.getElementById('promociones') || document.getElementById('destacados') || document.querySelector('.promo-banners-seccion');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.location.hash = '#promociones';
+        }
+      }, 250);
+    };
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlayClean && overlayClean.classList.contains('activo')) {
+        cerrarModalClean();
+      }
+    });
+  })();
+</script>

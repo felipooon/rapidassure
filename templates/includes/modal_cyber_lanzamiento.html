@@ -509,6 +509,9 @@
     const overlay = document.getElementById('modal-cyber-lanzamiento');
 
     function abrirModal() {
+      if (window.cerrarModalCyberClean) {
+        window.cerrarModalCyberClean();
+      }
       if (!overlay) return;
       overlay.style.display = 'flex';
       // Forzar reflujo para activar transición CSS
@@ -535,6 +538,10 @@
     }
 
     // Exponer al scope global para los eventos de clic
+    window.abrirModalCyber = function () {
+      abrirModal();
+    };
+
     window.cerrarModalCyber = function () {
       cerrarModal(true);
     };
