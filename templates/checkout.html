@@ -241,13 +241,28 @@
                                     Buscando puntos...
                                 </span>
                             </div>
-                            <select id="punto_blue_select" class="input-checkout-modern" style="cursor: pointer; background: white; border-color: #c084fc; font-weight: 600;" onchange="onPuntoBlueSelected()">
-                                <option value="">Cargando puntos de retiro disponibles...</option>
-                            </select>
+
+                            <!-- Selector con B azul y C roja delante -->
+                            <div class="custom-punto-dropdown" style="position: relative;" id="custom-punto-dropdown-box">
+                                <button type="button" id="custom_punto_trigger" onclick="togglePuntoDropdown(event)" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: white; border: 1.5px solid #c084fc; border-radius: 10px; padding: 10px 14px; font-family: inherit; font-size: 0.88rem; text-align: left; cursor: pointer; min-height: 44px; outline: none; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                                    <span id="custom_punto_selected_text" style="color: #64748b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 8px;">Cargando puntos de retiro disponibles...</span>
+                                    <i class="fa-solid fa-chevron-down" style="color: #7e22ce; font-size: 0.85rem; flex-shrink: 0; transition: transform 0.2s;" id="custom_punto_arrow"></i>
+                                </button>
+                                
+                                <div id="custom_punto_menu" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; max-height: 260px; overflow-y: auto; background: white; border: 1.5px solid #c084fc; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.12); z-index: 100;">
+                                </div>
+
+                                <select id="punto_blue_select" style="display: none;" onchange="onPuntoBlueSelected()">
+                                    <option value="">Cargando puntos de retiro disponibles...</option>
+                                </select>
+                            </div>
                             
                             <div id="punto-info-card" style="margin-top: 12px; display: none; background: white; border: 1.5px solid #e9d5ff; border-radius: 10px; padding: 12px 14px; box-shadow: 0 2px 6px rgba(126, 34, 206, 0.05);">
                                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
-                                    <strong style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #581c87;" id="punto-card-nombre"></strong>
+                                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                                        <strong id="punto-card-letra" style="font-size: 1.05rem; font-weight: 900;"></strong>
+                                        <strong style="font-family: 'Montserrat', sans-serif; font-size: 0.9rem; color: #581c87;" id="punto-card-nombre"></strong>
+                                    </div>
                                     <span id="punto-card-tag" style="background: #f3e8ff; color: #6b21a8; font-size: 0.72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px;"></span>
                                 </div>
                                 <div style="margin-top: 4px; font-size: 0.84rem; color: #4b5563; font-family: 'Open Sans', sans-serif;" id="punto-card-direccion"></div>
@@ -579,7 +594,9 @@
         const ciudadInput = document.getElementById('ciudad_input');
         if (!comunaSelect) return;
 
-        const comunas = REGIONES_DATA[regionNombre] || [];
+        const comunas = (REGIONES_DATA[regionNombre] || []).slice().sort(function(a, b) {
+            return a.localeCompare(b, 'es', { sensitivity: 'base' });
+        });
         comunaSelect.innerHTML = '';
 
         comunas.forEach(function(c) {
@@ -656,13 +673,66 @@
         actualizarCotizacionBlueExpress(comuna, tipo);
     }
 
+    function togglePuntoDropdown(e) {
+        if (e) e.stopPropagation();
+        const menu = document.getElementById('custom_punto_menu');
+        const arrow = document.getElementById('custom_punto_arrow');
+        if (!menu) return;
+        const abierto = menu.style.display === 'block';
+        menu.style.display = abierto ? 'none' : 'block';
+        if (arrow) arrow.style.transform = abierto ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+
+    function cerrarPuntoDropdown() {
+        const menu = document.getElementById('custom_punto_menu');
+        const arrow = document.getElementById('custom_punto_arrow');
+        if (menu) menu.style.display = 'none';
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+    }
+
+    document.addEventListener('click', function(e) {
+        const box = document.getElementById('custom-punto-dropdown-box');
+        if (box && !box.contains(e.target)) {
+            cerrarPuntoDropdown();
+        }
+    });
+
+    function selectCustomPunto(puntoId, index) {
+        const selectPunto = document.getElementById('punto_blue_select');
+        if (selectPunto) {
+            selectPunto.value = puntoId;
+            selectPunto.selectedIndex = index;
+        }
+        actualizarTextoTriggerPunto(index);
+        cerrarPuntoDropdown();
+        onPuntoBlueSelected();
+    }
+
+    function actualizarTextoTriggerPunto(index) {
+        const selectedText = document.getElementById('custom_punto_selected_text');
+        if (!selectedText) return;
+        const punto = puntosDisponiblesActuales[index];
+        if (!punto) {
+            selectedText.innerHTML = '<span style="color: #64748b;">Selecciona tu punto de retiro...</span>';
+            return;
+        }
+        const esCopec = (punto.tipo && punto.tipo.toLowerCase().includes('copec')) || (punto.nombre && punto.nombre.toLowerCase().includes('copec'));
+        const letraColor = esCopec ? '#dc2626' : '#2563eb';
+        const letra = esCopec ? 'C' : 'B';
+        selectedText.innerHTML = `<strong style="color: ${letraColor}; font-weight: 900; margin-right: 6px; font-size: 0.95rem;">${letra}</strong><span style="color: #000E1F;">${punto.nombre} - ${punto.direccion_completa}</span>`;
+    }
+
     function cargarPuntosBlue(comuna, puntoIdSeleccionar) {
         const selectPunto = document.getElementById('punto_blue_select');
+        const customMenu = document.getElementById('custom_punto_menu');
+        const selectedText = document.getElementById('custom_punto_selected_text');
         const badgeCount = document.getElementById('puntos-count-badge');
         const cardInfo = document.getElementById('punto-info-card');
 
         if (!selectPunto) return;
         selectPunto.innerHTML = '<option value="">Cargando puntos de retiro disponibles...</option>';
+        if (customMenu) customMenu.innerHTML = '<div style="padding: 12px 14px; color: #64748b; font-size: 0.88rem;">Cargando puntos...</div>';
+        if (selectedText) selectedText.innerHTML = '<span style="color: #64748b;">Cargando puntos de retiro...</span>';
         if (badgeCount) badgeCount.innerText = 'Buscando puntos...';
         if (cardInfo) cardInfo.style.display = 'none';
 
@@ -672,6 +742,7 @@
                 if (data.success && data.puntos && data.puntos.length > 0) {
                     puntosDisponiblesActuales = data.puntos;
                     selectPunto.innerHTML = '';
+                    if (customMenu) customMenu.innerHTML = '';
                     
                     if (badgeCount) {
                         badgeCount.innerText = `${data.puntos.length} puntos disponibles`;
@@ -680,28 +751,48 @@
                     }
 
                     data.puntos.forEach((p, idx) => {
+                        const esCopec = (p.tipo && p.tipo.toLowerCase().includes('copec')) || (p.nombre && p.nombre.toLowerCase().includes('copec'));
+                        const letraColor = esCopec ? '#dc2626' : '#2563eb';
+                        const letra = esCopec ? 'C' : 'B';
+                        const tag24 = p.es_24_7 ? ' [24/7]' : '';
+
+                        // Option en el select oculto
                         const opt = document.createElement('option');
                         opt.value = p.id;
-                        const esCopec = (p.tipo && p.tipo.toLowerCase().includes('copec')) || (p.nombre && p.nombre.toLowerCase().includes('copec'));
-                        const prefijo = esCopec ? '[Copec]' : '[Agencia]';
-                        const tag24 = p.es_24_7 ? ' [24/7]' : '';
-                        opt.textContent = `${prefijo} ${p.nombre} - ${p.direccion_completa}${tag24}`;
+                        opt.textContent = `${letra} - ${p.nombre} - ${p.direccion_completa}${tag24}`;
                         opt.dataset.index = idx;
                         selectPunto.appendChild(opt);
+
+                        // Elemento en el menú desplegable visual
+                        if (customMenu) {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.style.cssText = 'padding: 10px 14px; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; align-items: baseline; gap: 8px; font-size: 0.88rem; transition: background 0.15s;';
+                            itemDiv.onmouseover = function() { this.style.background = '#faf5ff'; };
+                            itemDiv.onmouseout = function() { this.style.background = 'white'; };
+                            itemDiv.onclick = function() { selectCustomPunto(p.id, idx); };
+                            itemDiv.innerHTML = `<strong style="color: ${letraColor}; font-weight: 900; font-size: 0.95rem; flex-shrink: 0;">${letra}</strong> <span style="color: #000E1F; line-height: 1.35;">${p.nombre} - ${p.direccion_completa}${tag24}</span>`;
+                            customMenu.appendChild(itemDiv);
+                        }
                     });
 
                     // Seleccionar punto previo o primero
+                    let selIdx = 0;
                     if (puntoIdSeleccionar) {
-                        selectPunto.value = puntoIdSeleccionar;
+                        const foundIdx = data.puntos.findIndex(p => String(p.id) === String(puntoIdSeleccionar));
+                        if (foundIdx !== -1) selIdx = foundIdx;
                     }
-                    if (!selectPunto.value && selectPunto.options.length > 0) {
-                        selectPunto.selectedIndex = 0;
+                    if (selectPunto.options.length > 0) {
+                        selectPunto.selectedIndex = selIdx;
+                        selectPunto.value = data.puntos[selIdx].id;
                     }
 
+                    actualizarTextoTriggerPunto(selIdx);
                     onPuntoBlueSelected();
                 } else {
                     puntosDisponiblesActuales = [];
                     selectPunto.innerHTML = '<option value="">No hay puntos de retiro en esta comuna (Elige despacho a domicilio)</option>';
+                    if (customMenu) customMenu.innerHTML = '<div style="padding: 12px 14px; color: #991b1b; font-size: 0.88rem;">No hay puntos de retiro en esta comuna (Elige despacho a domicilio)</div>';
+                    if (selectedText) selectedText.innerHTML = '<span style="color: #991b1b;">No hay puntos de retiro en esta comuna</span>';
                     if (badgeCount) {
                         badgeCount.innerText = 'Sin cobertura en comuna';
                         badgeCount.style.background = '#fee2e2';
@@ -718,6 +809,7 @@
             .catch(err => {
                 console.error("Error al cargar puntos Blue Express:", err);
                 selectPunto.innerHTML = '<option value="">Error cargando puntos</option>';
+                if (selectedText) selectedText.innerHTML = '<span style="color: #991b1b;">Error cargando puntos</span>';
             });
     }
 
@@ -748,8 +840,14 @@
 
             if (cardInfo) {
                 cardInfo.style.display = 'block';
+                const esCopec = (punto.tipo && punto.tipo.toLowerCase().includes('copec')) || (punto.nombre && punto.nombre.toLowerCase().includes('copec'));
+                const letraEl = document.getElementById('punto-card-letra');
+                if (letraEl) {
+                    letraEl.innerText = esCopec ? 'C' : 'B';
+                    letraEl.style.color = esCopec ? '#dc2626' : '#2563eb';
+                }
                 if (cardNombre) cardNombre.innerText = punto.nombre;
-                if (cardTag) cardTag.innerText = punto.tipo || 'Punto Blue';
+                if (cardTag) cardTag.innerText = punto.tipo || (esCopec ? 'Copec' : 'Agencia Blue');
                 if (cardDir) cardDir.innerHTML = `<i class="fa-solid fa-location-dot" style="color: #7e22ce; margin-right: 4px;"></i> <strong>${punto.direccion_completa}</strong>, ${punto.comuna}`;
                 if (cardHorarioTexto) cardHorarioTexto.innerText = `Horario: ${punto.horario}`;
             }

@@ -140,6 +140,11 @@ def normalizar_texto(texto):
         texto = texto.replace(orig, rep)
     return texto
 
+# Asegurar que las comunas de cada región se presenten ordenadas alfabéticamente
+for _reg in REGIONES_Y_COMUNAS:
+    REGIONES_Y_COMUNAS[_reg] = sorted(REGIONES_Y_COMUNAS[_reg], key=lambda c: normalizar_texto(c))
+
+
 def obtener_region_de_comuna(comuna_nombre):
     """Encuentra la región oficial dada una comuna."""
     comuna_norm = normalizar_texto(comuna_nombre)
