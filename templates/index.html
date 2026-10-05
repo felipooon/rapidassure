@@ -420,8 +420,7 @@
               <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
               {% endif %}
               {% endfor %}
-              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s"
-                }})</span>
+              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s" }})</span>
               {% else %}
               <span
                 style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
@@ -438,14 +437,16 @@
           <div class="card-price-container">
             {% if p.tiene_descuento %}
             <div style="display: flex; flex-direction: column;">
-              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{
-                p.precio }}</span>
-              <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
+              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
+              <div style="display: flex; align-items: baseline; gap: 6px;">
+                <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
+                <span class="card-vat-note">IVA Incluido</span>
+              </div>
             </div>
             {% else %}
             <span class="card-price-value">${{ p.precio }}</span>
-            {% endif %}
             <span class="card-vat-note">IVA Incluido</span>
+            {% endif %}
           </div>
 
           <div class="card-actions-row">
@@ -561,8 +562,7 @@
                 <span
                   style="display: block; font-size: 0.68rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Compró</span>
                 <span
-                  style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{
-                  r.producto.nombre }}</span>
+                  style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.producto.nombre }}</span>
               </div>
               <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94a3b8; flex-shrink: 0;"></i>
             </a>
@@ -1094,12 +1094,15 @@
                 ${p.tiene_descuento ? `
                   <div style="display: flex; flex-direction: column;">
                     <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$${p.precio}</span>
-                    <span class="card-price-value" style="color: #b45309;">$${p.precio_final}</span>
+                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                      <span class="card-price-value" style="color: #b45309;">$${p.precio_final}</span>
+                      <span class="card-vat-note">IVA Incluido</span>
+                    </div>
                   </div>
                 ` : `
                   <span class="card-price-value">$${p.precio}</span>
+                  <span class="card-vat-note">IVA Incluido</span>
                 `}
-                <span class="card-vat-note">IVA Incluido</span>
               </div>
               <div class="card-actions-row">
                 <a href="${p.url}" class="btn-card-view">

@@ -890,12 +890,15 @@
             {% if p.tiene_descuento %}
             <div style="display: flex; flex-direction: column;">
               <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
-              <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
+              <div style="display: flex; align-items: baseline; gap: 6px;">
+                <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
+                <span class="card-vat-note">IVA Incluido</span>
+              </div>
             </div>
             {% else %}
             <span class="card-price-value">${{ p.precio }}</span>
-            {% endif %}
             <span class="card-vat-note">IVA Incluido</span>
+            {% endif %}
           </div>
 
           <div class="card-actions-row">
@@ -1548,12 +1551,15 @@
                 ${p.tiene_descuento ? `
                   <div style="display: flex; flex-direction: column;">
                     <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$${p.precio}</span>
-                    <span class="card-price-value" style="color: #b45309;">$${p.precio_final}</span>
+                    <div style="display: flex; align-items: baseline; gap: 6px;">
+                      <span class="card-price-value" style="color: #b45309;">$${p.precio_final}</span>
+                      <span class="card-vat-note">IVA Incluido</span>
+                    </div>
                   </div>
                 ` : `
                   <span class="card-price-value">$${p.precio}</span>
+                  <span class="card-vat-note">IVA Incluido</span>
                 `}
-                <span class="card-vat-note">IVA Incluido</span>
               </div>
               <div class="card-actions-row">
                 <a href="${p.url}" class="btn-card-view">
