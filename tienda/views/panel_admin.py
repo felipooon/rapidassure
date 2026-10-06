@@ -1,4 +1,5 @@
 import os
+import re
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
@@ -323,6 +324,91 @@ def editar_producto(request, id):
         "next": next_url,
         "marcas_existentes": marcas_existentes
     })
+
+
+def generar_nombre_copia(nombre_original):
+    """
+    Genera un nombre para el producto duplicado con el formato '{nombre} (copia)'
+    o incrementando el contador si ya existen copias previas.
+    """
+    patron = r'^(.*?)(?:\s*\(copia(?:\s*(\d+))?\))?$'
+    match = re.match(patron, (nombre_original or '').strip(), re.IGNORECASE)
+    if match and match.group(1):
+        base = match.group(1).strip()
+    else:
+        base = (nombre_original or '').strip()
+
+    candidato = f"{base} (copia)"
+    if not Producto.objects.filter(nombre=candidato).exists():
+        return candidato
+
+    contador = 2
+    while Producto.objects.filter(nombre=f"{base} (copia {contador})").exists():
+        contador += 1
+    return f"{base} (copia {contador})"
+
+
+@staff_member_required(login_url='login')
+def duplicar_producto(request, id):
+    producto_original = get_object_or_404(Producto, id=id)
+
+    with transaction.atomic():
+        nuevo_nombre = generar_nombre_copia(producto_original.nombre)
+
+        nuevo_producto = Producto(
+            categoria=producto_original.categoria,
+            marca=producto_original.marca,
+            nombre=nuevo_nombre,
+            descripcion=producto_original.descripcion,
+            precio=producto_original.precio,
+            imagen=producto_original.imagen,
+            stock=producto_original.stock,
+            disponible=producto_original.disponible,
+            en_oferta=producto_original.en_oferta,
+            porcentaje_descuento=producto_original.porcentaje_descuento,
+            precio_oferta=producto_original.precio_oferta,
+            alto=producto_original.alto,
+            ancho=producto_original.ancho,
+            largo=producto_original.largo,
+            peso=producto_original.peso,
+            tiene_ficha_especie=producto_original.tiene_ficha_especie,
+            especie_nombre_comun=producto_original.especie_nombre_comun,
+            especie_nombre_cientifico=producto_original.especie_nombre_cientifico,
+            especie_habitat=producto_original.especie_habitat,
+            especie_estado_conservacion=producto_original.especie_estado_conservacion,
+            especie_dato_curioso=producto_original.especie_dato_curioso,
+        )
+        # Al guardar sin slug asignado, el modelo autogenera un slug único
+        nuevo_producto.save()
+
+        # Duplicar imágenes adicionales de galería si existen
+        for img_extra in producto_original.imagenes_adicionales.all().order_by('orden', 'id'):
+            ImagenProducto.objects.create(
+                producto=nuevo_producto,
+                imagen=img_extra.imagen,
+                orden=img_extra.orden
+            )
+
+        # Registro en Log de Auditoría
+        usuario_log = request.user if request.user.is_authenticated else None
+        detalles_str = (
+            f"Producto duplicado a partir de '{producto_original.nombre}' (ID #{producto_original.id}). "
+            f"Categoría: {nuevo_producto.categoria.nombre if nuevo_producto.categoria else 'Sin categoría'}, "
+            f"Precio: ${nuevo_producto.precio}, Stock: {nuevo_producto.stock}"
+        )
+        LogProducto.objects.create(
+            producto_id=nuevo_producto.id,
+            nombre_producto=nuevo_producto.nombre,
+            accion='CREACION',
+            usuario=usuario_log,
+            detalles=detalles_str
+        )
+
+    messages.success(
+        request,
+        f"Producto duplicado con éxito como '{nuevo_producto.nombre}'. Ya puedes editar sus características y guardarlo."
+    )
+    return redirect('editar_producto', id=nuevo_producto.id)
 
 
 @staff_member_required(login_url='login')

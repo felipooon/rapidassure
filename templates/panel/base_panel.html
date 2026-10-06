@@ -303,12 +303,34 @@ document.addEventListener("DOMContentLoaded", function() {
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
 }
+.btn-confirm-primary {
+  flex: 1.2;
+  background: #002093;
+  color: #ffffff;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0, 32, 147, 0.28);
+  transition: all 0.2s ease;
+}
+.btn-confirm-primary:hover {
+  background: #00176b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 32, 147, 0.4);
+}
 </style>
 
 <script>
 let panelPendingAction = null;
 
-window.abrirModalEliminar = function(event, config) {
+window.abrirModalConfirmacion = function(event, config) {
   if (event) {
     event.preventDefault();
     event.stopPropagation();
@@ -318,11 +340,36 @@ window.abrirModalEliminar = function(event, config) {
   const msgEl = document.getElementById('panel-confirm-message');
   const badgeEl = document.getElementById('panel-confirm-item-badge');
   const acceptBtn = document.getElementById('btn-confirm-accept');
+  const iconBox = modal ? modal.querySelector('.panel-confirm-icon-box') : null;
+  const iconEl = iconBox ? iconBox.querySelector('i') : null;
 
   if (!modal) return;
 
-  titleEl.textContent = config.titulo || '¿Estás seguro de eliminar este registro?';
-  msgEl.textContent = config.detalle || 'Esta acción no se puede deshacer y el elemento será eliminado del sistema.';
+  const esPeligro = config.tipo === 'peligro' || (!config.tipo && config.url && config.url.includes('eliminar'));
+
+  if (esPeligro) {
+    if (iconBox) {
+      iconBox.style.background = '#fef2f2';
+      iconBox.style.borderColor = '#fee2e2';
+      iconBox.style.color = '#ef4444';
+      iconBox.style.boxShadow = '0 6px 16px rgba(239, 68, 68, 0.15)';
+    }
+    if (iconEl) iconEl.className = config.icono || 'fa-solid fa-triangle-exclamation';
+    acceptBtn.className = 'btn-confirm-danger';
+  } else {
+    // Estética Corporativa Rapidassure (#002093)
+    if (iconBox) {
+      iconBox.style.background = '#eff6ff';
+      iconBox.style.borderColor = '#bfdbfe';
+      iconBox.style.color = '#002093';
+      iconBox.style.boxShadow = '0 6px 16px rgba(0, 32, 147, 0.18)';
+    }
+    if (iconEl) iconEl.className = config.icono || 'fa-solid fa-clone';
+    acceptBtn.className = 'btn-confirm-primary';
+  }
+
+  titleEl.textContent = config.titulo || (esPeligro ? '¿Eliminar elemento?' : '¿Confirmar acción?');
+  msgEl.textContent = config.detalle || (esPeligro ? 'Esta acción no se puede deshacer y el elemento será eliminado del sistema.' : '');
 
   if (config.item) {
     badgeEl.textContent = config.item;
@@ -331,11 +378,9 @@ window.abrirModalEliminar = function(event, config) {
     badgeEl.style.display = 'none';
   }
 
-  if (config.botonTexto) {
-    acceptBtn.querySelector('span').textContent = config.botonTexto;
-  } else {
-    acceptBtn.querySelector('span').textContent = 'Sí, eliminar';
-  }
+  const iconTag = esPeligro ? (config.iconoBoton || 'fa-solid fa-trash-can') : (config.iconoBoton || 'fa-solid fa-clone');
+  const btnTxt = config.botonTexto || (esPeligro ? 'Sí, eliminar' : 'Sí, duplicar y editar');
+  acceptBtn.innerHTML = `<i class="${iconTag}"></i> <span>${btnTxt}</span>`;
 
   panelPendingAction = function() {
     if (config.form) {
@@ -352,6 +397,21 @@ window.abrirModalEliminar = function(event, config) {
     modal.classList.add('active');
   });
   document.body.style.overflow = 'hidden';
+};
+
+window.abrirModalEliminar = function(event, config) {
+  window.abrirModalConfirmacion(event, Object.assign({}, config, { tipo: 'peligro' }));
+};
+
+window.abrirModalDuplicar = function(event, config) {
+  window.abrirModalConfirmacion(event, Object.assign({
+    tipo: 'duplicar',
+    titulo: '¿Duplicar producto?',
+    detalle: 'Se creará un nuevo producto con el nombre terminado en "(copia)", conservando todas sus fotos, dimensiones, categoría y ficha técnica para que puedas editarlo de inmediato.',
+    botonTexto: 'Sí, duplicar y editar',
+    icono: 'fa-solid fa-clone',
+    iconoBoton: 'fa-solid fa-copy'
+  }, config));
 };
 
 window.cerrarModalConfirmacion = function(e) {

@@ -25,6 +25,7 @@ urlpatterns = [
 
 
     path('panel/productos/editar/<int:id>/', views.editar_producto, name='editar_producto'),
+    path('panel/productos/duplicar/<int:id>/', views.duplicar_producto, name='duplicar_producto'),
     path('panel/productos/eliminar/<int:id>/', views.eliminar_producto, name='eliminar_producto'),
 
     path('panel/pedidos/', views.panel_pedidos, name='panel_pedidos'),

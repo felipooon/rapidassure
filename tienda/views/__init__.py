@@ -48,6 +48,7 @@ from .panel_admin import (
     eliminar_categoria,
     toggle_producto,
     editar_producto,
+    duplicar_producto,
     eliminar_producto,
     panel_pedidos,
     detalle_pedido,

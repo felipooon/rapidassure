@@ -167,6 +167,15 @@
             <i class="fa-solid fa-star"></i>
         </button>
 
+        <a href="{% url 'duplicar_producto' p.id %}" 
+           title="Duplicar producto como copia"
+           onclick="abrirModalDuplicar(event, { item: '{{ p.nombre|escapejs }}', url: '{% url 'duplicar_producto' p.id %}' });"
+           style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background-color: #eff6ff; color: #002093; border: 1px solid #bfdbfe; border-radius: 8px; text-decoration: none; transition: all 0.2s;"
+           onmouseover="this.style.backgroundColor='#002093'; this.style.color='white';" 
+           onmouseout="this.style.backgroundColor='#eff6ff'; this.style.color='#002093';">
+            <i class="fa-solid fa-clone" style="font-size: 14px;"></i>
+        </a>
+
         <a href="{% url 'editar_producto' p.id %}?next={{ request.get_full_path|urlencode }}" 
            title="Editar producto"
            style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background-color: #f0f7ff; color: #007bff; border-radius: 8px; text-decoration: none; transition: all 0.2s;"
