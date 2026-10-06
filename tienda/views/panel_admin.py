@@ -1485,7 +1485,16 @@ def crear_banner(request):
             return redirect('panel_banners')
     else:
         form = BannerPromocionalForm()
-    return render(request, "panel/banner_form.html", {"form": form, "titulo_pagina": "Nuevo Banner Promocional"})
+
+    categorias_existentes = Categoria.objects.all().order_by('nombre')
+    marcas_existentes = list(Producto.objects.exclude(marca='').values_list('marca', flat=True).distinct().order_by('marca'))
+
+    return render(request, "panel/banner_form.html", {
+        "form": form, 
+        "titulo_pagina": "Nuevo Banner Promocional",
+        "categorias_existentes": categorias_existentes,
+        "marcas_existentes": marcas_existentes
+    })
 
 
 @staff_member_required(login_url='login')
@@ -1499,7 +1508,17 @@ def editar_banner(request, id):
             return redirect('panel_banners')
     else:
         form = BannerPromocionalForm(instance=banner)
-    return render(request, "panel/banner_form.html", {"form": form, "banner": banner, "titulo_pagina": "Editar Banner Promocional"})
+
+    categorias_existentes = Categoria.objects.all().order_by('nombre')
+    marcas_existentes = list(Producto.objects.exclude(marca='').values_list('marca', flat=True).distinct().order_by('marca'))
+
+    return render(request, "panel/banner_form.html", {
+        "form": form, 
+        "banner": banner, 
+        "titulo_pagina": "Editar Banner Promocional",
+        "categorias_existentes": categorias_existentes,
+        "marcas_existentes": marcas_existentes
+    })
 
 
 @staff_member_required(login_url='login')

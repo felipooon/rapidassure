@@ -285,12 +285,24 @@ class BannerPromocionalForm(forms.ModelForm):
         
         try:
             cat_choices = []
-            for cat in Categoria.objects.all():
+            for cat in Categoria.objects.all().order_by('nombre'):
                 url = cat.get_absolute_url()
                 cat_choices.append((url, f"Categoría: {cat.nombre} ({url})"))
                 
+                # Marcas registradas en esta categoría
+                marcas_cat = list(
+                    Producto.objects.filter(categoria=cat, disponible=True)
+                    .exclude(marca='')
+                    .values_list('marca', flat=True)
+                    .distinct()
+                    .order_by('marca')
+                )
+                for m in marcas_cat:
+                    url_marca = f"{url}?marca={m}"
+                    cat_choices.append((url_marca, f"  ↳ {cat.nombre} ➔ Marca: {m}"))
+
             if cat_choices:
-                choices.append(('Categorías de Productos', tuple(cat_choices)))
+                choices.append(('Categorías & Marcas', tuple(cat_choices)))
         except Exception:
             pass
 

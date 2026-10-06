@@ -80,18 +80,43 @@ def terminos_condiciones(request):
 
 def categoria_detail(request, slug):
     categoria = get_object_or_404(Categoria, slug=slug)
-    orden = request.GET.get('orden', '')
+    orden = request.GET.get('orden', '').strip()
+    marca_param = request.GET.get('marca', '').strip()
 
-    productos = Producto.objects.filter(
+    productos_base = Producto.objects.filter(
         categoria=categoria,
         disponible=True
     )
+
+    # Obtenemos las marcas disponibles en esta categoría
+    marcas_disponibles = list(
+        productos_base.exclude(marca='')
+        .values_list('marca', flat=True)
+        .distinct()
+        .order_by('marca')
+    )
+
+    if marca_param and not any(m.lower() == marca_param.lower() for m in marcas_disponibles):
+        marcas_disponibles.append(marca_param)
+        marcas_disponibles.sort()
+
+    productos = productos_base
+    if marca_param:
+        productos = productos.filter(
+            models.Q(marca__iexact=marca_param) |
+            (models.Q(marca='') & models.Q(nombre__icontains=marca_param))
+        )
+
     productos = aplicar_ordenamiento(productos, orden)
 
     return render(request, "categoria.html", {
         "categoria": categoria,
         "productos": productos,
-        "orden_actual": orden
+        "orden_actual": orden,
+        "marcas_disponibles": marcas_disponibles,
+        "marca_actual": marca_param,
+        "total_productos": productos.count(),
+        "total_categoria": productos_base.count(),
     })
 
 
