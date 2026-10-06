@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, BlogPost, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido, BannerPromocional
+from .models import Categoria, Producto, ImagenProducto, Pedido, ItemPedido, Cupon, ResenaProducto, ConfiguracionSitio, LogProducto, LogPedido, BannerPromocional
 
 @admin.register(BannerPromocional)
 class BannerPromocionalAdmin(admin.ModelAdmin):
@@ -52,13 +52,6 @@ class PedidoAdmin(admin.ModelAdmin):
     
     inlines = [ItemPedidoInline]
 
-# --- Configuración de Blog ---
-@admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'autor', 'fecha_creacion', 'publicado')
-    list_filter = ('publicado', 'fecha_creacion')
-    search_fields = ('titulo', 'autor', 'contenido')
-    prepopulated_fields = {'slug': ('titulo',)}
 
 # --- Configuración de Reseñas ---
 @admin.register(ResenaProducto)

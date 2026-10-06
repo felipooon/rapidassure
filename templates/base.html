@@ -991,8 +991,10 @@
                                 data.productos.forEach(p => {
                                     html += `
                                     <a href="${p.url}" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; text-decoration: none; border-bottom: 1px solid #f5f5f5; color: #333; transition: background 0.2s;" onmouseover="this.style.background='#fff9f0'" onmouseout="this.style.background='white'">
-                                        ${p.imagen ? `<img src="${p.imagen}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px;">` : ''}
-                                        <div style="flex-grow: 1;">
+                                        <div style="width: 44px; height: 44px; min-width: 44px; max-width: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; padding: 3px; box-sizing: border-box;">
+                                            ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" style="width: 100%; height: 100%; object-fit: contain; display: block;">` : `<i class="fa-solid fa-box" style="color: #94a3b8; font-size: 1rem;"></i>`}
+                                        </div>
+                                        <div style="flex-grow: 1; min-width: 0;">
                                             <div style="font-weight: 600; font-size: 0.85rem; color: #222;">${p.nombre}</div>
                                             <div style="font-size: 0.8rem; font-weight: bold; display: flex; align-items: center; gap: 6px;">
                                                 ${p.tiene_descuento ? `<span style="text-decoration: line-through; color: #94a3b8; font-size: 0.75rem;">${p.precio_original}</span> <span style="color: #b45309;">${p.precio}</span> <span style="background: #fef2f2; color: #dc2626; font-size: 0.68rem; padding: 1px 4px; border-radius: 4px;">-${p.porcentaje_descuento}%</span>` : `<span style="color: #002093;">${p.precio}</span>`}
