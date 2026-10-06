@@ -51,7 +51,7 @@ h2 {
 /*DETALLE*/
 
 .producto-detalle {
-  padding: 130px 1.5rem 3rem 1.5rem;
+  padding: 24px 1.5rem 3rem 1.5rem;
   display: flex;
   justify-content: center;
   min-height: 85vh;
@@ -211,7 +211,7 @@ section:nth-of-type(4) {
 
 .categoria-wrapper,
 .deseos-wrapper {
-  padding: 130px 1rem 3rem 1rem;
+  padding: 24px 1rem 3rem 1rem;
   min-height: 85vh;
   box-sizing: border-box;
   max-width: 100%;
@@ -1336,13 +1336,13 @@ body.panel-body {
   /* Rendimiento Móvil: Desactivar background-attachment fixed y blur pesado que relentizan celulares */
   .categoria-wrapper,
   .deseos-wrapper {
-    padding: 95px 0.8rem 2rem 0.8rem !important;
+    padding: 16px 0.8rem 2rem 0.8rem !important;
     background-image: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
     background-attachment: scroll !important;
   }
 
   .producto-detalle {
-    padding: 95px 0.8rem 2rem 0.8rem !important;
+    padding: 16px 0.8rem 2rem 0.8rem !important;
     background-image: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
     background-attachment: scroll !important;
   }
@@ -1790,7 +1790,7 @@ body.panel-body {
   }
 
   .producto-detalle {
-    padding: 135px 6px 30px 6px;
+    padding: 16px 6px 30px 6px;
     background-image:
       linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.7)),
       url("../img/Fondo_corporativo.jpg");
@@ -2321,6 +2321,123 @@ body.panel-body {
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 4px 20px rgba(0, 14, 31, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Top Announcement Bar (Presencia Física en Santiago) */
+.top-announcement-bar {
+  background: linear-gradient(90deg, #000E1F 0%, #001B3D 50%, #002093 100%);
+  color: #f8fafc;
+  font-size: 0.78rem;
+  padding: 6px 1.5rem;
+  border-bottom: 1px solid rgba(252, 190, 0, 0.25);
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.top-announcement-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.top-bar-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.top-bar-icon-gold {
+  color: #FCBE00;
+  font-size: 0.85rem;
+  animation: pulsePin 2.5s infinite ease-in-out;
+}
+
+@keyframes pulsePin {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.top-bar-badge-pickup {
+  background: rgba(252, 190, 0, 0.16);
+  border: 1px solid rgba(252, 190, 0, 0.45);
+  color: #FCBE00;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.top-bar-perks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.76rem;
+  color: #cbd5e1;
+}
+
+.top-bar-perk-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.top-bar-perk-item i {
+  color: #38bdf8;
+}
+
+.top-bar-divider {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.75rem;
+}
+
+.top-bar-contact-link {
+  color: #f8fafc;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.top-bar-contact-link i {
+  color: #25D366;
+  font-size: 0.9rem;
+}
+
+.top-bar-contact-link:hover {
+  color: #FCBE00;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .top-announcement-bar {
+    padding: 5px 12px;
+    font-size: 0.72rem;
+  }
+  .top-announcement-container {
+    justify-content: center;
+  }
+  .top-bar-location {
+    font-size: 0.72rem;
+  }
+  .top-bar-badge-pickup {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+  }
+  .top-bar-perks {
+    display: none;
+  }
 }
 
 /* Top Bar */

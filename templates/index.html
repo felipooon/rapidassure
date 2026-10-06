@@ -124,7 +124,7 @@
             </div>
             <div class="bx-vertical-divider"></div>
             <div class="bx-right-section">
-              <p class="bx-text">Envíos rápidos y seguros a todo Chile con Bluexpress.</p>
+              <p class="bx-text">Envíos rápidos y seguros a todo Chile con Blue Express.</p>
             </div>
           </div>
 
@@ -420,7 +420,8 @@
               <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
               {% endif %}
               {% endfor %}
-              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s" }})</span>
+              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s"
+                }})</span>
               {% else %}
               <span
                 style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
@@ -437,7 +438,8 @@
           <div class="card-price-container">
             {% if p.tiene_descuento %}
             <div style="display: flex; flex-direction: column;">
-              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
+              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{
+                p.precio }}</span>
               <div style="display: flex; align-items: baseline; gap: 6px;">
                 <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
                 <span class="card-vat-note">IVA Incluido</span>
@@ -562,7 +564,8 @@
                 <span
                   style="display: block; font-size: 0.68rem; color: #6366f1; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Compró</span>
                 <span
-                  style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ r.producto.nombre }}</span>
+                  style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #002093; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{
+                  r.producto.nombre }}</span>
               </div>
               <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem; color: #94a3b8; flex-shrink: 0;"></i>
             </a>
@@ -604,11 +607,14 @@
       <div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;">
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.95); font-size: 1.12rem; line-height: 1.7; margin: 0; font-weight: 500;">
-          En <strong style="color: #FCBE00; font-weight: 800;">Rapidassure Retail</strong> somos una empresa especializada en la comercialización de productos tecnológicos, computación y soluciones para el día a día, orientada tanto a empresas como a clientes particulares.
+          En <strong style="color: #FCBE00; font-weight: 800;">Rapidassure Retail</strong> somos una empresa
+          especializada en la comercialización de productos tecnológicos, computación y soluciones para el día a día,
+          orientada tanto a empresas como a clientes particulares.
         </p>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 1.02rem; line-height: 1.65; margin: 0;">
-          Trabajamos para ofrecer productos de calidad, un servicio confiable y una experiencia de compra rápida y segura, seleccionando soluciones que respondan a las necesidades de nuestros clientes.
+          Trabajamos para ofrecer productos de calidad, un servicio confiable y una experiencia de compra rápida y
+          segura, seleccionando soluciones que respondan a las necesidades de nuestros clientes.
         </p>
       </div>
     </div>
@@ -622,7 +628,8 @@
         style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
         onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
         onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
-        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+        <div
+          style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
           <i class="fa-solid fa-laptop-code"></i>
         </div>
         <h3
@@ -631,7 +638,8 @@
         </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Contamos con un catálogo de productos tecnológicos, accesorios y equipamiento para computación, conectividad, audio, gaming, escritorio y uso diario.
+          Contamos con un catálogo de productos tecnológicos, accesorios y equipamiento para computación, conectividad,
+          audio, gaming, escritorio y uso diario.
         </p>
       </div>
 
@@ -640,7 +648,8 @@
         style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
         onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
         onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
-        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+        <div
+          style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
           <i class="fa-solid fa-shield-halved"></i>
         </div>
         <h3
@@ -649,7 +658,8 @@
         </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Seleccionamos productos de marcas reconocidas y alternativas confiables, buscando entregar una excelente relación entre calidad, precio y funcionalidad.
+          Seleccionamos productos de marcas reconocidas y alternativas confiables, buscando entregar una excelente
+          relación entre calidad, precio y funcionalidad.
         </p>
       </div>
 
@@ -658,7 +668,8 @@
         style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
         onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
         onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
-        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+        <div
+          style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
           <i class="fa-solid fa-handshake-angle"></i>
         </div>
         <h3
@@ -667,7 +678,8 @@
         </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Atendemos tanto a empresas, PyMEs y organizaciones como a clientes particulares, ofreciendo soluciones adaptadas a cada necesidad y apoyo durante el proceso de compra.
+          Atendemos tanto a empresas, PyMEs y organizaciones como a clientes particulares, ofreciendo soluciones
+          adaptadas a cada necesidad y apoyo durante el proceso de compra.
         </p>
       </div>
 
@@ -676,7 +688,8 @@
         style="background: linear-gradient(145deg, rgba(0, 32, 147, 0.45), rgba(0, 14, 31, 0.70)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 32px 24px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); box-shadow: 0 10px 28px rgba(0,0,0,0.35); transition: all 0.35s ease; display: flex; flex-direction: column; align-items: center; text-align: center;"
         onmouseover="this.style.transform='translateY(-7px)'; this.style.borderColor='rgba(252, 190, 0, 0.6)'; this.style.boxShadow='0 18px 36px rgba(0,32,147,0.4), 0 0 18px rgba(252,190,0,0.18)'"
         onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(255, 255, 255, 0.15)'; this.style.boxShadow='0 10px 28px rgba(0,0,0,0.35)'">
-        <div style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
+        <div
+          style="width: 58px; height: 58px; border-radius: 14px; background: rgba(252, 190, 0, 0.12); border: 1.5px solid rgba(252, 190, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #FCBE00; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(252,190,0,0.15);">
           <i class="fa-solid fa-bolt-lightning"></i>
         </div>
         <h3
@@ -685,7 +698,8 @@
         </h3>
         <p
           style="font-family: 'Open Sans', sans-serif; color: rgba(255, 255, 255, 0.85); font-size: 0.92rem; line-height: 1.6; margin: 0;">
-          Nos preocupamos de que cada compra sea un proceso simple, rápido y seguro, desde la selección del producto hasta su entrega.
+          Nos preocupamos de que cada compra sea un proceso simple, rápido y seguro, desde la selección del producto
+          hasta su entrega.
         </p>
       </div>
 
@@ -703,7 +717,8 @@
       </blockquote>
       <div style="display: flex; align-items: center; gap: 10px; margin-top: 14px;">
         <span style="height: 2px; width: 24px; background: #FCBE00; display: inline-block;"></span>
-        <span style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #FCBE00; letter-spacing: 1.2px; text-transform: uppercase;">
+        <span
+          style="font-family: 'Montserrat', sans-serif; font-size: 0.88rem; font-weight: 800; color: #FCBE00; letter-spacing: 1.2px; text-transform: uppercase;">
           Rapidassure Retail
         </span>
         <span style="height: 2px; width: 24px; background: #FCBE00; display: inline-block;"></span>
@@ -767,7 +782,8 @@
           {% csrf_token %}
           <div style="margin-bottom: 14px;">
             <label
-              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre Completo <span style="color: #ef4444;">*</span></label>
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Nombre
+              Completo <span style="color: #ef4444;">*</span></label>
             <input type="text" name="nombre" id="contacto-nombre" required placeholder="Tu nombre completo"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
@@ -775,7 +791,8 @@
 
           <div style="margin-bottom: 14px;">
             <label
-              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Correo Electrónico <span style="color: #ef4444;">*</span></label>
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Correo
+              Electrónico <span style="color: #ef4444;">*</span></label>
             <input type="email" name="email" id="contacto-email" required placeholder="tu.correo@empresa.cl"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
@@ -783,8 +800,10 @@
 
           <div style="margin-bottom: 14px;">
             <label
-              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto / Motivo <span style="color: #ef4444;">*</span></label>
-            <input type="text" name="asunto" id="contacto-asunto" required placeholder="Ej: Cotización de equipamiento / Consulta técnica"
+              style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Asunto
+              / Motivo <span style="color: #ef4444;">*</span></label>
+            <input type="text" name="asunto" id="contacto-asunto" required
+              placeholder="Ej: Cotización de equipamiento / Consulta técnica"
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'">
           </div>
@@ -792,12 +811,15 @@
           <div style="margin-bottom: 18px;">
             <label
               style="display: block; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 700; color: #000E1F; margin-bottom: 6px;">Mensaje</label>
-            <textarea name="mensaje" id="contacto-mensaje" required rows="3" placeholder="Escribe tu mensaje o consulta aquí..."
+            <textarea name="mensaje" id="contacto-mensaje" required rows="3"
+              placeholder="Escribe tu mensaje o consulta aquí..."
               style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid #cbd5e1; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; outline: none; background: #ffffff; resize: vertical; transition: border-color 0.2s;"
               onfocus="this.style.borderColor='#002093'" onblur="this.style.borderColor='#cbd5e1'"></textarea>
           </div>
 
-          <div id="contacto-status-feedback" style="display: none; margin-bottom: 14px; padding: 10px 14px; border-radius: 10px; font-size: 0.88rem; font-family: 'Open Sans', sans-serif;"></div>
+          <div id="contacto-status-feedback"
+            style="display: none; margin-bottom: 14px; padding: 10px 14px; border-radius: 10px; font-size: 0.88rem; font-family: 'Open Sans', sans-serif;">
+          </div>
 
           <button type="submit" id="btn-enviar-contacto"
             style="width: 100%; background: linear-gradient(135deg, #002093, #3230C2); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 800; font-size: 0.95rem; font-family: 'Montserrat', sans-serif; cursor: pointer; box-shadow: 0 4px 14px rgba(0, 32, 147, 0.3); transition: transform 0.2s, box-shadow 0.2s;"
