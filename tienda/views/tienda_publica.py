@@ -351,7 +351,28 @@ def api_destacados_random(request):
     import random
     badges_pool = ['Alta Tecnología', 'Tendencia Retail', 'Garantía Rapidassure', 'Smart POS', 'Control Anti-Hurto', 'Conectividad IoT', 'Más Vendido', 'Recomendación']
     random.shuffle(badges_pool)
-    productos = Producto.objects.filter(disponible=True).order_by('?')[:8]
+    
+    # Excluir productos ya mostrados si se solicitan más
+    exclude_ids_str = request.GET.get('exclude', '')
+    exclude_ids = []
+    if exclude_ids_str:
+        for x in exclude_ids_str.split(','):
+            if x.strip().isdigit():
+                exclude_ids.append(int(x.strip()))
+
+    queryset = Producto.objects.filter(disponible=True)
+    if exclude_ids:
+        queryset_filtrada = queryset.exclude(id__in=exclude_ids)
+        # Si ya se mostraron casi todos, permitir mezclar del total disponible
+        if queryset_filtrada.exists():
+            productos = queryset_filtrada.order_by('?')[:8]
+            has_more = queryset.exclude(id__in=exclude_ids + [p.id for p in productos]).exists()
+        else:
+            productos = queryset.order_by('?')[:8]
+            has_more = False
+    else:
+        productos = queryset.order_by('?')[:8]
+        has_more = queryset.exclude(id__in=[p.id for p in productos]).exists()
     
     from ..deseos import Deseos
     deseos_obj = Deseos(request)
@@ -362,6 +383,7 @@ def api_destacados_random(request):
         data.append({
             'id': p.id,
             'nombre': p.nombre,
+            'categoria': p.categoria.nombre if p.categoria else 'Equipamiento Tech',
             'precio': f"{p.precio:,}".replace(',', '.'),
             'precio_final': f"{p.precio_final:,}".replace(',', '.'),
             'tiene_descuento': p.tiene_descuento,
@@ -373,7 +395,7 @@ def api_destacados_random(request):
             'imagen': p.get_imagen_url_absoluta,
             'badge': f"-{p.porcentaje_descuento}% OFF" if p.tiene_descuento else badges_pool[idx % len(badges_pool)]
         })
-    return JsonResponse({'productos': data})
+    return JsonResponse({'productos': data, 'has_more': has_more})
 
 
 def _despachar_email_contacto(asunto, cuerpo, destinatario, reply_to, from_email, cuerpo_html=None):

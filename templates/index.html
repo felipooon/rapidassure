@@ -366,7 +366,7 @@
 
     <div class="modern-products-grid" id="destacados-container">
       {% for p in productos_destacados %}
-      <div class="modern-product-card">
+      <div class="modern-product-card" data-id="{{ p.id }}">
 
         <a href="{% url 'toggle_deseos' p.id %}"
           class="card-heart-wishlist {% if p.id in deseos_ids %}active{% endif %}"
@@ -420,8 +420,7 @@
               <i class="fa-regular fa-star" style="color: #cbd5e1;"></i>
               {% endif %}
               {% endfor %}
-              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s"
-                }})</span>
+              <span>{{ p.promedio_calificacion }} ({{ p.total_resenas }} reseña{{ p.total_resenas|pluralize:"s" }})</span>
               {% else %}
               <span
                 style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
@@ -438,8 +437,7 @@
           <div class="card-price-container">
             {% if p.tiene_descuento %}
             <div style="display: flex; flex-direction: column;">
-              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{
-                p.precio }}</span>
+              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">${{ p.precio }}</span>
               <div style="display: flex; align-items: baseline; gap: 6px;">
                 <span class="card-price-value" style="color: #b45309;">${{ p.precio_final }}</span>
                 <span class="card-vat-note">IVA Incluido</span>
@@ -466,6 +464,19 @@
       <p style="text-align: center; color: #64748b; width: 100%; grid-column: 1 / -1;">No hay productos disponibles por
         ahora.</p>
       {% endfor %}
+    </div>
+
+    <!-- Botón Sutil "Ver más" para cargar más productos hacia abajo -->
+    <div class="destacados-ver-mas-box">
+      <button type="button" class="btn-ver-mas-sutil" id="btn-cargar-mas-destacados" onclick="cargarMasDestacados()">
+        <span class="btn-ver-mas-content">
+          <i class="fa-solid fa-chevron-down" id="icono-ver-mas"></i>
+          <span>Ver más productos</span>
+        </span>
+        <span class="btn-ver-mas-spinner" id="spinner-ver-mas" style="display: none;">
+          <i class="fa-solid fa-circle-notch fa-spin"></i> Cargando...
+        </span>
+      </button>
     </div>
 
   </div>
@@ -1137,8 +1148,18 @@
             </div>
           </div>
         `;
-          container.insertAdjacentHTML('beforeend', cardHtml);
+          container.insertAdjacentHTML('beforeend', buildProductCardHtml(p));
         });
+
+        // Restablecer botón de ver más si había quedado oculto
+        const btnCargar = document.getElementById('btn-cargar-mas-destacados');
+        if (btnCargar) {
+          btnCargar.style.display = 'inline-flex';
+          const iconChevron = document.getElementById('icono-ver-mas');
+          if (iconChevron) iconChevron.className = 'fa-solid fa-chevron-down';
+          const spanText = btnCargar.querySelector('.btn-ver-mas-content span');
+          if (spanText) spanText.textContent = 'Ver más productos';
+        }
       }
     } catch (err) {
       console.error('Error al actualizar destacados:', err);
@@ -1147,6 +1168,131 @@
         container.style.opacity = '1';
         if (icon) icon.classList.remove('fa-spin');
       }, 200);
+    }
+  }
+
+  function buildProductCardHtml(p) {
+    return `
+    <div class="modern-product-card" data-id="${p.id}" style="animation: fadeInUpCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+      <a href="/deseos/toggle/${p.id}/" class="card-heart-wishlist ${p.en_deseos ? 'active' : ''}" title="${p.en_deseos ? 'Quitar de favoritos' : 'Guardar en favoritos'}">
+        ${p.en_deseos ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}
+      </a>
+      <a href="${p.url}" class="card-image-box" style="position: relative;">
+        ${p.tiene_descuento ? `
+          <span style="position: absolute; top: 10px; left: 10px; z-index: 5; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 12px; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35); display: inline-flex; align-items: center; gap: 4px;">
+            <i class="fa-solid fa-bolt" style="font-size: 0.65rem;"></i> -${p.porcentaje_descuento}% OFF
+          </span>
+        ` : ''}
+        ${p.imagen ? `<img src="${p.imagen}" alt="${p.nombre}" loading="lazy">` : '<div class="card-no-img"><i class="fa-solid fa-box-open"></i></div>'}
+        <div class="card-badges-bottom">
+          <span class="badge-ship-free"><i class="fa-solid fa-truck-fast"></i> Envío Gratis RM</span>
+        </div>
+      </a>
+      <div class="card-body">
+        <span class="card-category-tag">${p.categoria || p.badge || 'Equipamiento Tech'}</span>
+        ${MOSTRAR_RESENAS ? `
+        <div class="card-stars-row">
+          ${p.total_resenas > 0 ? `
+            <i class="fa-solid fa-star"></i>
+            <span>${p.promedio_calificacion} (${p.total_resenas} reseña${p.total_resenas > 1 ? 's' : ''})</span>
+          ` : `
+            <span style="color: #94a3b8; font-size: 0.78rem; font-weight: 500; display: inline-flex; align-items: center; gap: 4px;">
+              <i class="fa-regular fa-star" style="color: #cbd5e1;"></i> Sin reseñas aún
+            </span>
+          `}
+        </div>
+        ` : ''}
+        <h3 class="card-title">
+          <a href="${p.url}">${p.nombre}</a>
+        </h3>
+        <div class="card-price-container">
+          ${p.tiene_descuento ? `
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-size: 0.8rem; color: #94a3b8; text-decoration: line-through; font-weight: 600;">$${p.precio}</span>
+              <div style="display: flex; align-items: baseline; gap: 6px;">
+                <span class="card-price-value" style="color: #b45309;">${p.precio_final}</span>
+                <span class="card-vat-note">IVA Incluido</span>
+              </div>
+            </div>
+          ` : `
+            <span class="card-price-value">$${p.precio}</span>
+            <span class="card-vat-note">IVA Incluido</span>
+          `}
+        </div>
+        <div class="card-actions-row">
+          <a href="${p.url}" class="btn-card-view">
+            <i class="fa-solid fa-eye"></i> Ver
+          </a>
+          <a href="/carrito/agregar/${p.id}/" title="Agregar al carrito" class="btn-card-cart">
+            <i class="fa-solid fa-cart-plus"></i> Añadir
+          </a>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+
+  let cargandoMas = false;
+  async function cargarMasDestacados() {
+    if (cargandoMas) return;
+    const container = document.getElementById('destacados-container');
+    const btnCargar = document.getElementById('btn-cargar-mas-destacados');
+    const content = btnCargar ? btnCargar.querySelector('.btn-ver-mas-content') : null;
+    const spinner = document.getElementById('spinner-ver-mas');
+    if (!container || !btnCargar) return;
+
+    // Obtener IDs actuales para no repetir
+    const cards = container.querySelectorAll('.modern-product-card');
+    const idsActuales = Array.from(cards).map(c => c.getAttribute('data-id')).filter(Boolean);
+
+    cargandoMas = true;
+    btnCargar.disabled = true;
+    if (content) content.style.display = 'none';
+    if (spinner) spinner.style.display = 'inline-flex';
+
+    try {
+      const url = `/api/destacados-random/?exclude=${idsActuales.join(',')}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.productos && data.productos.length > 0) {
+        data.productos.forEach(p => {
+          container.insertAdjacentHTML('beforeend', buildProductCardHtml(p));
+        });
+
+        if (!data.has_more) {
+          // Si no quedan más disponibles
+          btnCargar.disabled = true;
+          if (content) {
+            content.style.display = 'inline-flex';
+            const icon = content.querySelector('i');
+            if (icon) icon.className = 'fa-solid fa-check';
+            const spanText = content.querySelector('span');
+            if (spanText) spanText.textContent = 'Has visto todo el catálogo destacado';
+          }
+          btnCargar.classList.add('btn-ver-mas-terminado');
+        } else {
+          btnCargar.disabled = false;
+          if (content) content.style.display = 'inline-flex';
+        }
+      } else {
+        btnCargar.disabled = true;
+        if (content) {
+          content.style.display = 'inline-flex';
+          const icon = content.querySelector('i');
+          if (icon) icon.className = 'fa-solid fa-check';
+          const spanText = content.querySelector('span');
+          if (spanText) spanText.textContent = 'Has visto todo el catálogo destacado';
+        }
+        btnCargar.classList.add('btn-ver-mas-terminado');
+      }
+    } catch (err) {
+      console.error('Error al cargar más productos:', err);
+      btnCargar.disabled = false;
+      if (content) content.style.display = 'inline-flex';
+    } finally {
+      if (spinner) spinner.style.display = 'none';
+      cargandoMas = false;
     }
   }
 

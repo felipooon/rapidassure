@@ -2054,6 +2054,98 @@ body.panel-body {
   }
 }
 
+/* Botón Sutil "Ver más" de Productos Destacados */
+.destacados-ver-mas-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2.5rem;
+  padding-top: 0.5rem;
+}
+
+.btn-ver-mas-sutil {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1.5px solid #e2e8f0;
+  padding: 10px 28px;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 14, 31, 0.04);
+}
+
+.btn-ver-mas-sutil:hover:not(:disabled) {
+  background: #f8fafc;
+  color: #002093;
+  border-color: #002093;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 32, 147, 0.12);
+}
+
+.btn-ver-mas-sutil:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-ver-mas-sutil:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.btn-ver-mas-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ver-mas-content i {
+  color: #002093;
+  font-size: 0.82rem;
+  transition: transform 0.25s ease;
+}
+
+.btn-ver-mas-sutil:hover:not(:disabled) .btn-ver-mas-content i {
+  transform: translateY(2px);
+}
+
+.btn-ver-mas-spinner {
+  color: #002093;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ver-mas-terminado {
+  background: #f1f5f9 !important;
+  color: #64748b !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.btn-ver-mas-terminado i {
+  color: #10b981 !important;
+}
+
+@keyframes fadeInUpCard {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .destacados-slider-wrapper {
   position: relative;
   max-width: 1200px;
